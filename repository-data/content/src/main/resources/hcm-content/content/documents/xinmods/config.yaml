@@ -1,0 +1,1059 @@
+/content/documents/xinmods/config:
+  jcr:primaryType: hippostd:folder
+  jcr:mixinTypes: ['hippo:named', 'mix:versionable']
+  jcr:uuid: b15107e0-2cd7-474f-b3b8-1ee8ad957be2
+  hippo:name: Config
+  hippostd:foldertype: [new-document, new-folder]
+  /site-configuration:
+    jcr:primaryType: hippo:handle
+    jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+    jcr:uuid: a33fad61-2be7-49dc-83be-cc88fb04f293
+    hippo:name: Site configuration
+    /site-configuration[1]:
+      jcr:primaryType: xinmods:siteconfig
+      jcr:mixinTypes: ['mix:referenceable']
+      jcr:uuid: 1248a550-9ded-4e65-b26c-1ba6319bde87
+      hippo:availability: []
+      hippostd:state: draft
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-07-29T14:35:59.153+12:00
+      hippostdpubwf:lastModificationDate: 2017-07-29T14:50:37.700+12:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippotranslation:id: 01fccf9c-2964-4f2a-adf5-ed5136f37a91
+      hippotranslation:locale: document-type-locale
+      xinmods:description: My personal website, it has things on it that I've worked
+        on over the years professionally, but also some of my personal projects.
+      xinmods:siteName: Marnix Kok - driven, enthusiastic and a little bit geeky.
+      /xinmods:headerMenu:
+        jcr:primaryType: hippo:mirror
+        hippo:docbase: fa6fd454-7c8c-4226-bd85-38e07c1435f7
+      /xinmods:footerMenu:
+        jcr:primaryType: hippo:mirror
+        hippo:docbase: fa141157-e3bd-4a91-a623-c179a527e00d
+      /xinmods:logo:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: b1ade7d2-db38-49a3-82aa-00542a87cc40
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:favicon:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: 9d3a45d2-b7fb-498d-b09b-022ecc92cb56
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:homepage:
+        jcr:primaryType: hippo:mirror
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+    /site-configuration[2]:
+      jcr:primaryType: xinmods:siteconfig
+      jcr:mixinTypes: ['mix:referenceable', 'mix:versionable']
+      jcr:uuid: 822815b4-5055-47cb-9f9e-4abe6271ed72
+      hippo:availability: [preview]
+      hippostd:state: unpublished
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-07-29T14:35:59.153+12:00
+      hippostdpubwf:lastModificationDate: 2017-07-29T14:50:47.352+12:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippotranslation:id: 01fccf9c-2964-4f2a-adf5-ed5136f37a91
+      hippotranslation:locale: document-type-locale
+      xinmods:description: My personal website, it has things on it that I've worked
+        on over the years professionally, but also some of my personal projects.
+      xinmods:siteName: Marnix Kok - driven, enthusiastic and a little bit geeky.
+      /xinmods:headerMenu:
+        jcr:primaryType: hippo:mirror
+        hippo:docbase: fa6fd454-7c8c-4226-bd85-38e07c1435f7
+      /xinmods:footerMenu:
+        jcr:primaryType: hippo:mirror
+        hippo:docbase: fa141157-e3bd-4a91-a623-c179a527e00d
+      /xinmods:logo:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: b1ade7d2-db38-49a3-82aa-00542a87cc40
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:favicon:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: 9d3a45d2-b7fb-498d-b09b-022ecc92cb56
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:homepage:
+        jcr:primaryType: hippo:mirror
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+    /site-configuration[3]:
+      jcr:primaryType: xinmods:siteconfig
+      jcr:mixinTypes: ['mix:referenceable']
+      jcr:uuid: c9271c79-29ef-4304-9b13-1e3a47a55bfe
+      hippo:availability: [live]
+      hippostd:state: published
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-07-29T14:35:59.153+12:00
+      hippostdpubwf:lastModificationDate: 2017-07-29T14:50:47.352+12:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippostdpubwf:publicationDate: 2017-07-29T15:01:45.101+12:00
+      hippotranslation:id: 01fccf9c-2964-4f2a-adf5-ed5136f37a91
+      hippotranslation:locale: document-type-locale
+      xinmods:description: My personal website, it has things on it that I've worked
+        on over the years professionally, but also some of my personal projects.
+      xinmods:siteName: Marnix Kok - driven, enthusiastic and a little bit geeky.
+      /xinmods:headerMenu:
+        jcr:primaryType: hippo:mirror
+        hippo:docbase: fa6fd454-7c8c-4226-bd85-38e07c1435f7
+      /xinmods:footerMenu:
+        jcr:primaryType: hippo:mirror
+        hippo:docbase: fa141157-e3bd-4a91-a623-c179a527e00d
+      /xinmods:logo:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: b1ade7d2-db38-49a3-82aa-00542a87cc40
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:favicon:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: 9d3a45d2-b7fb-498d-b09b-022ecc92cb56
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:homepage:
+        jcr:primaryType: hippo:mirror
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+  /header-menu:
+    jcr:primaryType: hippo:handle
+    jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+    jcr:uuid: fa6fd454-7c8c-4226-bd85-38e07c1435f7
+    hippo:name: Header menu
+    /header-menu[1]:
+      jcr:primaryType: xinmods:menu
+      jcr:mixinTypes: ['mix:referenceable']
+      jcr:uuid: d56bc16d-55ca-4841-9fc5-02b5f913cd96
+      hippo:availability: []
+      hippostd:state: draft
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-07-29T14:41:52.928+12:00
+      hippostdpubwf:lastModificationDate: 2017-07-29T14:41:52.928+12:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippotranslation:id: abd9b4ce-d3b7-41d5-9a86-c52b0d68db77
+      hippotranslation:locale: document-type-locale
+      xinmods:maxPerColumn: 0
+      xinmods:nMaxColumns: 0
+      xinmods:title: Header menu
+      /xinmods:image:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: 9d3a45d2-b7fb-498d-b09b-022ecc92cb56
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:items[1]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: /home.html
+        xinmods:item: Home
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[2]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Articles
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[3]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Blog
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[4]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Code
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[5]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Websites
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[6]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: http://github.com/marnixk
+        xinmods:item: Github
+        xinmods:openInNewWindow: true
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+    /header-menu[2]:
+      jcr:primaryType: xinmods:menu
+      jcr:mixinTypes: ['mix:referenceable', 'mix:versionable']
+      jcr:uuid: 6fb6251f-d825-46b2-b445-a9eaebfe4636
+      hippo:availability: [preview]
+      hippostd:state: unpublished
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-07-29T14:41:52.928+12:00
+      hippostdpubwf:lastModificationDate: 2017-07-29T14:46:04.482+12:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippotranslation:id: abd9b4ce-d3b7-41d5-9a86-c52b0d68db77
+      hippotranslation:locale: document-type-locale
+      xinmods:maxPerColumn: 0
+      xinmods:nMaxColumns: 0
+      xinmods:title: Header menu
+      /xinmods:image:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: 9d3a45d2-b7fb-498d-b09b-022ecc92cb56
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:items[1]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: /home.html
+        xinmods:item: Home
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[2]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Articles
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[3]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Blog
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[4]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Code
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[5]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Websites
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[6]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: http://github.com/marnixk
+        xinmods:item: Github
+        xinmods:openInNewWindow: true
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+    /header-menu[3]:
+      jcr:primaryType: xinmods:menu
+      jcr:mixinTypes: ['mix:referenceable']
+      jcr:uuid: 0e255f65-2544-49d5-afa2-99773528ab6b
+      hippo:availability: [live]
+      hippostd:state: published
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-07-29T14:41:52.928+12:00
+      hippostdpubwf:lastModificationDate: 2017-07-29T14:46:04.482+12:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippostdpubwf:publicationDate: 2017-07-29T14:50:33.167+12:00
+      hippotranslation:id: abd9b4ce-d3b7-41d5-9a86-c52b0d68db77
+      hippotranslation:locale: document-type-locale
+      xinmods:maxPerColumn: 0
+      xinmods:nMaxColumns: 0
+      xinmods:title: Header menu
+      /xinmods:image:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: 9d3a45d2-b7fb-498d-b09b-022ecc92cb56
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:items[1]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: /home.html
+        xinmods:item: Home
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[2]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Articles
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[3]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Blog
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[4]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Code
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[5]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Websites
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[6]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: http://github.com/marnixk
+        xinmods:item: Github
+        xinmods:openInNewWindow: true
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+  /footer-menu:
+    jcr:primaryType: hippo:handle
+    jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+    jcr:uuid: fa141157-e3bd-4a91-a623-c179a527e00d
+    hippo:name: Footer menu
+    /footer-menu[1]:
+      jcr:primaryType: xinmods:menu
+      jcr:mixinTypes: ['mix:referenceable']
+      jcr:uuid: 0b58a075-8f8e-425c-88f4-26addb74f250
+      hippo:availability: []
+      hippostd:state: draft
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-07-29T14:46:23.682+12:00
+      hippostdpubwf:lastModificationDate: 2017-07-29T14:46:23.682+12:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippotranslation:id: 01e78ab7-32a6-4250-b17c-966c23a81a75
+      hippotranslation:locale: document-type-locale
+      xinmods:maxPerColumn: 0
+      xinmods:nMaxColumns: 0
+      xinmods:title: Footer
+      /xinmods:image:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:items[1]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Projects ...
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[1]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: OpenGL Mini GUI
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[2]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: Linear Constraint Solver
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[3]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: SQLite C++ Wrapper
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[2]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Links ...
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[1]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: http://xinsolutions.co.nz
+          xinmods:item: XIN Solutions
+          xinmods:openInNewWindow: true
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[2]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: http://fourdsoftware.com
+          xinmods:item: FourD Software
+          xinmods:openInNewWindow: true
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[3]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: http://wieger.org
+          xinmods:item: Wieger Hofstra
+          xinmods:openInNewWindow: true
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[3]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Articles ...
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[1]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: Flocking around with the Kinect
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[2]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: Problems of evolution in software also apply to configuration
+            files
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[3]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: Reaction diffusion Texture Generation on the GPU
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[4]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: A blast from the past
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+    /footer-menu[2]:
+      jcr:primaryType: xinmods:menu
+      jcr:mixinTypes: ['mix:referenceable', 'mix:versionable']
+      jcr:uuid: 7e061319-4551-413c-8f11-78a0fa5abd14
+      hippo:availability: [preview]
+      hippostd:state: unpublished
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-07-29T14:46:23.682+12:00
+      hippostdpubwf:lastModificationDate: 2017-07-29T14:49:43.973+12:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippotranslation:id: 01e78ab7-32a6-4250-b17c-966c23a81a75
+      hippotranslation:locale: document-type-locale
+      xinmods:maxPerColumn: 0
+      xinmods:nMaxColumns: 0
+      xinmods:title: Footer
+      /xinmods:image:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:items[1]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Projects ...
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[1]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: OpenGL Mini GUI
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[2]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: Linear Constraint Solver
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[3]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: SQLite C++ Wrapper
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[2]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Links ...
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[1]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: http://xinsolutions.co.nz
+          xinmods:item: XIN Solutions
+          xinmods:openInNewWindow: true
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[2]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: http://fourdsoftware.com
+          xinmods:item: FourD Software
+          xinmods:openInNewWindow: true
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[3]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: http://wieger.org
+          xinmods:item: Wieger Hofstra
+          xinmods:openInNewWindow: true
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[3]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Articles ...
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[1]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: Flocking around with the Kinect
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[2]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: Problems of evolution in software also apply to configuration
+            files
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[3]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: Reaction diffusion Texture Generation on the GPU
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[4]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: A blast from the past
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+    /footer-menu[3]:
+      jcr:primaryType: xinmods:menu
+      jcr:mixinTypes: ['mix:referenceable']
+      jcr:uuid: d717e9ee-9673-4004-a58f-9ccbb4e7281f
+      hippo:availability: [live]
+      hippostd:state: published
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-07-29T14:46:23.682+12:00
+      hippostdpubwf:lastModificationDate: 2017-07-29T14:49:43.973+12:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippostdpubwf:publicationDate: 2017-07-29T14:49:46.127+12:00
+      hippotranslation:id: 01e78ab7-32a6-4250-b17c-966c23a81a75
+      hippotranslation:locale: document-type-locale
+      xinmods:maxPerColumn: 0
+      xinmods:nMaxColumns: 0
+      xinmods:title: Footer
+      /xinmods:image:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:items[1]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Projects ...
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[1]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: OpenGL Mini GUI
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[2]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: Linear Constraint Solver
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[3]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: SQLite C++ Wrapper
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[2]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Links ...
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[1]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: http://xinsolutions.co.nz
+          xinmods:item: XIN Solutions
+          xinmods:openInNewWindow: true
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[2]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: http://fourdsoftware.com
+          xinmods:item: FourD Software
+          xinmods:openInNewWindow: true
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[3]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: http://wieger.org
+          xinmods:item: Wieger Hofstra
+          xinmods:openInNewWindow: true
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+      /xinmods:items[3]:
+        jcr:primaryType: xinmods:menuitem
+        xinmods:externalUrl: ''
+        xinmods:item: Articles ...
+        xinmods:openInNewWindow: false
+        /xinmods:icon:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+        /xinmods:internalLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[1]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: Flocking around with the Kinect
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[2]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: Problems of evolution in software also apply to configuration
+            files
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[3]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: Reaction diffusion Texture Generation on the GPU
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:Children[4]:
+          jcr:primaryType: xinmods:menuitem
+          xinmods:externalUrl: ''
+          xinmods:item: A blast from the past
+          xinmods:openInNewWindow: false
+          /xinmods:icon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:internalLink:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe

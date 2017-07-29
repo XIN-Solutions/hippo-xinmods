@@ -1,8 +1,8 @@
-/content/documents/marnixkok-nl/blogs:
+/content/documents/xinmods/site:
   jcr:primaryType: hippostd:folder
   jcr:mixinTypes: ['hippo:named', 'mix:versionable']
   jcr:uuid: 942578ca-a5f1-42ed-8416-25c4d0a16ef7
-  hippo:name: Blogs
+  hippo:name: Site
   hippostd:foldertype: [new-document, new-folder]
   /categories:
     jcr:primaryType: hippostd:folder
@@ -15,4 +15,10 @@
     jcr:mixinTypes: ['hippo:named', 'mix:versionable']
     jcr:uuid: 07532867-dd3a-4af6-a019-09cee80e9547
     hippo:name: Posts
+    hippostd:foldertype: [new-document, new-folder]
+  /pages:
+    jcr:primaryType: hippostd:folder
+    jcr:mixinTypes: ['hippo:named', 'mix:versionable']
+    jcr:uuid: c160fe80-0557-499e-932a-84c6c919eaa4
+    hippo:name: Pages
     hippostd:foldertype: [new-document, new-folder]

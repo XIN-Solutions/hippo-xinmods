@@ -63,6 +63,68 @@ definitions:
             hipposysedit:path: xinmods:homepage
             hipposysedit:primary: false
             hipposysedit:type: hippo:mirror
+        /hipposysedit:nodetype[2]:
+          jcr:primaryType: hipposysedit:nodetype
+          jcr:mixinTypes: ['mix:referenceable']
+          jcr:uuid: 765c4601-8c6f-4b12-bb13-2b0e236284b3
+          hipposysedit:node: true
+          hipposysedit:supertype: ['xinmods:basedocument', 'hippostd:relaxed', 'hippotranslation:translated']
+          /siteName:
+            jcr:primaryType: hipposysedit:field
+            hipposysedit:mandatory: false
+            hipposysedit:multiple: false
+            hipposysedit:ordered: false
+            hipposysedit:path: xinmods:siteName
+            hipposysedit:primary: false
+            hipposysedit:type: String
+          /headerMenu:
+            jcr:primaryType: hipposysedit:field
+            hipposysedit:mandatory: false
+            hipposysedit:multiple: false
+            hipposysedit:ordered: false
+            hipposysedit:path: xinmods:headerMenu
+            hipposysedit:primary: false
+            hipposysedit:type: hippo:mirror
+          /footerMenu:
+            jcr:primaryType: hipposysedit:field
+            hipposysedit:mandatory: false
+            hipposysedit:multiple: false
+            hipposysedit:ordered: false
+            hipposysedit:path: xinmods:footerMenu
+            hipposysedit:primary: false
+            hipposysedit:type: hippo:mirror
+          /logo:
+            jcr:primaryType: hipposysedit:field
+            hipposysedit:mandatory: false
+            hipposysedit:multiple: false
+            hipposysedit:ordered: false
+            hipposysedit:path: xinmods:logo
+            hipposysedit:primary: false
+            hipposysedit:type: hippogallerypicker:imagelink
+          /favicon:
+            jcr:primaryType: hipposysedit:field
+            hipposysedit:mandatory: false
+            hipposysedit:multiple: false
+            hipposysedit:ordered: false
+            hipposysedit:path: xinmods:favicon
+            hipposysedit:primary: false
+            hipposysedit:type: hippogallerypicker:imagelink
+          /homepage:
+            jcr:primaryType: hipposysedit:field
+            hipposysedit:mandatory: false
+            hipposysedit:multiple: false
+            hipposysedit:ordered: false
+            hipposysedit:path: xinmods:homepage
+            hipposysedit:primary: false
+            hipposysedit:type: hippo:mirror
+          /text:
+            jcr:primaryType: hipposysedit:field
+            hipposysedit:mandatory: false
+            hipposysedit:multiple: false
+            hipposysedit:ordered: false
+            hipposysedit:path: xinmods:text
+            hipposysedit:primary: false
+            hipposysedit:type: Text
       /hipposysedit:prototypes:
         jcr:primaryType: hipposysedit:prototypeset
         /hipposysedit:prototype:
@@ -78,6 +140,41 @@ definitions:
           jcr:uuid: 344fe0a0-a9f6-447a-8801-2d4f127217d8
           hippostdpubwf:lastModificationDate: 2017-07-29T14:22:06.093+12:00
           hippostdpubwf:creationDate: 2017-07-29T14:22:06.093+12:00
+          /xinmods:headerMenu:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          /xinmods:footerMenu:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          /xinmods:logo:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:favicon:
+            jcr:primaryType: hippogallerypicker:imagelink
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+            hippo:facets: []
+            hippo:modes: []
+            hippo:values: []
+          /xinmods:homepage:
+            jcr:primaryType: hippo:mirror
+            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /hipposysedit:prototype[2]:
+          jcr:primaryType: nt:unstructured
+          jcr:mixinTypes: ['hippotranslation:translated', 'mix:referenceable', 'hippostd:relaxed']
+          jcr:uuid: e5e78129-c96f-4f63-bfbb-aa85925fa9e9
+          hippostd:holder: holder
+          hippostd:state: draft
+          hippostdpubwf:createdBy: ''
+          hippostdpubwf:creationDate: 2017-07-29T14:22:06.093+12:00
+          hippostdpubwf:lastModificationDate: 2017-07-29T14:22:06.093+12:00
+          hippostdpubwf:lastModifiedBy: ''
+          hippotranslation:id: document-type-locale-id
+          hippotranslation:locale: document-type-locale
+          xinmods:siteName: ''
+          xinmods:text: ''
           /xinmods:headerMenu:
             jcr:primaryType: hippo:mirror
             hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
@@ -171,6 +268,14 @@ definitions:
             field: homepage
             hint: ''
             plugin.class: org.hippoecm.frontend.editor.plugins.field.NodeFieldPlugin
+            wicket.id: ${cluster.id}.left.item
+            /cluster.options:
+              jcr:primaryType: frontend:pluginconfig
+          /text:
+            jcr:primaryType: frontend:plugin
+            caption: Text
+            field: text
+            plugin.class: org.hippoecm.frontend.editor.plugins.field.PropertyFieldPlugin
             wicket.id: ${cluster.id}.left.item
             /cluster.options:
               jcr:primaryType: frontend:pluginconfig
