@@ -1,0 +1,8 @@
+definitions:
+  config:
+    /hst:hst/hst:configurations/xinmods/hst:workspace/hst:channel:
+      jcr:primaryType: hst:channel
+      hst:name: XINmods
+      hst:type: website
+      /hst:channelinfo:
+        jcr:primaryType: hst:channelinfo

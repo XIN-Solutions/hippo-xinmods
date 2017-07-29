@@ -1,0 +1,16 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:translations/hippo:templates/de:
+      new-untranslated-folder: Neuer nicht übersetzter Ordner
+      new-resource-bundle: Neues Resource-Bundle
+    /hippo:configuration/hippo:translations/hippo:templates/en:
+      new-resource-bundle: new resource bundle
+      new-untranslated-folder: new untranslated folder
+      new-xinmods-genericimageset-folder: new folder
+      new-xinmods-genericimageset-image: New Image
+    /hippo:configuration/hippo:translations/hippo:templates/fr:
+      new-untranslated-folder: nouveau dossier non traduit
+      new-resource-bundle: nouveau resource bundle
+    /hippo:configuration/hippo:translations/hippo:templates/nl:
+      new-untranslated-folder: nieuwe onvertaalde map
+      new-resource-bundle: nieuwe resource bundle

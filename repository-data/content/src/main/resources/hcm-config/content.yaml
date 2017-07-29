@@ -1,0 +1,5 @@
+definitions:
+  config:
+    /content/gallery:
+      hippostd:foldertype: [new-xinmods-genericimageset-folder]
+      hippostd:gallerytype: ['xinmods:genericimageset']

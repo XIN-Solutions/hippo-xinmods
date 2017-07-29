@@ -1,0 +1,18 @@
+/content/documents/marnixkok-nl/blogs:
+  jcr:primaryType: hippostd:folder
+  jcr:mixinTypes: ['hippo:named', 'mix:versionable']
+  jcr:uuid: 942578ca-a5f1-42ed-8416-25c4d0a16ef7
+  hippo:name: Blogs
+  hippostd:foldertype: [new-document, new-folder]
+  /categories:
+    jcr:primaryType: hippostd:folder
+    jcr:mixinTypes: ['hippo:named', 'mix:versionable']
+    jcr:uuid: bd843492-fc2f-4a07-850c-ea1cf2c98b3a
+    hippo:name: Categories
+    hippostd:foldertype: [new-document, new-folder]
+  /posts:
+    jcr:primaryType: hippostd:folder
+    jcr:mixinTypes: ['hippo:named', 'mix:versionable']
+    jcr:uuid: 07532867-dd3a-4af6-a019-09cee80e9547
+    hippo:name: Posts
+    hippostd:foldertype: [new-document, new-folder]

@@ -1,0 +1,4 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:translations/hippo:types/xinmods:genericimageset:
+      jcr:primaryType: hipposys:resourcebundles
