@@ -10,11 +10,11 @@
     jcr:uuid: bd843492-fc2f-4a07-850c-ea1cf2c98b3a
     hippo:name: Categories
     hippostd:foldertype: [new-document, new-folder]
-  /posts:
+  /events:
     jcr:primaryType: hippostd:folder
     jcr:mixinTypes: ['hippo:named', 'mix:versionable']
     jcr:uuid: 07532867-dd3a-4af6-a019-09cee80e9547
-    hippo:name: Posts
+    hippo:name: Events
     hippostd:foldertype: [new-document, new-folder]
   /pages:
     jcr:primaryType: hippostd:folder
@@ -22,3 +22,134 @@
     jcr:uuid: c160fe80-0557-499e-932a-84c6c919eaa4
     hippo:name: Pages
     hippostd:foldertype: [new-document, new-folder]
+  /homepage:
+    jcr:primaryType: hippo:handle
+    jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+    jcr:uuid: 06728b87-08fd-458d-a6b6-ed7aa2b444ee
+    hippo:name: Homepage
+    /homepage[1]:
+      jcr:primaryType: xinmods:content
+      jcr:mixinTypes: ['mix:referenceable']
+      jcr:uuid: 59e8cde2-a4a8-48eb-989d-135bd351f06b
+      hippo:availability: []
+      hippostd:state: draft
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-07-29T15:59:31.224+12:00
+      hippostdpubwf:lastModificationDate: 2017-07-29T16:12:34.571+12:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippotranslation:id: ac7579de-b05a-4173-8fda-397e7aedb876
+      hippotranslation:locale: document-type-locale
+      xinmods:description: ''
+      xinmods:pageTitle: Home
+      xinmods:title: Homepage
+      /xinmods:thumbnail:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:Content[1]:
+        jcr:primaryType: xinmods:textImageComponent
+        xinmods:html: |-
+          <p>Hi!&nbsp;My name is&nbsp;Marnix Kok. I am a&nbsp;Software developer, fascinated by extremes in Computer Science. I love the simplicity and elegance of optimized code in embedded environments, and adore the complexities in distributed systems.</p>
+
+          <p>&nbsp;</p>
+        xinmods:imageLocation: Image to the Right
+        xinmods:textWrap: false
+        /xinmods:image:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: 7768b9c5-a608-4822-af69-700232fef9ad
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+      /xinmods:Content[2]:
+        jcr:primaryType: xinmods:listComponent
+        xinmods:tags: ['']
+        xinmods:title: ''
+        /xinmods:titleLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:basePath:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: c160fe80-0557-499e-932a-84c6c919eaa4
+    /homepage[2]:
+      jcr:primaryType: xinmods:content
+      jcr:mixinTypes: ['mix:referenceable', 'mix:versionable']
+      jcr:uuid: e07ff79e-4b22-49f0-a965-f975c7b15b90
+      hippo:availability: [preview]
+      hippostd:state: unpublished
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-07-29T15:59:31.224+12:00
+      hippostdpubwf:lastModificationDate: 2017-07-29T16:13:33.369+12:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippotranslation:id: ac7579de-b05a-4173-8fda-397e7aedb876
+      hippotranslation:locale: document-type-locale
+      xinmods:description: ''
+      xinmods:pageTitle: Home
+      xinmods:title: Homepage
+      /xinmods:thumbnail:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:Content[1]:
+        jcr:primaryType: xinmods:textImageComponent
+        xinmods:html: |-
+          <p>Hi!&nbsp;My name is&nbsp;Marnix Kok. I am a&nbsp;Software developer, fascinated by extremes in Computer Science. I love the simplicity and elegance of optimized code in embedded environments, and adore the complexities in distributed systems.</p>
+
+          <p>&nbsp;</p>
+        xinmods:imageLocation: Image to the Right
+        xinmods:textWrap: false
+        /xinmods:image:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: 7768b9c5-a608-4822-af69-700232fef9ad
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+      /xinmods:Content[2]:
+        jcr:primaryType: xinmods:listComponent
+        xinmods:tags: ['']
+        xinmods:title: ''
+        /xinmods:titleLink:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        /xinmods:basePath:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: c160fe80-0557-499e-932a-84c6c919eaa4
+    /homepage[3]:
+      jcr:primaryType: xinmods:content
+      jcr:mixinTypes: ['mix:referenceable']
+      jcr:uuid: 4f2e6014-1c23-4906-93c8-bcc0315ca3bd
+      hippo:availability: [live]
+      hippostd:state: published
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-07-29T15:59:31.224+12:00
+      hippostdpubwf:lastModificationDate: 2017-07-29T16:03:52.461+12:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippostdpubwf:publicationDate: 2017-07-29T16:03:56.340+12:00
+      hippotranslation:id: ac7579de-b05a-4173-8fda-397e7aedb876
+      hippotranslation:locale: document-type-locale
+      xinmods:description: ''
+      xinmods:pageTitle: Home
+      xinmods:title: Homepage
+      /xinmods:thumbnail:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:Content:
+        jcr:primaryType: xinmods:textImageComponent
+        xinmods:html: |-
+          <p>Hi!&nbsp;My name is&nbsp;Marnix Kok. I am a&nbsp;Software developer, fascinated by extremes in Computer Science. I love the simplicity and elegance of optimized code in embedded environments, and adore the complexities in distributed systems.</p>
+
+          <p>&nbsp;</p>
+        xinmods:imageLocation: Image to the Right
+        xinmods:textWrap: false
+        /xinmods:image:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: 7768b9c5-a608-4822-af69-700232fef9ad
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []

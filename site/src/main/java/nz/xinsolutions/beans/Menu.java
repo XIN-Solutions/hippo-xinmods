@@ -2,8 +2,8 @@ package nz.xinsolutions.beans;
 
 import org.hippoecm.hst.content.beans.Node;
 import org.onehippo.cms7.essentials.dashboard.annotations.HippoEssentialsGenerated;
-
 import java.util.List;
+import nz.xinsolutions.beans.Menuitem;
 
 @HippoEssentialsGenerated(internalName = "xinmods:menu")
 @Node(jcrType = "xinmods:menu")
@@ -29,7 +29,7 @@ public class Menu extends BaseDocument {
     }
 
     @HippoEssentialsGenerated(internalName = "xinmods:items")
-    public List<Menuitem> getItems() {
-        return getChildBeansByName("xinmods:items", Menuitem.class);
+    public Menuitem getItems() {
+        return getBean("xinmods:items", Menuitem.class);
     }
 }

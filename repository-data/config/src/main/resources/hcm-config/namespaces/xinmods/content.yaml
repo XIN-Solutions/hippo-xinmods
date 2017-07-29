@@ -1,104 +1,90 @@
 definitions:
   config:
-    /hippo:namespaces/xinmods/siteconfig:
+    /hippo:namespaces/xinmods/content:
       jcr:primaryType: hipposysedit:templatetype
       jcr:mixinTypes: ['editor:editable', 'mix:referenceable']
-      jcr:uuid: 54f2c15c-77b5-4a62-b7cd-47d2a388aa0b
+      jcr:uuid: a829cd9a-209a-402b-9cc3-464e238d8545
       /hipposysedit:nodetype:
         jcr:primaryType: hippo:handle
         jcr:mixinTypes: ['mix:referenceable']
-        jcr:uuid: 12bc03b6-cc80-4862-92d3-25bde86a5557
-        /hipposysedit:nodetype:
+        jcr:uuid: 376b9dd4-6658-44b9-8ecd-68a7f8cf1d51
+        /hipposysedit:nodetype[1]:
           jcr:primaryType: hipposysedit:nodetype
-          jcr:mixinTypes: ['mix:referenceable', 'hipposysedit:remodel']
-          jcr:uuid: 765c4601-8c6f-4b12-bb13-2b0e236284b3
+          jcr:mixinTypes: ['hipposysedit:remodel', 'mix:referenceable']
+          jcr:uuid: 2f1e45b9-3fcd-4d14-a9aa-bc8689b1fbd8
           hipposysedit:node: true
           hipposysedit:supertype: ['xinmods:basedocument', 'hippostd:relaxed', 'hippotranslation:translated']
           hipposysedit:uri: http://www.onehippo.org/xinmods/nt/1.0
-          /siteName:
+          /title:
             jcr:primaryType: hipposysedit:field
             hipposysedit:mandatory: false
             hipposysedit:multiple: false
             hipposysedit:ordered: false
-            hipposysedit:path: xinmods:siteName
+            hipposysedit:path: xinmods:title
             hipposysedit:primary: false
             hipposysedit:type: String
-          /headerMenu:
+          /description:
             jcr:primaryType: hipposysedit:field
             hipposysedit:mandatory: false
             hipposysedit:multiple: false
             hipposysedit:ordered: false
-            hipposysedit:path: xinmods:headerMenu
+            hipposysedit:path: xinmods:description
             hipposysedit:primary: false
-            hipposysedit:type: hippo:mirror
-          /footerMenu:
+            hipposysedit:type: Text
+          /thumbnail:
             jcr:primaryType: hipposysedit:field
             hipposysedit:mandatory: false
             hipposysedit:multiple: false
             hipposysedit:ordered: false
-            hipposysedit:path: xinmods:footerMenu
-            hipposysedit:primary: false
-            hipposysedit:type: hippo:mirror
-          /logo:
-            jcr:primaryType: hipposysedit:field
-            hipposysedit:mandatory: false
-            hipposysedit:multiple: false
-            hipposysedit:ordered: false
-            hipposysedit:path: xinmods:logo
+            hipposysedit:path: xinmods:thumbnail
             hipposysedit:primary: false
             hipposysedit:type: hippogallerypicker:imagelink
-          /favicon:
+          /pageTitle:
             jcr:primaryType: hipposysedit:field
             hipposysedit:mandatory: false
             hipposysedit:multiple: false
             hipposysedit:ordered: false
-            hipposysedit:path: xinmods:favicon
+            hipposysedit:path: xinmods:pageTitle
             hipposysedit:primary: false
-            hipposysedit:type: hippogallerypicker:imagelink
-          /homepage:
+            hipposysedit:type: String
+            hipposysedit:validators: [optional]
+          /Content:
             jcr:primaryType: hipposysedit:field
-            hipposysedit:mandatory: false
-            hipposysedit:multiple: false
-            hipposysedit:ordered: false
-            hipposysedit:path: xinmods:homepage
-            hipposysedit:primary: false
-            hipposysedit:type: hippo:mirror
+            hipposysedit:multiple: true
+            hipposysedit:ordered: true
+            hipposysedit:path: xinmods:Content
+            hipposysedit:type: hippo:compound
+            hipposysedit:validators: [contentblocks-validator]
+          /Information:
+            jcr:primaryType: hipposysedit:field
+            hipposysedit:multiple: true
+            hipposysedit:ordered: true
+            hipposysedit:path: xinmods:Information
+            hipposysedit:type: hippo:compound
+            hipposysedit:validators: [contentblocks-validator]
       /hipposysedit:prototypes:
         jcr:primaryType: hipposysedit:prototypeset
-        /hipposysedit:prototype:
-          jcr:primaryType: xinmods:siteconfig
+        /hipposysedit:prototype[1]:
+          jcr:primaryType: xinmods:content
+          jcr:mixinTypes: ['mix:referenceable']
+          jcr:uuid: 920e425e-b8c3-40ff-96c0-6ae68534e918
           hippostd:holder: holder
           hippostd:state: draft
           hippostdpubwf:createdBy: ''
+          hippostdpubwf:creationDate: 2017-07-29T15:26:44.424+12:00
+          hippostdpubwf:lastModificationDate: 2017-07-29T15:26:44.424+12:00
           hippostdpubwf:lastModifiedBy: ''
           hippotranslation:id: document-type-locale-id
           hippotranslation:locale: document-type-locale
-          jcr:mixinTypes: ['mix:referenceable']
-          xinmods:siteName: ''
-          jcr:uuid: 79e272c5-cc38-45f6-a79b-0677646057db
-          hippostdpubwf:lastModificationDate: 2017-07-29T14:22:06.093+12:00
-          hippostdpubwf:creationDate: 2017-07-29T14:22:06.093+12:00
-          /xinmods:headerMenu:
-            jcr:primaryType: hippo:mirror
-            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
-          /xinmods:footerMenu:
-            jcr:primaryType: hippo:mirror
-            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
-          /xinmods:logo:
+          xinmods:description: ''
+          xinmods:pageTitle: ''
+          xinmods:title: ''
+          /xinmods:thumbnail:
             jcr:primaryType: hippogallerypicker:imagelink
             hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
             hippo:facets: []
             hippo:modes: []
             hippo:values: []
-          /xinmods:favicon:
-            jcr:primaryType: hippogallerypicker:imagelink
-            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
-            hippo:facets: []
-            hippo:modes: []
-            hippo:values: []
-          /xinmods:homepage:
-            jcr:primaryType: hippo:mirror
-            hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
       /editor:templates:
         jcr:primaryType: editor:templateset
         /_default_:
@@ -122,55 +108,59 @@ definitions:
             item: ${cluster.id}.right.item
             plugin.class: org.hippoecm.frontend.service.render.ListViewPlugin
             wicket.id: ${cluster.id}.right
-          /siteName:
+          /title:
             jcr:primaryType: frontend:plugin
-            caption: Site name
-            field: siteName
+            caption: Title
+            field: title
             plugin.class: org.hippoecm.frontend.editor.plugins.field.PropertyFieldPlugin
             wicket.id: ${cluster.id}.left.item
             /cluster.options:
               jcr:primaryType: frontend:pluginconfig
-          /headerMenu:
+          /pageTitle:
             jcr:primaryType: frontend:plugin
-            caption: Header Menu
-            field: headerMenu
-            plugin.class: org.hippoecm.frontend.editor.plugins.field.NodeFieldPlugin
-            wicket.id: ${cluster.id}.left.item
+            caption: Page title
+            field: pageTitle
+            hint: Specify this field if you want the title in the browser to differ
+              from the content title.
+            plugin.class: org.hippoecm.frontend.editor.plugins.field.PropertyFieldPlugin
+            wicket.id: ${cluster.id}.right.item
             /cluster.options:
               jcr:primaryType: frontend:pluginconfig
-              nodetypes: ['xinmods:menu']
-          /footerMenu:
+          /thumbnail:
             jcr:primaryType: frontend:plugin
-            caption: Footer Menu
-            field: footerMenu
-            plugin.class: org.hippoecm.frontend.editor.plugins.field.NodeFieldPlugin
-            wicket.id: ${cluster.id}.left.item
-            /cluster.options:
-              jcr:primaryType: frontend:pluginconfig
-              nodetypes: ['xinmods:menu']
-          /logo:
-            jcr:primaryType: frontend:plugin
-            caption: Logo
-            field: logo
+            caption: Thumbnail
+            field: thumbnail
             plugin.class: org.hippoecm.frontend.editor.plugins.field.NodeFieldPlugin
             wicket.id: ${cluster.id}.right.item
             /cluster.options:
               jcr:primaryType: frontend:pluginconfig
-          /favicon:
+          /description:
             jcr:primaryType: frontend:plugin
-            caption: Favicon
-            field: favicon
-            hint: ''
-            plugin.class: org.hippoecm.frontend.editor.plugins.field.NodeFieldPlugin
+            caption: Description
+            field: description
+            hint: This description will be used when this page is referenced elsewhere
+            plugin.class: org.hippoecm.frontend.editor.plugins.field.PropertyFieldPlugin
             wicket.id: ${cluster.id}.right.item
             /cluster.options:
               jcr:primaryType: frontend:pluginconfig
-          /homepage:
+          /Content:
             jcr:primaryType: frontend:plugin
-            caption: Homepage
-            field: homepage
-            hint: ''
-            plugin.class: org.hippoecm.frontend.editor.plugins.field.NodeFieldPlugin
+            caption: Content
+            compoundList: xinmods:galleryComponent,xinmods:imageComponent,xinmods:listComponent,xinmods:textComponent,xinmods:textImageComponent,xinmods:twoColumn
+            contentPickerType: links
+            field: Content
+            plugin.class: org.onehippo.forge.contentblocks.ContentBlocksFieldPlugin
             wicket.id: ${cluster.id}.left.item
             /cluster.options:
               jcr:primaryType: frontend:pluginconfig
+          /Information:
+            jcr:primaryType: frontend:plugin
+            caption: Information
+            compoundList: xinmods:postdetails
+            contentPickerType: dropdown
+            field: Information
+            plugin.class: org.onehippo.forge.contentblocks.ContentBlocksFieldPlugin
+            wicket.id: ${cluster.id}.left.item
+            /cluster.options:
+              jcr:primaryType: frontend:pluginconfig
+              maxitems: 1

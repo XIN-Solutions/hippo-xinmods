@@ -13,11 +13,6 @@ public class Siteconfig extends BaseDocument {
         return getProperty("xinmods:siteName");
     }
 
-    @HippoEssentialsGenerated(internalName = "xinmods:description")
-    public String getDescription() {
-        return getProperty("xinmods:description");
-    }
-
     @HippoEssentialsGenerated(internalName = "xinmods:headerMenu")
     public HippoBean getHeaderMenu() {
         return getLinkedBean("xinmods:headerMenu", HippoBean.class);
