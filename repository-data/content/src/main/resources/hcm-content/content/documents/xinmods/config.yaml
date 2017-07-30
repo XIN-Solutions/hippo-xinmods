@@ -3,7 +3,7 @@
   jcr:mixinTypes: ['hippo:named', 'mix:versionable']
   jcr:uuid: b15107e0-2cd7-474f-b3b8-1ee8ad957be2
   hippo:name: Config
-  hippostd:foldertype: [new-document, new-folder]
+  hippostd:foldertype: [new-document]
   /site-configuration:
     jcr:primaryType: hippo:handle
     jcr:mixinTypes: ['hippo:named', 'mix:referenceable']

@@ -2,5 +2,5 @@
   jcr:primaryType: hippostd:folder
   jcr:mixinTypes: ['hippo:named', 'mix:versionable']
   jcr:uuid: c3ce401f-871a-4625-8111-697560aff634
-  hippo:name: MarnixKok NL
+  hippo:name: XIN Modules
   hippostd:foldertype: [new-document, new-folder]

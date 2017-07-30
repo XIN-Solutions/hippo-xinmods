@@ -8,6 +8,8 @@ definitions:
       new-untranslated-folder: new untranslated folder
       new-xinmods-genericimageset-folder: new folder
       new-xinmods-genericimageset-image: New Image
+      new-content-folder: Content folder
+      new-content: Content
     /hippo:configuration/hippo:translations/hippo:templates/fr:
       new-untranslated-folder: nouveau dossier non traduit
       new-resource-bundle: nouveau resource bundle
