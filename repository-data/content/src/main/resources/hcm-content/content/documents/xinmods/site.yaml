@@ -32,10 +32,11 @@
       jcr:mixinTypes: ['mix:referenceable']
       jcr:uuid: 59e8cde2-a4a8-48eb-989d-135bd351f06b
       hippo:availability: []
+      hippostd:holder: admin
       hippostd:state: draft
       hippostdpubwf:createdBy: admin
       hippostdpubwf:creationDate: 2017-07-29T15:59:31.224+12:00
-      hippostdpubwf:lastModificationDate: 2017-07-29T16:12:34.571+12:00
+      hippostdpubwf:lastModificationDate: 2017-07-30T12:07:09.669+12:00
       hippostdpubwf:lastModifiedBy: admin
       hippotranslation:id: ac7579de-b05a-4173-8fda-397e7aedb876
       hippotranslation:locale: document-type-locale

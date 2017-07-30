@@ -2,3 +2,61 @@ definitions:
   config:
     /hippo:configuration/hippo:translations/hippo:types/xinmods:genericimageset:
       jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        jcr:name: Image Set
+    /hippo:configuration/hippo:translations/hippo:types/xinmods:content:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        jcr:name: Content Page
+    /hippo:configuration/hippo:translations/hippo:types/xinmods:galleryComponent:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        jcr:name: Gallery
+    /hippo:configuration/hippo:translations/hippo:types/xinmods:imageComponent:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        jcr:name: Image
+    /hippo:configuration/hippo:translations/hippo:types/xinmods:listComponent:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        jcr:name: List
+    /hippo:configuration/hippo:translations/hippo:types/xinmods:menu:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        jcr:name: Menu
+    /hippo:configuration/hippo:translations/hippo:types/xinmods:menuitem:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        jcr:name: Menu Item
+    /hippo:configuration/hippo:translations/hippo:types/xinmods:postdetails:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        jcr:name: Post Type
+    /hippo:configuration/hippo:translations/hippo:types/xinmods:siteconfig:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        jcr:name: Site Configuration
+    /hippo:configuration/hippo:translations/hippo:types/xinmods:textComponent:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        jcr:name: Text
+    /hippo:configuration/hippo:translations/hippo:types/xinmods:textImageComponent:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        jcr:name: Text & Image
+    /hippo:configuration/hippo:translations/hippo:types/xinmods:twoColumn:
+      jcr:primaryType: hipposys:resourcebundles
+      /en:
+        jcr:primaryType: hipposys:resourcebundle
+        jcr:name: 2-Column Control

@@ -143,16 +143,6 @@ definitions:
             wicket.id: ${cluster.id}.right.item
             /cluster.options:
               jcr:primaryType: frontend:pluginconfig
-          /Content:
-            jcr:primaryType: frontend:plugin
-            caption: Content
-            compoundList: xinmods:galleryComponent,xinmods:imageComponent,xinmods:listComponent,xinmods:textComponent,xinmods:textImageComponent,xinmods:twoColumn
-            contentPickerType: links
-            field: Content
-            plugin.class: org.onehippo.forge.contentblocks.ContentBlocksFieldPlugin
-            wicket.id: ${cluster.id}.left.item
-            /cluster.options:
-              jcr:primaryType: frontend:pluginconfig
           /Information:
             jcr:primaryType: frontend:plugin
             caption: Information
@@ -164,3 +154,13 @@ definitions:
             /cluster.options:
               jcr:primaryType: frontend:pluginconfig
               maxitems: 1
+          /Content:
+            jcr:primaryType: frontend:plugin
+            caption: Content
+            compoundList: xinmods:galleryComponent,xinmods:imageComponent,xinmods:listComponent,xinmods:textComponent,xinmods:textImageComponent,xinmods:twoColumn
+            contentPickerType: links
+            field: Content
+            plugin.class: org.onehippo.forge.contentblocks.ContentBlocksFieldPlugin
+            wicket.id: ${cluster.id}.left.item
+            /cluster.options:
+              jcr:primaryType: frontend:pluginconfig
