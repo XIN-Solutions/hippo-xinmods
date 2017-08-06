@@ -11,7 +11,7 @@ definitions:
         /hipposysedit:nodetype:
           jcr:primaryType: hipposysedit:nodetype
           jcr:mixinTypes: ['mix:referenceable', 'hipposysedit:remodel']
-          jcr:uuid: 83e645ae-72f7-4aff-9ff9-51064c54c47d
+          jcr:uuid: 8944ab95-8307-40a8-986f-368246dad9b3
           hipposysedit:node: true
           hipposysedit:supertype: ['xinmods:basedocument', 'hippostd:relaxed', 'hippotranslation:translated']
           hipposysedit:uri: http://www.onehippo.org/xinmods/nt/1.0
@@ -34,7 +34,7 @@ definitions:
           /items:
             jcr:primaryType: hipposysedit:field
             hipposysedit:mandatory: false
-            hipposysedit:multiple: false
+            hipposysedit:multiple: true
             hipposysedit:ordered: false
             hipposysedit:path: xinmods:items
             hipposysedit:primary: false
@@ -69,7 +69,7 @@ definitions:
           xinmods:title: ''
           xinmods:nMaxColumns: 0
           xinmods:maxPerColumn: 0
-          jcr:uuid: e15ebaae-2f10-476a-8aef-d3c1fdc0ad3f
+          jcr:uuid: ff689481-7a69-4712-b8a0-57dd3edd30e4
           hippostdpubwf:lastModificationDate: 2017-07-29T14:21:09.601+12:00
           hippostdpubwf:creationDate: 2017-07-29T14:21:09.601+12:00
           /xinmods:image:
@@ -78,20 +78,6 @@ definitions:
             hippo:facets: []
             hippo:modes: []
             hippo:values: []
-          /xinmods:items:
-            jcr:primaryType: xinmods:menuitem
-            xinmods:externalUrl: ''
-            xinmods:item: ''
-            xinmods:openInNewWindow: false
-            /xinmods:icon:
-              jcr:primaryType: hippogallerypicker:imagelink
-              hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
-              hippo:facets: []
-              hippo:modes: []
-              hippo:values: []
-            /xinmods:internalLink:
-              jcr:primaryType: hippo:mirror
-              hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
       /editor:templates:
         jcr:primaryType: editor:templateset
         /_default_:
@@ -138,6 +124,7 @@ definitions:
             field: items
             plugin.class: org.hippoecm.frontend.editor.plugins.field.NodeFieldPlugin
             wicket.id: ${cluster.id}.left.item
+            hint: ''
             /cluster.options:
               jcr:primaryType: frontend:pluginconfig
           /maxPerColumn:

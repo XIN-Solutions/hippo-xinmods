@@ -8,6 +8,9 @@
 [xinmods:basedocument] > hippo:document, hippostd:publishableSummary, hippostdpubwf:document
   orderable
 
+[xinmods:categorydetails] > hippo:compound, hippostd:relaxed
+  orderable
+
 [xinmods:content] > hippostd:relaxed, hippotranslation:translated, xinmods:basedocument
   orderable
 
@@ -22,11 +25,12 @@
 [xinmods:listComponent] > hippo:compound, hippostd:relaxed
   orderable
 
-[xinmods:menu] > hippostd:relaxed, hippotranslation:translated, xinmods:basedocument
-  orderable
-
 [xinmods:menuitem] > hippo:compound, hippostd:relaxed
   orderable
+
+[xinmods:menu] > hippostd:relaxed, hippotranslation:translated, xinmods:basedocument
+    orderable
+    + xinmods:items (xinmods:menuitem) multiple
 
 [xinmods:postdetails] > hippo:compound, hippostd:relaxed
   orderable

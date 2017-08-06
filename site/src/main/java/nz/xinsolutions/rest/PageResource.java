@@ -10,6 +10,7 @@ import org.onehippo.cms7.essentials.components.rest.ctx.DefaultRestContext;
 import org.onehippo.cms7.essentials.components.rest.ctx.RestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.query.QueryManager;
@@ -54,6 +55,19 @@ public class PageResource extends BaseRestResource {
         return findBeans(new DefaultRestContext(this, request, page, pageSize), Page.class);
     }
 
+    @GET
+    @Path("/document/by-path/")
+    public Object pageByPath(@Context HttpServletRequest request, @RequestParam("path") String path) {
+        RestContext ctx = newContext(request);
+        try {
+            return ctx.getRequestContext().getObjectBeanManager().getObject(path);
+        }
+        catch (Exception ex) {
+            LOG.error("Something happened while retrieving object at `" + path + "`, caused by: ", ex);
+            return null;
+        }
+    }
+    
     
     @GET
     @Path("/by-title/{title}")

@@ -146,7 +146,7 @@ definitions:
           /Information:
             jcr:primaryType: frontend:plugin
             caption: Information
-            compoundList: xinmods:postdetails
+            compoundList: xinmods:categorydetails,xinmods:postdetails
             contentPickerType: dropdown
             field: Information
             plugin.class: org.onehippo.forge.contentblocks.ContentBlocksFieldPlugin
