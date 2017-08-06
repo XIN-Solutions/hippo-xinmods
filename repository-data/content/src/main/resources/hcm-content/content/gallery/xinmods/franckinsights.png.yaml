@@ -1,0 +1,63 @@
+/content/gallery/xinmods/franckinsights.png:
+  jcr:primaryType: hippo:handle
+  jcr:mixinTypes: ['mix:referenceable']
+  jcr:uuid: b16b7f5f-2883-49ab-83b4-237097393a3c
+  /franckinsights.png:
+    jcr:primaryType: xinmods:genericimageset
+    hippo:availability: [live, preview]
+    hippogallery:filename: franckinsights.png
+    /hippogallery:thumbnail:
+      jcr:primaryType: hippogallery:image
+      hippo:filename: franckinsights.png
+      hippogallery:height: 49
+      hippogallery:width: 60
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/franckinsights.png/franckinsights.png/thumbnail/thumbnail.png
+      jcr:lastModified: 2017-07-30T19:04:25.942+12:00
+      jcr:mimeType: image/png
+    /xinmods:tablet:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 495
+      hippogallery:width: 600
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/franckinsights.png/franckinsights.png/tablet/tablet.png
+      jcr:lastModified: 2017-07-30T19:04:25.942+12:00
+      jcr:mimeType: image/png
+    /hippogallery:original:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 495
+      hippogallery:width: 600
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/franckinsights.png/franckinsights.png/original/original.png
+      jcr:lastModified: 2017-07-30T19:04:25.942+12:00
+      jcr:mimeType: image/png
+    /xinmods:desktop:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 495
+      hippogallery:width: 600
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/franckinsights.png/franckinsights.png/desktop/desktop.png
+      jcr:lastModified: 2017-07-30T19:04:25.942+12:00
+      jcr:mimeType: image/png
+    /xinmods:mobile:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 297
+      hippogallery:width: 360
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/franckinsights.png/franckinsights.png/mobile/mobile.png
+      jcr:lastModified: 2017-07-30T19:04:25.942+12:00
+      jcr:mimeType: image/png
+    /xinmods:widescreen:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 495
+      hippogallery:width: 600
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/franckinsights.png/franckinsights.png/widescreen/widescreen.png
+      jcr:lastModified: 2017-07-30T19:04:25.942+12:00
+      jcr:mimeType: image/png

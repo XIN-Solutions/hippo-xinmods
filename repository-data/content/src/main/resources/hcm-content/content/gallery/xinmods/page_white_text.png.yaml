@@ -1,0 +1,63 @@
+/content/gallery/xinmods/page_white_text.png:
+  jcr:primaryType: hippo:handle
+  jcr:mixinTypes: ['mix:referenceable']
+  jcr:uuid: 935602b1-1b4e-46bc-ad86-a5a03d875a4c
+  /page_white_text.png:
+    jcr:primaryType: xinmods:genericimageset
+    hippo:availability: [live, preview]
+    hippogallery:filename: page_white_text.png
+    /hippogallery:thumbnail:
+      jcr:primaryType: hippogallery:image
+      hippo:filename: page_white_text.png
+      hippogallery:height: 60
+      hippogallery:width: 60
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/page_white_text.png/page_white_text.png/thumbnail/thumbnail.png
+      jcr:lastModified: 2017-07-30T18:47:06.373+12:00
+      jcr:mimeType: image/png
+    /xinmods:tablet:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 96
+      hippogallery:width: 96
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/page_white_text.png/page_white_text.png/tablet/tablet.png
+      jcr:lastModified: 2017-07-30T18:47:06.373+12:00
+      jcr:mimeType: image/png
+    /hippogallery:original:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 96
+      hippogallery:width: 96
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/page_white_text.png/page_white_text.png/original/original.png
+      jcr:lastModified: 2017-07-30T18:47:06.373+12:00
+      jcr:mimeType: image/png
+    /xinmods:desktop:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 96
+      hippogallery:width: 96
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/page_white_text.png/page_white_text.png/desktop/desktop.png
+      jcr:lastModified: 2017-07-30T18:47:06.373+12:00
+      jcr:mimeType: image/png
+    /xinmods:mobile:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 96
+      hippogallery:width: 96
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/page_white_text.png/page_white_text.png/mobile/mobile.png
+      jcr:lastModified: 2017-07-30T18:47:06.373+12:00
+      jcr:mimeType: image/png
+    /xinmods:widescreen:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 96
+      hippogallery:width: 96
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/page_white_text.png/page_white_text.png/widescreen/widescreen.png
+      jcr:lastModified: 2017-07-30T18:47:06.373+12:00
+      jcr:mimeType: image/png

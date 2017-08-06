@@ -1,0 +1,7 @@
+/hst:hst/hst:hosts/dev-localhost/localhost/hst:root/custom-api:
+  jcr:primaryType: hst:mount
+  jcr:uuid: 2e3cdb1d-a2ae-4802-9589-18e921f690b2
+  hst:alias: custom-api
+  hst:ismapped: false
+  hst:namedpipeline: JaxrsRestPlainPipeline
+  hst:types: [rest]

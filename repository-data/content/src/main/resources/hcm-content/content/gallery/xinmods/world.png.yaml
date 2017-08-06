@@ -1,0 +1,63 @@
+/content/gallery/xinmods/world.png:
+  jcr:primaryType: hippo:handle
+  jcr:mixinTypes: ['mix:referenceable']
+  jcr:uuid: 84ab7f32-857c-4007-afe6-d253dc456d3d
+  /world.png:
+    jcr:primaryType: xinmods:genericimageset
+    hippo:availability: [live, preview]
+    hippogallery:filename: world.png
+    /hippogallery:thumbnail:
+      jcr:primaryType: hippogallery:image
+      hippo:filename: world.png
+      hippogallery:height: 60
+      hippogallery:width: 60
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/world.png/world.png/thumbnail/thumbnail.png
+      jcr:lastModified: 2017-07-30T18:47:12.858+12:00
+      jcr:mimeType: image/png
+    /xinmods:tablet:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 96
+      hippogallery:width: 96
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/world.png/world.png/tablet/tablet.png
+      jcr:lastModified: 2017-07-30T18:47:12.858+12:00
+      jcr:mimeType: image/png
+    /hippogallery:original:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 96
+      hippogallery:width: 96
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/world.png/world.png/original/original.png
+      jcr:lastModified: 2017-07-30T18:47:12.858+12:00
+      jcr:mimeType: image/png
+    /xinmods:desktop:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 96
+      hippogallery:width: 96
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/world.png/world.png/desktop/desktop.png
+      jcr:lastModified: 2017-07-30T18:47:12.858+12:00
+      jcr:mimeType: image/png
+    /xinmods:mobile:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 96
+      hippogallery:width: 96
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/world.png/world.png/mobile/mobile.png
+      jcr:lastModified: 2017-07-30T18:47:12.858+12:00
+      jcr:mimeType: image/png
+    /xinmods:widescreen:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 96
+      hippogallery:width: 96
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/world.png/world.png/widescreen/widescreen.png
+      jcr:lastModified: 2017-07-30T18:47:12.858+12:00
+      jcr:mimeType: image/png
