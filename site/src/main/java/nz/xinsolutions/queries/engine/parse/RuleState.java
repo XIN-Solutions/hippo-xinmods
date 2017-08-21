@@ -5,6 +5,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.ArrayUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,10 +29,10 @@ public class RuleState {
     /**
      * @return rules with a certain name
      */
-    List<RuleState> findRules(String... ruleNames) {
+    public List<RuleState> findRules(String... ruleNames) {
         
         if (CollectionUtils.isEmpty(subStates)) {
-            return null;
+            return Collections.EMPTY_LIST;
         } else {
             return subStates
                         .stream()
@@ -45,14 +46,14 @@ public class RuleState {
     /**
      * @return the first token with name <code>tokenId</code>.
      */
-    TokenElement findToken(String tokenId) {
+    public TokenElement findToken(String tokenId) {
         return findToken(tokenId, 1);
     }
     
     /**
      * @return the nth token of a specific name
      */
-    TokenElement findToken(String tokenId, int nOccurance) {
+    public TokenElement findToken(String tokenId, int nOccurance) {
         
         if (CollectionUtils.isEmpty(tokens)) {
             return null;

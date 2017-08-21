@@ -1,8 +1,15 @@
 package nz.xinsolutions.queries;
 
+import nz.xinsolutions.queries.engine.QueryParserException;
+import nz.xinsolutions.queries.engine.interpret.QuerySettings;
+import nz.xinsolutions.queries.engine.interpret.QuerySettingsFactory;
 import nz.xinsolutions.queries.engine.parse.ParseRuleFactory.Rule;
 import nz.xinsolutions.queries.engine.parse.ParseRuleSet;
+import nz.xinsolutions.queries.engine.parse.RuleMatching;
+import nz.xinsolutions.queries.engine.parse.RuleState;
 import nz.xinsolutions.queries.engine.tokenise.TokenSet;
+import org.hippoecm.hst.content.beans.query.HstQuery;
+import org.hippoecm.hst.content.beans.query.HstQueryManager;
 
 import static nz.xinsolutions.queries.engine.parse.ParseRuleFactory.Token;
 import static nz.xinsolutions.queries.engine.parse.ParseRuleFactory.rule;
@@ -30,6 +37,27 @@ public class QueryParser {
         this.ruleSet = initialiseRules();
         
     }
+
+    
+    public HstQuery createFromString(HstQueryManager qMgr, String query) throws QueryParserException {
+        
+        // parse the incoming text
+        RuleState queryRuleState =
+            RuleMatching.parseString(
+                initialiseRules(),
+                initialiseTokenSet(),
+                query,
+                "whitespace", "query"
+            );
+        
+        if (queryRuleState == null) {
+            throw new QueryParserException("Could not parse query text, check logs for detailed error.");
+        }
+        
+        QuerySettings querySettings = QuerySettingsFactory.fromRuleState(queryRuleState);
+        
+        return null;
+    }
     
     /**
      * Initialise the rule set
@@ -39,7 +67,7 @@ public class QueryParser {
         return new ParseRuleSet(
             
             rule("whitespace", Token.m("ws")),
-           
+            
             rule("query",
                 Token.m("expr_start"), Token.o("ws"),
                     Token.m("expr_query"), Token.o("ws"),

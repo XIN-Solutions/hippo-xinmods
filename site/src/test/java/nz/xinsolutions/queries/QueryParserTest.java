@@ -1,5 +1,6 @@
 package nz.xinsolutions.queries;
 
+import nz.xinsolutions.queries.engine.QueryParserException;
 import nz.xinsolutions.queries.engine.parse.ParseRuleSet;
 import nz.xinsolutions.queries.engine.parse.RuleMatching;
 import nz.xinsolutions.queries.engine.parse.RuleState;
@@ -8,6 +9,8 @@ import nz.xinsolutions.queries.engine.tokenise.TokenSet;
 import nz.xinsolutions.queries.engine.tokenise.Tokeniser;
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -16,7 +19,12 @@ import java.util.List;
  * Date: 20/08/17
  */
 public class QueryParserTest {
-   
+    
+    /**
+     * Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(QueryParserTest.class);
+    
     /*
     
             This tests that we can do the types of queries we want to be doing:
@@ -57,7 +65,7 @@ public class QueryParserTest {
     
     public static final String QUERY_COMPLETE =
         "             (query\n" +
-        "                (offset 10)\n" +
+        "                (offset 100)\n" +
         "                (limit 10)\n" +
         "                (scopes\n" +
         "                    (include '/content/documents/xin')\n" +
@@ -77,6 +85,17 @@ public class QueryParserTest {
         "            )";
     
     QueryParser parser = new QueryParser();
+    
+    
+    @Test public void testQueryHstGenerator() {
+        try {
+            QueryParser qParser = new QueryParser();
+            qParser.createFromString(null, QUERY_COMPLETE);
+        }
+        catch (QueryParserException e) {
+            LOG.error("Something happened, caused by: ", e);
+        }
+    }
     
     @Test public void testAllTokens() {
         TokenSet tokenSet = parser.initialiseTokenSet();
