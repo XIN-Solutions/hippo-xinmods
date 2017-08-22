@@ -11,6 +11,8 @@ import java.util.List;
  */
 public class QuerySettings {
     
+    private String beanName;
+    private boolean useSubtypes;
     private Integer limit = null;
     private Integer offset = null;
     private List<String> includeScopes = Arrays.asList("/content/documents");
@@ -18,6 +20,22 @@ public class QuerySettings {
     private String sortField;
     private String sortOrder;
     private RuleState whereState;
+    
+    public String getBeanName() {
+        return beanName;
+    }
+    
+    public void setBeanName(String beanName) {
+        this.beanName = beanName;
+    }
+    
+    public boolean isUseSubtypes() {
+        return useSubtypes;
+    }
+    
+    public void setUseSubtypes(boolean useSubtypes) {
+        this.useSubtypes = useSubtypes;
+    }
     
     public List<String> getIncludeScopes() {
         return includeScopes;

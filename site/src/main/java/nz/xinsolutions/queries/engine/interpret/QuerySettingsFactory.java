@@ -45,7 +45,8 @@ public class QuerySettingsFactory {
         RuleState qLimit = findFirstOf(qExpr, "q_limit");
         RuleState qSortOrder = findFirstOf(qExpr, "q_sortby");
         RuleState qScope = findFirstOf(qExpr, "q_scope");
-    
+        RuleState qType = findFirstOf(qExpr, "q_type");
+        
         extractIntegerFromTokens(settings, qOffset, settings::setOffset);
         extractIntegerFromTokens(settings, qLimit, settings::setLimit);
         
@@ -65,6 +66,21 @@ public class QuerySettingsFactory {
             settings.setExcludeScopes(getValuesFromScopeStates(excludeStates));
         }
         
+        if (qType != null) {
+            boolean alsoIncludeSubtypes = qType.findToken("expr_subtypes") != null;
+
+            // make sure the value is a string
+            TokenElement typeValue = qType.findToken("value");
+            if (typeValue == null || !isStringValue(typeValue.getValue())) {
+                throw new IllegalStateException("Query does not specify a type of string value");
+            }
+            
+            
+            settings.setBeanName(getStringValue(typeValue.getValue()));
+            settings.setUseSubtypes(alsoIncludeSubtypes);
+            
+        }
+        
         settings.setWhereState(findFirstOf(qExpr, "q_where"));
         
         return settings;
@@ -77,9 +93,17 @@ public class QuerySettingsFactory {
     protected static List<String> getValuesFromScopeStates(List<RuleState> scopeStates) {
         return scopeStates.stream()
             .map( state -> state.findToken("value").getValue() )
-            .filter( val -> val.startsWith("'") && val.endsWith("'"))
-            .map( val -> val.substring(1, val.length() - 1))
+            .filter(QuerySettingsFactory::isStringValue)
+            .map(QuerySettingsFactory::getStringValue)
             .collect(Collectors.toList());
+    }
+    
+    private static String getStringValue(String val) {
+        return val.substring(1, val.length() - 1).replace("\\'", "'");
+    }
+    
+    private static boolean isStringValue(String val) {
+        return val.startsWith("'") && val.endsWith("'");
     }
     
     /**

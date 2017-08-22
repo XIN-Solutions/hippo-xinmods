@@ -65,6 +65,7 @@ public class QueryParserTest {
     
     public static final String QUERY_COMPLETE =
         "             (query\n" +
+        "                (type with-subtypes 'xinmods:page')\n" +
         "                (offset 100)\n" +
         "                (limit 10)\n" +
         "                (scopes\n" +

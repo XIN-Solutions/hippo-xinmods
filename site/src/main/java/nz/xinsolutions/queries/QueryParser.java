@@ -71,11 +71,20 @@ public class QueryParser {
             rule("query",
                 Token.m("expr_start"), Token.o("ws"),
                     Token.m("expr_query"), Token.o("ws"),
+                        Rule.m("q_type"), Token.o("ws"),
                         Rule.o("q_offset"), Token.o("ws"),
                         Rule.o("q_limit"), Token.o("ws"),
                         Rule.o("q_scope"), Token.o("ws"),
                         Rule.m("q_where"), Token.o("ws"),
                         Rule.o("q_sortby"), Token.o("ws"),
+                Token.m("expr_stop")
+            ),
+            
+            rule("q_type",
+                Token.m("expr_start"), Token.o("ws"),
+                    Token.m("expr_type"), Token.o("ws"),
+                    Token.o("expr_subtypes"), Token.o("ws"),
+                    Token.m("value"), Token.o("ws"),
                 Token.m("expr_stop")
             ),
             
@@ -205,6 +214,8 @@ public class QueryParser {
              text("expr_limit", "limit"),
              text("expr_scopes", "scopes"),
              text("expr_sortby", "sortby"),
+             text("expr_type", "type"),
+             text("expr_subtypes", "with-subtypes"),
             
              text("scope_include", "include"),
              text("scope_exclude", "exclude"),
@@ -220,7 +231,7 @@ public class QueryParser {
              text("prop_end", "]"),
             
             regex("varname", "[A-Za-z]+:[A-Za-z]+"),
-            regex("value", "'[^']*?'|[0-9]+|true|false|\\$[A-Za-z][A-Za-z0-9]*")
+            regex("value", "'(?:[^'\\\\]|\\\\.)*'|[0-9]+|true|false|\\$[A-Za-z][A-Za-z0-9]*")
         
         );
     }
