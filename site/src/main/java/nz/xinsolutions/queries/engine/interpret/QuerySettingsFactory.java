@@ -111,6 +111,10 @@ public class QuerySettingsFactory {
      */
     protected static void extractIntegerFromTokens(QuerySettings settings, RuleState state, Consumer<Integer> consume) {
         
+        if (state == null) {
+            return;
+        }
+        
         TokenElement valueEl = state.findToken("value");
         if (NumberUtils.isDigits(valueEl.getValue())) {
             int value = Integer.parseInt(valueEl.getValue());

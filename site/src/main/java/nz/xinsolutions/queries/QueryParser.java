@@ -1,6 +1,7 @@
 package nz.xinsolutions.queries;
 
 import nz.xinsolutions.queries.engine.QueryParserException;
+import nz.xinsolutions.queries.engine.interpret.HstQueryGenerator;
 import nz.xinsolutions.queries.engine.interpret.QuerySettings;
 import nz.xinsolutions.queries.engine.interpret.QuerySettingsFactory;
 import nz.xinsolutions.queries.engine.parse.ParseRuleFactory.Rule;
@@ -56,6 +57,14 @@ public class QueryParser {
         
         QuerySettings querySettings = QuerySettingsFactory.fromRuleState(queryRuleState);
         
+        if (querySettings == null) {
+            throw new QueryParserException("Could not interpret the query");
+        }
+    
+        if (qMgr != null) {
+            return HstQueryGenerator.createQueryFromSettings(qMgr, querySettings);
+        }
+        
         return null;
     }
     
@@ -75,7 +84,7 @@ public class QueryParser {
                         Rule.o("q_offset"), Token.o("ws"),
                         Rule.o("q_limit"), Token.o("ws"),
                         Rule.o("q_scope"), Token.o("ws"),
-                        Rule.m("q_where"), Token.o("ws"),
+                        Rule.o("q_where"), Token.o("ws"),
                         Rule.o("q_sortby"), Token.o("ws"),
                 Token.m("expr_stop")
             ),
@@ -225,7 +234,7 @@ public class QueryParser {
              text("op_where", "where"),
             regex("op_unary", "null|notnull|where"),
             regex("op_compound", "and|or"),
-            regex("op_binary", "contains|<|>|<=|>=|="),
+            regex("op_binary", "!contains|contains|<|>|<=|>=|=|!=|i=|i!="),
             
              text("prop_start", "["),
              text("prop_end", "]"),

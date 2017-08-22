@@ -1,7 +1,12 @@
 package nz.xinsolutions.rest;
 
+import nz.xinsolutions.queries.QueryParser;
 import org.apache.commons.lang.StringUtils;
+import org.hippoecm.hst.content.beans.query.HstQuery;
+import org.hippoecm.hst.content.beans.query.HstQueryManager;
+import org.hippoecm.hst.content.beans.query.HstQueryResult;
 import org.hippoecm.hst.content.beans.standard.HippoBean;
+import org.hippoecm.hst.content.beans.standard.HippoBeanIterator;
 import org.hippoecm.hst.content.beans.standard.HippoDocument;
 import org.onehippo.cms7.essentials.components.rest.BaseRestResource;
 import org.onehippo.cms7.essentials.components.rest.ctx.DefaultRestContext;
@@ -15,7 +20,9 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -33,6 +40,66 @@ public class ContentResource extends BaseRestResource {
      */
     private static final Logger LOG = LoggerFactory.getLogger(ContentResource.class);
     
+    
+    @GET
+    @Path("/query/")
+    public Response performQuery(@Context HttpServletRequest request, @QueryParam(value = "query") String query) {
+        
+        RestContext ctx = newContext(request);
+        
+        try {
+            if (StringUtils.isEmpty(query)) {
+                throw new IllegalArgumentException("`query` parameter is empty");
+            }
+
+            HstQueryManager qMgr = ctx.getRequestContext().getQueryManager();
+            HstQuery hstQuery = new QueryParser().createFromString(qMgr, query);
+            
+            HstQueryResult queryResult = hstQuery.execute();
+            int totalItems = queryResult.getTotalSize();
+
+            // uuid lists
+            List<String> uuids = new ArrayList<>();
+            HippoBeanIterator it = queryResult.getHippoBeans();
+            while (it.hasNext()) {
+                HippoBean bean = it.nextHippoBean();
+                if (bean instanceof HippoDocument) {
+                    uuids.add( ((HippoDocument) bean).getCanonicalHandleUUID() );
+                } else {
+                    uuids.add(bean.getCanonicalUUID());
+                }
+            }
+            
+            // respond
+            return
+                Response.status(200)
+                    .entity(
+                        new LinkedHashMap<String, Object>() {{
+                            put("success", true);
+                            put("msg", "Result found");
+                            put("uuids", uuids);
+                            put("totalSize", totalItems);
+                        }}
+                    )
+                    .build()
+                ;
+        }
+        catch (Exception ex) {
+        
+            LOG.error("Could not parse a query properly, caused by: ", ex);
+
+            return
+                Response.status(501)
+                    .entity(
+                        new LinkedHashMap<String, Object>() {{
+                            put("success", false);
+                            put("msg", "Error: " + ex.getMessage());
+                        }}
+                    ).build()
+            ;
+        }
+        
+    }
     
     /**
      * Convert a UUID
