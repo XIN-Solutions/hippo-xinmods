@@ -131,6 +131,7 @@ public class HstQueryGenerator {
                     String propertyName = property.getValue();
                     
                     switch (binary.getValue()) {
+                        
                         case "contains":
                             filter.addContains(propertyName, sanitised.toString());
                             break;
