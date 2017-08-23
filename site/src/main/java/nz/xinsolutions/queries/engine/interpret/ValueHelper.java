@@ -9,7 +9,11 @@ public class ValueHelper {
     private ValueHelper() {}
     
     public static String getStringValue(String val) {
-        return val.substring(1, val.length() - 1).replace("\\'", "'");
+        return
+            val.substring(1, val.length() - 1)
+                .replace("\\'", "'")
+                .replace("'", "''")
+            ;
     }
     
     public static boolean isStringValue(String val) {

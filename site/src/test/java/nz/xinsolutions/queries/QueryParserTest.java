@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.core.MultivaluedHashMap;
 import java.util.List;
 
 /**
@@ -91,7 +92,7 @@ public class QueryParserTest {
     @Test public void testQueryHstGenerator() {
         try {
             QueryParser qParser = new QueryParser();
-            qParser.createFromString(null, QUERY_COMPLETE);
+            qParser.createFromString(null, QUERY_COMPLETE, new MultivaluedHashMap<>());
         }
         catch (QueryParserException e) {
             LOG.error("Something happened, caused by: ", e);

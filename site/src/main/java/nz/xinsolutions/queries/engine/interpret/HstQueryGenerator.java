@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
+import javax.ws.rs.core.MultivaluedMap;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -39,9 +40,10 @@ public class HstQueryGenerator {
      *
      * @param qMgr      is the query manager we're using to setup
      * @param settings  query settings instance
+     * @param queryParams
      * @return is the hst query instance
      */
-    public static HstQuery createQueryFromSettings(HstQueryManager qMgr, QuerySettings settings) {
+    public static HstQuery createQueryFromSettings(HstQueryManager qMgr, QuerySettings settings, MultivaluedMap<String, String> queryParams) {
     
         try {
             HstQuery query = qMgr.createQuery((Node) null, settings.isUseSubtypes(), settings.getBeanName());
@@ -73,7 +75,7 @@ public class HstQueryGenerator {
             // have some where clause?
             if (settings.getWhereState() != null) {
                 Filter filter = query.createFilter();
-                fromWhereState(settings.getWhereState(), query, filter);
+                fromWhereState(settings.getWhereState(), query, queryParams, filter);
                 query.setFilter(filter);
             }
             
@@ -91,9 +93,10 @@ public class HstQueryGenerator {
     /**
      * Create a query filter from the rule state
      *
+     * @param queryParams
      * @param filter
      */
-    protected static void fromWhereState(RuleState whereState, HstQuery query, Filter filter) throws FilterException {
+    protected static void fromWhereState(RuleState whereState, HstQuery query, MultivaluedMap<String, String> queryParams, Filter filter) throws FilterException {
 
         for (RuleState subState : whereState.subStates) {
             
@@ -105,13 +108,13 @@ public class HstQueryGenerator {
                         
                         case "and":
                             Filter andFilter = query.createFilter();
-                            fromWhereState(subState, query, andFilter);
+                            fromWhereState(subState, query, queryParams, andFilter);
                             filter.addAndFilter(andFilter);
                             break;
                             
                         case "or":
                             Filter orFilter = query.createFilter();
-                            fromWhereState(subState, query, orFilter);
+                            fromWhereState(subState, query, queryParams, orFilter);
                             filter.addOrFilter(orFilter);
                             break;
     
@@ -124,47 +127,47 @@ public class HstQueryGenerator {
                     TokenElement property = subState.findToken("varname");
                     TokenElement value = subState.findToken("value");
 
-                    Object sanitised = sanitise(value);
-                    String propertyValue = property.getValue();
+                    Object sanitised = sanitise(value, queryParams);
+                    String propertyName = property.getValue();
                     
                     switch (binary.getValue()) {
                         case "contains":
-                            filter.addContains(propertyValue, sanitised.toString());
+                            filter.addContains(propertyName, sanitised.toString());
                             break;
                             
                         case "!contains":
-                            filter.addNotContains(propertyValue, sanitised.toString());
+                            filter.addNotContains(propertyName, sanitised.toString());
                             
                         case ">":
-                            filter.addGreaterThan(propertyValue, sanitised);
+                            filter.addGreaterThan(propertyName, sanitised);
                             break;
                             
                         case ">=":
-                            filter.addGreaterOrEqualThan(propertyValue, sanitised);
+                            filter.addGreaterOrEqualThan(propertyName, sanitised);
                             break;
                             
                         case "<":
-                            filter.addLessThan(propertyValue, sanitised);
+                            filter.addLessThan(propertyName, sanitised);
                             break;
                             
                         case "<=":
-                            filter.addLessOrEqualThan(propertyValue, sanitised);
+                            filter.addLessOrEqualThan(propertyName, sanitised);
                             break;
                         
                         case "=":
-                            filter.addEqualTo(propertyValue, sanitised);
+                            filter.addEqualTo(propertyName, sanitised);
                             break;
                             
                         case "!=":
-                            filter.addNotEqualTo(propertyValue, sanitised);
+                            filter.addNotEqualTo(propertyName, sanitised);
                             break;
                             
                         case "i=":
-                            filter.addEqualToCaseInsensitive(propertyValue, sanitised.toString());
+                            filter.addEqualToCaseInsensitive(propertyName, sanitised.toString());
                             break;
                             
                         case "i!=":
-                            filter.addNotEqualToCaseInsensitive(propertyValue, sanitised.toString());
+                            filter.addNotEqualToCaseInsensitive(propertyName, sanitised.toString());
                             break;
                     }
                     break;
@@ -199,7 +202,7 @@ public class HstQueryGenerator {
     /**
      * @return the sanitised value
      */
-    protected static Object sanitise(TokenElement value) {
+    protected static Object sanitise(TokenElement value, MultivaluedMap<String, String> queryParams) {
         if (ValueHelper.isStringValue(value.getValue())) {
             return ValueHelper.getStringValue(value.getValue());
         }
@@ -211,6 +214,11 @@ public class HstQueryGenerator {
         }
         else if ("true".equals(value.getValue())) {
             return true;
+        }
+        else if (queryParams != null && value.getValue().length() > 1 && value.getValue().startsWith("$")) {
+            String paramValue = queryParams.getFirst(value.getValue().substring(1));
+            TokenElement fakeToken = new TokenElement("", String.format("'%s'", paramValue));
+            return sanitise(fakeToken, null);
         }
         
         return value.getValue();

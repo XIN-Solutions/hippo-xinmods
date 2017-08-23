@@ -17,9 +17,7 @@ import org.slf4j.LoggerFactory;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import javax.ws.rs.core.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -43,8 +41,10 @@ public class ContentResource extends BaseRestResource {
     
     @GET
     @Path("/query/")
-    public Response performQuery(@Context HttpServletRequest request, @QueryParam(value = "query") String query) {
-        
+    public Response performQuery(@Context UriInfo uriInfo, @Context HttpServletRequest request, @QueryParam(value = "query") String query) {
+    
+        MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
+    
         RestContext ctx = newContext(request);
         
         try {
@@ -53,7 +53,7 @@ public class ContentResource extends BaseRestResource {
             }
 
             HstQueryManager qMgr = ctx.getRequestContext().getQueryManager();
-            HstQuery hstQuery = new QueryParser().createFromString(qMgr, query);
+            HstQuery hstQuery = new QueryParser().createFromString(qMgr, query, queryParams);
             
             HstQueryResult queryResult = hstQuery.execute();
             int totalItems = queryResult.getTotalSize();

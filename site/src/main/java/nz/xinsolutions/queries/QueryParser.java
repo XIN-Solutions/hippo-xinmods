@@ -12,6 +12,8 @@ import nz.xinsolutions.queries.engine.tokenise.TokenSet;
 import org.hippoecm.hst.content.beans.query.HstQuery;
 import org.hippoecm.hst.content.beans.query.HstQueryManager;
 
+import javax.ws.rs.core.MultivaluedMap;
+
 import static nz.xinsolutions.queries.engine.parse.ParseRuleFactory.Token;
 import static nz.xinsolutions.queries.engine.parse.ParseRuleFactory.rule;
 import static nz.xinsolutions.queries.engine.tokenise.TokenFactory.regex;
@@ -40,7 +42,7 @@ public class QueryParser {
     }
 
     
-    public HstQuery createFromString(HstQueryManager qMgr, String query) throws QueryParserException {
+    public HstQuery createFromString(HstQueryManager qMgr, String query, MultivaluedMap<String, String> queryParams) throws QueryParserException {
         
         // parse the incoming text
         RuleState queryRuleState =
@@ -62,7 +64,7 @@ public class QueryParser {
         }
     
         if (qMgr != null) {
-            return HstQueryGenerator.createQueryFromSettings(qMgr, querySettings);
+            return HstQueryGenerator.createQueryFromSettings(qMgr, querySettings, queryParams);
         }
         
         return null;
