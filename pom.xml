@@ -230,9 +230,7 @@
         </property>
       </activation>
       <modules>
-<!--
         <module>repository-data</module>
--->
         <module>cms</module>
         <module>site</module>
         <module>essentials</module>

@@ -15,8 +15,10 @@
 
   <modules>
     <module>config</module>
-    <module>content</module>
-    <module>webfiles</module>
+    <!--
+      <module>content</module>
+      <module>webfiles</module>
+    -->
   </modules>
 
   <build>
