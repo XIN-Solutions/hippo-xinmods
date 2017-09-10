@@ -826,13 +826,13 @@
         jcr:primaryType: xinmods:content
         jcr:mixinTypes: ['mix:referenceable']
         jcr:uuid: d9e5d96a-0b1c-4c53-9376-8de078dbe9e9
-        hippo:availability: []
+        hippo:availability: [live]
         hippostd:state: published
         hippostdpubwf:createdBy: admin
         hippostdpubwf:creationDate: 2017-09-02T20:17:54.924+12:00
         hippostdpubwf:lastModificationDate: 2017-09-02T20:18:12.397+12:00
         hippostdpubwf:lastModifiedBy: admin
-        hippostdpubwf:publicationDate: 2017-09-02T22:42:34.463+12:00
+        hippostdpubwf:publicationDate: 2017-09-10T19:30:07.272+12:00
         hippotranslation:id: b979bcb0-dcd8-40e9-ab81-b34d1a771609
         hippotranslation:locale: document-type-locale
         xinmods:description: ''

@@ -39,16 +39,6 @@
       <artifactId>hippo-addon-channel-manager-repository</artifactId>
     </dependency>
     <dependency>
-      <groupId>nz.xinsolutions</groupId>
-      <artifactId>xinmods-repository-data-config</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>nz.xinsolutions</groupId>
-      <artifactId>xinmods-repository-data-webfiles</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-plugin-gallerypicker</artifactId>
     </dependency>

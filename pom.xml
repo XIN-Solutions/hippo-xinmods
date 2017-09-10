@@ -230,7 +230,9 @@
         </property>
       </activation>
       <modules>
+<!--
         <module>repository-data</module>
+-->
         <module>cms</module>
         <module>site</module>
         <module>essentials</module>
@@ -262,12 +264,6 @@
                     <tofile>logging.properties</tofile>
                   </configfile>
                 </configfiles>
-                <files>
-                  <file>
-                    <file>${project.basedir}/repository-data/content/target/xinmods-repository-data-content-${project.version}.jar</file>
-                    <todir>${content-module-deploy-dir}</todir>
-                  </file>
-                </files>
               </configuration>
               <deployables>
                 <deployable>
