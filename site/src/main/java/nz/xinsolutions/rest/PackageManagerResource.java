@@ -34,7 +34,7 @@ public class PackageManagerResource extends BaseRestResource {
      * @throws FileNotFoundException
      */
     @GET
-    @Path("/index.html")
+    @Path("/")
     @Produces(MediaType.TEXT_HTML)
     public InputStream packageIndex() throws FileNotFoundException {
         File file = new File("/home/marnix/tmp/hippo/xinmods/packageManager.html");
