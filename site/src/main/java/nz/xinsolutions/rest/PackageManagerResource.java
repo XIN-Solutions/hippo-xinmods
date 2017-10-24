@@ -1,18 +1,24 @@
 package nz.xinsolutions.rest;
 
-import nz.xinsolutions.packages.Package;
+import nz.xinsolutions.packages.PackageException;
+import nz.xinsolutions.packages.PackageService;
 import org.onehippo.cms7.essentials.components.rest.BaseRestResource;
+import org.onehippo.cms7.essentials.components.rest.ctx.DefaultRestContext;
+import org.onehippo.cms7.essentials.components.rest.ctx.RestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
@@ -26,6 +32,11 @@ public class PackageManagerResource extends BaseRestResource {
      * Logger
      */
     private static final Logger LOG = LoggerFactory.getLogger(PackageManagerResource.class);
+    
+    /**
+     * Package service bound here
+     */
+    @Autowired private PackageService pkgService;
     
     /**
      * Retrieve the HTML for the angular application
@@ -44,26 +55,56 @@ public class PackageManagerResource extends BaseRestResource {
     @GET
     @Path("/list")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<Package> getAllPackages() {
-        LOG.info("Return a list of packages");
-        return Collections.EMPTY_LIST;
+    public Response getAllPackages() {
+        try {
+            LOG.info("Return a list of packages");
+            return Response.ok(pkgService.getPackages()).build();
+        }
+        catch (PackageException ex) {
+            LOG.error("Couldn't get all packages, caused by: ", ex);
+            return Response.serverError().build();
+        }
     }
     
     
     /**
      * Build a package that was already defined
+     *
      * @param packageId
      * @return
      */
-    @GET
+    @POST
     @Path("/{id}/build")
     @Produces(MediaType.APPLICATION_JSON)
-    public Void buildPackage(@PathParam("id") String packageId) {
+    public Response buildPackage(@Context HttpServletRequest request, @PathParam("id") String packageId) {
         LOG.info("Requesting build of " + packageId);
-        return null;
+        
+        RestContext ctx = new DefaultRestContext(this, request);
+    
+        try {
+    
+            if (!pkgService.packageExists(packageId)) {
+                return Response.status(404).build();
+            }
+    
+            pkgService.build(ctx.getRequestContext().getSession(), packageId);
+            
+        }
+        catch (RepositoryException rEx) {
+            LOG.error("Repository exception, caused by: ", rEx);
+        }
+        catch (PackageException pkgEx) {
+            LOG.error("Something went wrong, caused by: ", pkgEx);
+        }
+        
+        return Response.status(200).build();
     }
     
-    
+    /**
+     *
+     * @param packageId
+     * @return
+     */
     @DELETE
     @Path("/{id}")
     public Void deletePackage(@PathParam("id") String packageId) {
@@ -71,6 +112,11 @@ public class PackageManagerResource extends BaseRestResource {
         return null;
     }
     
+    /**
+     *
+     * @param packageId
+     * @return
+     */
     @PUT
     @Path("/{id}")
     public Void createPackage(@PathParam("id") String packageId) {

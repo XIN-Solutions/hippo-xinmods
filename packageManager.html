@@ -4,13 +4,29 @@
 	<head>
 		<link href="https://bootswatch.com/lumen/bootstrap.min.css" rel="stylesheet" type="text/css">
 
+		<title>Packages | XIN Solutions</title>
+
 		<style>
 			body {
 				overflow-y: scroll;
 			}
-			
+
+			[data-loading="{{1}}"] {
+				display: none;
+			}
+
+			.right {
+				float: right;
+			}
+
 			.ButtonBar {
 				margin-bottom: 2em;
+			}
+
+			.NoPackages {
+				margin-top: 2em;
+				font-size: 1.3em;
+				font-style: italic;
 			}
 
 			.Title {
@@ -41,20 +57,17 @@
 
 				}
 
-				.Package__modified {
+				.alert-warning {
 					background-color: #FFE2C9;
 					color: #333;
 					border-color: #FFC595;
 				}
 
-				.right {
-					float: right;
-				}
 		</style>
 	</head>
 	<body ng-app="app">
 
-		<div ng-controller="packages">
+		<div ng-controller="packages" data-loading="{{1}}">
 			<div class="container">
 				<div class="row">
 
@@ -63,7 +76,6 @@
 							<i class="Title__icon glyphicon glyphicon-folder-open"></i> 
 							Packages
 						</h1>
-
 
 						<div class="ButtonBar">
 
@@ -82,6 +94,10 @@
 							</button>
 						</div>
 
+						<div ng-show="noPackages()" class="NoPackages">
+							No packages available in the repository
+						</div>
+
 						<sly ng-repeat="pkg in packages">
 							<div class="Package panel panel-default">
 								<div class="Package__title panel-heading" ng-click="collapse(pkg)">
@@ -98,7 +114,7 @@
 										<button class="btn"><i class="glyphicon glyphicon-remove"></i> Delete</button>
 									</div>
 									<button class="btn"><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp;Edit</button>
-									<button class="btn"><i class="glyphicon glyphicon-refresh"></i>&nbsp;&nbsp;Rebuild</button>
+									<button class="btn" ng-click="buildPackage(pkg.id)"><i class="glyphicon glyphicon-refresh"></i>&nbsp;&nbsp;Build</button>
 									<button class="btn"><i class="glyphicon glyphicon-asterisk"></i>&nbsp;&nbsp;Install</button>
 									
 								</div>
@@ -120,15 +136,12 @@
 									<div class="well">
 										<ul ng-repeat="cnd in pkg.cnds">
 											<li><code>{{cnd}}</code></li>
-										</ul>								
+										</ul>
 									</div>
-
 								</div>
 							</div>
 						</sly>
 					</div>
-
-
 
 				</div>
 			</div>
@@ -156,25 +169,67 @@
 					 * Initialisation of interface data
 					 */
 					initialise : function() {
-						endpoint.getPackages( (payload) => { $scope.packages = payload; } );
+						endpoint.getPackages()	
+							.then( (payload) => {
+								$scope.packages = payload.data;
+								_.each($scope.packages, (pkg) => pkg.collapsed = true);
+							})
+							.catch( (err) => console.log(err) )
+						;
 					},
 
+					/**
+					 * Collapse a package
+					 */
 					collapse : function(pkg) {
 						pkg.collapsed = !pkg.collapsed;
 					},
 
+					/**
+					 * Add a package from a certain URL
+					 */
 					addPackage : function() {
 						var pkg = prompt("Ingest package from URL:")
+						if (!pkg) {
+							console.log("Cancelled");
+							return;
+						}
 						console.log("Ingesting package from: ", pkg);
 					},
 
+					/**
+					 * Create a new package
+					 */
 					createPackage : function() {
 						var id = prompt("Package ID of new package:");
+						if (!id) {
+							console.log("Cancelled");
+							return;
+						}
 						console.log("New package: ", id);
 					},
 
+					/**
+					 * Build a new package
+					 *
+					 * @param id  the identifier to use
+					 */
+					buildPackage : function(id) {
+						endpoint.buildPackage(id);
+					},
+
+					/**
+					 * Refresh the page
+					 */
 					refresh : function() {
 						location.reload();
+					},
+
+					/**
+					 * @return true if there are no packages
+					 */
+					noPackages : function() {
+						return !this.packages || this.packages.length == 0;
 					}
 
 				});
@@ -185,11 +240,18 @@
 			});
 
 
-			app.service("endpoint", function() {
+			app.service("endpoint", function($q, $http) {
+
+				/**
+				 * Where to look for the endpoints
+				 * @type {String}
+				 */
+				var BASE_URL = "/site/custom-api";
+
 
 				var package = {
-					collapsed: false,
-					modified: true,
+					collapsed: true,
+					modified: false,
 					origin: "", 
 					filters: [ 
 						"/content/documents/shop1", 
@@ -201,16 +263,31 @@
 						"xinmods:shopcategory",
 						"xinmods:product"
 					]
-				}
+				};
 
 				return {
 
-					getPackages : function(callback) {
-						callback([
-							_.extend({}, package, {collapsed: true, id: "First package"}),
-							_.extend({}, package, {collapsed: true, id: "Second package"}), 
-							_.extend({}, package, {collapsed: true, id: "Third package"})
-						]);
+					/**
+					 * Retrieve all packages
+					 */
+					getPackages : function() {
+						return $http({
+							method: "get",
+							url: BASE_URL + "/packages/list" 
+						});
+					},
+
+
+					/**
+					 * Build a package with a certain identifier
+					 * 
+					 * @return {[type]} [description]
+					 */
+					buildPackage : function(id) {
+						return $http({
+							method: "post",
+							url: BASE_URL + "/packages/" + id + "/build"
+						});
 					}
 
 				};
