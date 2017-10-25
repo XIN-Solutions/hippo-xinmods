@@ -41,7 +41,7 @@ public class PackageService {
                 "/hippo:namespaces/xinmods",
                 "/hippo:configuration/hippo:queries/hippo:templates/new-xinmods-genericimageset-folder",
                 "/hippo:configuration/hippo:queries/hippo:templates/new-xinmods-genericimageset-image"));
-            setCnds(Arrays.asList("xinmods:content", "xinmods:postdetails", "xinmods:eventdetails"));
+            setCnds(Arrays.asList("xinmods:content", "xinmods:postdetails", "xinmods:eventdetails", "xinmods:menuitem", "xinmods:menu"));
         }});
     
         add(new Package() {{

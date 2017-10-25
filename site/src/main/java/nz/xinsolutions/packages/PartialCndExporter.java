@@ -1,17 +1,16 @@
 package nz.xinsolutions.packages;
 
-import org.hippoecm.repository.util.JcrCompactNodeTypeDefWriter;
+import nz.xinsolutions.cnd.CndEntity;
+import nz.xinsolutions.cnd.CndNamespace;
+import nz.xinsolutions.cnd.CndSerialiser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import javax.jcr.nodetype.NodeType;
+import javax.jcr.nodetype.NodeTypeIterator;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -65,13 +64,67 @@ public class PartialCndExporter {
      * @return a cnd export for a namespace
      */
     protected String toFullCnd(Workspace workspace, String prefix, List<String> allTypes) {
+        List<NodeType> types = getInterestingNodeTypes(workspace, prefix, allTypes);
+        List<CndEntity> cndEntities = convertFromNodeTypes(types);
+        List<CndNamespace> namespaces = new ArrayList<>();
+        
+        cndEntities.forEach(
+            entity -> entity.getReferredNamespaces().forEach(
+                ns -> {
+                    ns.resolve(workspace);
+                    namespaces.add(ns);
+                }
+            )
+        );
+    
+        
+        String output = CndSerialiser.outputAll(namespaces, cndEntities);
+
+        LOG.info(output);
+
+        return output;
+    }
+    
+    /**
+     * @return a list of cnd entity instances based off of a list of node type
+     */
+    protected List<CndEntity> convertFromNodeTypes(List<NodeType> types) {
+        return types.stream().map(CndEntity::fromNodeType).collect(Collectors.toList());
+    }
+    
+    
+    /**
+     * @return a list of node types that we are interesting in saving.
+     */
+    protected List<NodeType> getInterestingNodeTypes(Workspace workspace, String prefix, List<String> allTypes) {
+        
         try {
-            return JcrCompactNodeTypeDefWriter.compactNodeTypeDef(workspace, prefix);
+            NodeTypeIterator ntIt = workspace.getNodeTypeManager().getAllNodeTypes();
+            List<NodeType> interestingNodes = new ArrayList<>();
+            while (ntIt.hasNext()) {
+                NodeType nodeType = ntIt.nextNodeType();
+                
+                // make sure this is something we're interested in
+                if (!isInterestingNodeType(allTypes, nodeType)) {
+                    continue;
+                }
+                
+                interestingNodes.add(nodeType);
+            }
+            return interestingNodes;
         }
-        catch (RepositoryException | IOException ex) {
+        catch (Exception ex) {
             LOG.error("Could not get CND for prefix `{}`, caused by: ", prefix, ex);
         }
-        return null;
+        
+        return Collections.EMPTY_LIST;
+    }
+    
+    /**
+     * @return true if it's an interesting node type
+     */
+    protected boolean isInterestingNodeType(List<String> allTypes, NodeType nodeType) {
+        return allTypes.contains(nodeType.getName());
     }
     
     
