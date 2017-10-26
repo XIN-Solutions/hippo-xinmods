@@ -2,6 +2,7 @@ package nz.xinsolutions.cnd;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.commons.collections.CollectionUtils;
 
 import javax.jcr.nodetype.NodeDefinition;
 import javax.jcr.nodetype.NodeType;
@@ -74,10 +75,16 @@ public class CndEntity implements CndNamespaceReferer {
     public List<CndNamespace> getReferredNamespaces() {
         List<CndNamespace> nsList = new ArrayList<>();
         
-        if (this.name.contains(":")) {
-            int colonIdx = this.name.indexOf(":");
-            String namespace = this.name.substring(0, colonIdx);
-            nsList.add(CndNamespace.partial(namespace));
+        // from type name
+        nsList.add(CndNamespace.fromType(this.name));
+        
+        // super types have types too you know!
+        if (CollectionUtils.isNotEmpty(this.getSuperTypes())) {
+            nsList.addAll(
+                this.getSuperTypes().stream()
+                    .map(CndNamespace::fromType)
+                    .collect(Collectors.toList())
+            );
         }
         
         getProperties()

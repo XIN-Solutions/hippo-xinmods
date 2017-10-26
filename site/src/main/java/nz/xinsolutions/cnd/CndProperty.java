@@ -2,12 +2,14 @@ package nz.xinsolutions.cnd;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.commons.lang.ArrayUtils;
 
 import javax.jcr.nodetype.NodeDefinition;
 import javax.jcr.nodetype.PropertyDefinition;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
@@ -46,15 +48,30 @@ public class CndProperty implements CndNamespaceReferer {
     }
     
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @JsonIgnore
     public List<CndNamespace> getReferredNamespaces() {
+        List<CndNamespace> namespaces = new ArrayList<CndNamespace>();
+        
         if (this.name.contains(":")) {
-            int colonIdx = this.name.indexOf(":");
-            String namespace = this.name.substring(0, colonIdx);
-            return Arrays.asList(CndNamespace.partial(namespace));
+            namespaces.add(CndNamespace.fromType(this.name));
         }
-        return Collections.EMPTY_LIST;
+        
+        // add possible namespaces from supertypes
+        if (ArrayUtils.isNotEmpty(this.primaryTypes)) {
+            namespaces.addAll(
+                Arrays.stream(this.primaryTypes)
+                    .map(CndNamespace::fromType)
+                    .collect(Collectors.toList()
+                )
+            );
+        }
+        
+        
+        return namespaces;
     }
     
     // --------------------------------------------------------

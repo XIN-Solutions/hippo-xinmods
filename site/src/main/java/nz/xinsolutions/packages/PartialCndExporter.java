@@ -1,7 +1,6 @@
 package nz.xinsolutions.packages;
 
 import nz.xinsolutions.cnd.CndEntity;
-import nz.xinsolutions.cnd.CndNamespace;
 import nz.xinsolutions.cnd.CndSerialiser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,24 +65,16 @@ public class PartialCndExporter {
     protected String toFullCnd(Workspace workspace, String prefix, List<String> allTypes) {
         List<NodeType> types = getInterestingNodeTypes(workspace, prefix, allTypes);
         List<CndEntity> cndEntities = convertFromNodeTypes(types);
-        List<CndNamespace> namespaces = new ArrayList<>();
         
-        cndEntities.forEach(
-            entity -> entity.getReferredNamespaces().forEach(
-                ns -> {
-                    ns.resolve(workspace);
-                    namespaces.add(ns);
-                }
-            )
-        );
-    
-        
-        String output = CndSerialiser.outputAll(namespaces, cndEntities);
+        // output
+        CndSerialiser serialiser = new CndSerialiser();
+        String jsonOutput = serialiser.outputToJson(workspace, cndEntities);
+        LOG.info("JSON OUTPUT: " + jsonOutput);
+        LOG.info("CND OUTPUT: " + serialiser.outputToCndFormat(workspace, cndEntities));
 
-        LOG.info(output);
-
-        return output;
+        return jsonOutput;
     }
+    
     
     /**
      * @return a list of cnd entity instances based off of a list of node type

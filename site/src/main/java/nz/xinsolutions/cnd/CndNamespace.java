@@ -26,6 +26,19 @@ public class CndNamespace {
     
     }
     
+    /**
+     * @return cnd namespace instance based on a typename
+     */
+    public static CndNamespace fromType(String type) {
+        if (type.contains(":")) {
+            int colonIdx = type.indexOf(":");
+            String namespace = type.substring(0, colonIdx);
+            return CndNamespace.partial(namespace);
+        }
+        
+        return null;
+    }
+    
     
     public static CndNamespace partial(String name) {
         return new CndNamespace() {{
