@@ -28,53 +28,14 @@ public class PartialCndExporter {
     /**
      * @return a list of sanitised CDN descriptions
      */
-    public List<String> exportCnds(Workspace workspace, String[] types) {
-        Set<String> namespaces = getPrefixes(types);
-        List<String> cdnExports = getFullExports(workspace, namespaces, Arrays.asList(types));
-        
-        return cdnExports;
-    }
-    
-    
-    /**
-     * @return a set of namespaces used in the types we're interested in
-     */
-    protected Set<String> getPrefixes(String[] types) {
-        return Arrays.stream(types)
-                .filter(type -> type.indexOf(":") != -1)
-                .map(type -> type.substring(0, type.indexOf(":")))
-                .collect(Collectors.toSet())
-            ;
-    }
-    
-    /**
-     * @return a list of full exports for a set of namespaces
-     */
-    protected List<String> getFullExports(Workspace workspace, Set<String> namespaces, List<String> allTypes) {
-        return namespaces
-                .stream()
-                .map(prefix -> toFullCnd(workspace, prefix, allTypes))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList())
-            ;
-    }
-    
-    /**
-     * @return a cnd export for a namespace
-     */
-    protected String toFullCnd(Workspace workspace, String prefix, List<String> allTypes) {
-        List<NodeType> types = getInterestingNodeTypes(workspace, prefix, allTypes);
+    public String exportCnds(Workspace workspace, String[] typeNames) {
+        List<NodeType> types = getInterestingNodeTypes(workspace, Arrays.asList(typeNames));
         List<CndEntity> cndEntities = convertFromNodeTypes(types);
-        
+    
         // output
         CndSerialiser serialiser = new CndSerialiser();
-        String jsonOutput = serialiser.outputToJson(workspace, cndEntities);
-        LOG.info("JSON OUTPUT: " + jsonOutput);
-        LOG.info("CND OUTPUT: " + serialiser.outputToCndFormat(workspace, cndEntities));
-
-        return jsonOutput;
+        return serialiser.outputToJson(workspace, cndEntities);
     }
-    
     
     /**
      * @return a list of cnd entity instances based off of a list of node type
@@ -87,7 +48,7 @@ public class PartialCndExporter {
     /**
      * @return a list of node types that we are interesting in saving.
      */
-    protected List<NodeType> getInterestingNodeTypes(Workspace workspace, String prefix, List<String> allTypes) {
+    protected List<NodeType> getInterestingNodeTypes(Workspace workspace, List<String> allTypes) {
         
         try {
             NodeTypeIterator ntIt = workspace.getNodeTypeManager().getAllNodeTypes();
@@ -105,7 +66,7 @@ public class PartialCndExporter {
             return interestingNodes;
         }
         catch (Exception ex) {
-            LOG.error("Could not get CND for prefix `{}`, caused by: ", prefix, ex);
+            LOG.error("Could not get CND, caused by: ", ex);
         }
         
         return Collections.EMPTY_LIST;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +41,14 @@ public class PackageService {
                 "/hippo:namespaces/xinmods",
                 "/hippo:configuration/hippo:queries/hippo:templates/new-xinmods-genericimageset-folder",
                 "/hippo:configuration/hippo:queries/hippo:templates/new-xinmods-genericimageset-image"));
-            setCnds(Arrays.asList("xinmods:content", "xinmods:postdetails", "xinmods:eventdetails", "xinmods:menuitem", "xinmods:menu"));
+            setCnds(Arrays.asList(
+                "xinmods:basedocument",
+                "xinmods:content",
+                "xinmods:postdetails",
+                "xinmods:eventdetails",
+                "xinmods:menuitem",
+                "xinmods:menu"
+            ));
         }});
     
         add(new Package() {{
@@ -68,14 +75,19 @@ public class PackageService {
     
         try {
             List<Node> filterNode = getFilterNodes(jcrSession, pkg);
-            multiPathExporter.exportZippedContent(filterNode);
-            List<String> cnds = partialCndExporter.exportCnds(
+            File tmpBaseFolder = multiPathExporter.exportZippedContent(filterNode);
+            String cnd =
+                partialCndExporter.exportCnds(
                     jcrSession.getWorkspace(),
                     pkg.getCnds().toArray(new String[0])
-            );
+                );
             
-            LOG.info("-- CNDS:");
-            cnds.forEach(cnd -> LOG.info("cnd export: " + cnd));
+            LOG.info("CND:\n" + cnd);
+            
+            File cndDescription = new File(tmpBaseFolder, "cndExport.json");
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(cndDescription)));
+            writer.print(cnd);
+            writer.close();
         }
         catch (IOException ioEx) {
             LOG.error("IO Exception, caused by: ", ioEx);
@@ -84,7 +96,6 @@ public class PackageService {
             LOG.error("Cannot find node, caused by: ", rEx);
         }
         
-//        configService.exportZippedContent()
         
     }
     
