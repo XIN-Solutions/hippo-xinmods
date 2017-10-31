@@ -1,5 +1,6 @@
 package nz.xinsolutions.packages;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import java.util.List;
 public class PackageService {
     
     public static final String FILE_CND_EXPORT_JSON = "cndExport.json";
+    public static final String FILE_METADATA = "metadata.json";
     @Autowired
     private MultiPathExporter multiPathExporter;
     
@@ -80,6 +82,7 @@ public class PackageService {
         try {
             List<Node> filterNode = getFilterNodes(jcrSession, pkg);
             File tmpBaseFolder = multiPathExporter.exportZippedContent(filterNode);
+            
             String cnd =
                 partialCndExporter.exportCnds(
                     jcrSession.getWorkspace(),
@@ -88,10 +91,13 @@ public class PackageService {
             
             LOG.info("CND:\n" + cnd);
             
-            File cndDescription = new File(tmpBaseFolder, FILE_CND_EXPORT_JSON);
-            PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(cndDescription)));
-            writer.print(cnd);
-            writer.close();
+            String packageMetadata = fromPojoToString(pkg);
+            
+            // write package description to file
+            writeStringAsFile(tmpBaseFolder, FILE_METADATA, packageMetadata);
+            
+            // write CND string to file
+            writeStringAsFile(tmpBaseFolder, FILE_CND_EXPORT_JSON, cnd);
     
             // pack and stream back to the user
             ZipUtil.pack(tmpBaseFolder, outStream, ZipUtil.DEFAULT_COMPRESSION_LEVEL);
@@ -108,6 +114,39 @@ public class PackageService {
         }
         
         
+    }
+    
+    /**
+     * @return the json string of <code>pojo</code>.
+     */
+    protected String fromPojoToString(Object pojo) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            StringWriter strWriter = new StringWriter();
+            objectMapper.writeValue(strWriter, pojo);
+            return strWriter.toString();
+        }
+        catch (IOException ioEx) {
+            LOG.error("Could not properly marshal the pojo, caused by: ", ioEx);
+        }
+        return null;
+    }
+    
+    
+    /**
+     * Write a string to file.
+     *
+     * @param folder    is the folder to write to the file to
+     * @param filename  is the name of the file to create
+     * @param content   is the contents of the file.
+     *
+     * @throws FileNotFoundException
+     */
+    protected void writeStringAsFile(File folder, String filename, String content) throws FileNotFoundException {
+        File metainfo = new File(folder, filename);
+        PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(metainfo)));
+        writer.print(content);
+        writer.close();
     }
     
     /**
