@@ -1,9 +1,11 @@
 package nz.xinsolutions.packages;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.zeroturnaround.zip.ZipUtil;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
@@ -20,6 +22,7 @@ import java.util.List;
 @Component
 public class PackageService {
     
+    public static final String FILE_CND_EXPORT_JSON = "cndExport.json";
     @Autowired
     private MultiPathExporter multiPathExporter;
     
@@ -64,9 +67,10 @@ public class PackageService {
      * Build a package
      *
      * @param packageId
+     * @param outStream
      * @throws PackageException
      */
-    public void build(Session jcrSession, String packageId) throws PackageException {
+    public void build(Session jcrSession, String packageId, OutputStream outStream) throws PackageException {
      
         Package pkg = getPackage(packageId);
         if (pkg == null) {
@@ -84,10 +88,17 @@ public class PackageService {
             
             LOG.info("CND:\n" + cnd);
             
-            File cndDescription = new File(tmpBaseFolder, "cndExport.json");
+            File cndDescription = new File(tmpBaseFolder, FILE_CND_EXPORT_JSON);
             PrintWriter writer = new PrintWriter(new OutputStreamWriter(new FileOutputStream(cndDescription)));
             writer.print(cnd);
             writer.close();
+    
+            // pack and stream back to the user
+            ZipUtil.pack(tmpBaseFolder, outStream, ZipUtil.DEFAULT_COMPRESSION_LEVEL);
+
+            LOG.info("Attempting to delete the temporary folder in which package content was generated");
+            FileUtils.deleteDirectory(tmpBaseFolder);
+            LOG.info("Deleted temporary folder at " + tmpBaseFolder.getAbsolutePath());
         }
         catch (IOException ioEx) {
             LOG.error("IO Exception, caused by: ", ioEx);

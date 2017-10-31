@@ -100,6 +100,10 @@
       <artifactId>hippo-plugin-taxonomy-hstclient</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>org.zeroturnaround</groupId>
+      <artifactId>zt-zip</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <resources>

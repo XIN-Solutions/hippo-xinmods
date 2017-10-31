@@ -74,6 +74,7 @@
 
     <hippo.cms.locales>nl,de,fr,es,zh</hippo.cms.locales>
 
+    <zip-library.version>1.12</zip-library.version>
   </properties>
 
   <repositories>
@@ -128,6 +129,14 @@
       </dependency>
 
       <!-- other predefined compile scope versioned dependencies -->
+
+      <!-- https://mvnrepository.com/artifact/org.zeroturnaround/zt-zip -->
+      <dependency>
+        <groupId>org.zeroturnaround</groupId>
+        <artifactId>zt-zip</artifactId>
+        <version>${zip-library.version}</version>
+      </dependency>
+
       <dependency>
         <groupId>org.freemarker</groupId>
         <artifactId>freemarker</artifactId>

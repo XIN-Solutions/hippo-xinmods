@@ -10,15 +10,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
@@ -32,6 +37,7 @@ public class PackageManagerResource extends BaseRestResource {
      * Logger
      */
     private static final Logger LOG = LoggerFactory.getLogger(PackageManagerResource.class);
+    public static final String DATE_PATTERN = "Y-M-d";
     
     /**
      * Package service bound here
@@ -76,7 +82,7 @@ public class PackageManagerResource extends BaseRestResource {
     @POST
     @Path("/{id}/build")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response buildPackage(@Context HttpServletRequest request, @PathParam("id") String packageId) {
+    public void buildPackage(@Context HttpServletRequest request, @Context HttpServletResponse response, @PathParam("id") String packageId) {
         LOG.info("Requesting build of " + packageId);
         
         RestContext ctx = new DefaultRestContext(this, request);
@@ -84,11 +90,23 @@ public class PackageManagerResource extends BaseRestResource {
         try {
     
             if (!pkgService.packageExists(packageId)) {
-                return Response.status(404).build();
+                response.setStatus(SC_NOT_FOUND);
+                return;
             }
     
-            pkgService.build(ctx.getRequestContext().getSession(), packageId);
+            String date = getFilenameDate(getNowStamp());
+            String packageDate = packageId + "-" + date + ".zip";
             
+            response.setStatus(SC_OK);
+            response.setHeader("Content-Type", "application/zip");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + packageDate + "\"");
+            ServletOutputStream responseOutStr = response.getOutputStream();
+            Session jcrSession = ctx.getRequestContext().getSession();
+            pkgService.build(jcrSession, packageId, responseOutStr);
+            
+        }
+        catch (IOException ioEx) {
+            LOG.error("Could not retrieve output stream for response object, caused by: ", ioEx);
         }
         catch (RepositoryException rEx) {
             LOG.error("Repository exception, caused by: ", rEx);
@@ -97,7 +115,21 @@ public class PackageManagerResource extends BaseRestResource {
             LOG.error("Something went wrong, caused by: ", pkgEx);
         }
         
-        return Response.status(200).build();
+    }
+    
+    
+    /**
+     * @return the now date
+     */
+    protected Date getNowStamp() {
+        return new Date();
+    }
+    
+    /**
+     * @return the formatted date for the filename for <code>date</code>.
+     */
+    protected String getFilenameDate(Date date) {
+        return new SimpleDateFormat(DATE_PATTERN).format(date);
     }
     
     /**
