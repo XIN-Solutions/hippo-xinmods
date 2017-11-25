@@ -28,6 +28,22 @@ public class CndSerialiser {
     private static final Logger LOG = LoggerFactory.getLogger(CndSerialiser.class);
     
     /**
+     * Convert a json string into a cnd bundle
+     * @param json is the json string to convert
+     * @return is the cndbundle or null if not possible to convert.
+     */
+    public CndBundle fromJson(String json) {
+        try {
+            ObjectMapper objMapper = new ObjectMapper();
+            return objMapper.readValue(json, CndBundle.class);
+        }
+        catch (IOException ioEx) {
+            LOG.error("Could not marshal from json to CndBundle, caused by: ", ioEx);
+        }
+        return null;
+    }
+    
+    /**
      * Output a list of cnd entities to string and return their json
      *
      * @param entities  the list to write
@@ -39,12 +55,7 @@ public class CndSerialiser {
             StringWriter strWriter = new StringWriter();
            
             List<CndNamespace> namespaces = uniqueNamespaces(workspace, entities);
-            
-            objMap.writeValue(strWriter, new LinkedHashMap<String, Object>() {{
-                put("namespaces", namespaces);
-                put("entities", entities);
-            }});
-            
+            objMap.writeValue(strWriter, new CndBundle(namespaces, entities));
             return strWriter.toString();
         }
         catch (IOException ioEx) {

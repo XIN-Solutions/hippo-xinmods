@@ -1,7 +1,11 @@
 package nz.xinsolutions.rest;
 
 import nz.xinsolutions.packages.PackageException;
-import nz.xinsolutions.packages.PackageService;
+import nz.xinsolutions.packages.PackageExportService;
+import nz.xinsolutions.packages.PackageImportService;
+import nz.xinsolutions.packages.PackageListService;
+import org.apache.cxf.jaxrs.ext.multipart.Attachment;
+import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.onehippo.cms7.essentials.components.rest.BaseRestResource;
 import org.onehippo.cms7.essentials.components.rest.ctx.DefaultRestContext;
 import org.onehippo.cms7.essentials.components.rest.ctx.RestContext;
@@ -22,8 +26,7 @@ import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
+import static javax.servlet.http.HttpServletResponse.*;
 
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
@@ -40,9 +43,19 @@ public class PackageManagerResource extends BaseRestResource {
     public static final String DATE_PATTERN = "Y-M-d";
     
     /**
+     * Package list service bound here
+     */
+    @Autowired private PackageListService pkgListService;
+    
+    /**
      * Package service bound here
      */
-    @Autowired private PackageService pkgService;
+    @Autowired private PackageExportService pkgExportService;
+    
+    /**
+     * Package import service bound here
+     */
+    @Autowired private PackageImportService pkgImportService;
     
     /**
      * Retrieve the HTML for the angular application
@@ -54,6 +67,7 @@ public class PackageManagerResource extends BaseRestResource {
     @Path("/")
     @Produces(MediaType.TEXT_HTML)
     public InputStream packageIndex() throws FileNotFoundException {
+        // TODO: Make this less shitty
         File file = new File("/home/marnix/tmp/hippo/xinmods/packageManager.html");
         return new FileInputStream(file);
     }
@@ -64,7 +78,7 @@ public class PackageManagerResource extends BaseRestResource {
     public Response getAllPackages() {
         try {
             LOG.info("Return a list of packages");
-            return Response.ok(pkgService.getPackages()).build();
+            return Response.ok(pkgListService.getPackages()).build();
         }
         catch (PackageException ex) {
             LOG.error("Couldn't get all packages, caused by: ", ex);
@@ -74,22 +88,73 @@ public class PackageManagerResource extends BaseRestResource {
     
     
     /**
+     * This package imports the contents and CND elements of a package in the zip file for the <code>file</code> query parameter.
+     * If there is 'autorun.groovy' in the package, it will be executed in the context of this request as well with access to
+     * the repository.
+     *
+     * @param request
+     * @param response
+     * @param stream
+     */
+    @PUT
+    @Path("/import")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public void importPackage(
+        @Context HttpServletRequest request,
+        @Context HttpServletResponse response,
+        @QueryParam("careful") boolean careful,
+        @Multipart("file") Attachment stream)
+    {
+        try {
+            // attachment found?
+            if (stream == null) {
+                LOG.error("No attachment found with name `file`, aborting.");
+                response.setStatus(SC_BAD_REQUEST);
+                return;
+            }
+            
+            // attachment of the correct type?
+            if (!stream.getContentType().getSubtype().equals("zip")) {
+                LOG.error("Incoming stream was not of type `zip`, aborting.");
+                response.setStatus(SC_BAD_REQUEST);
+                return;
+            }
+            
+            // copy file onto disk
+            File tmpAttachmentFile = File.createTempFile("attachment_" + new Date().getTime(), ".zip");
+            stream.transferTo(tmpAttachmentFile);
+            
+            pkgImportService.importFile(tmpAttachmentFile, false);
+            
+            LOG.info("Package temporarily stored at: " + tmpAttachmentFile.getCanonicalPath());
+        }
+        catch (PackageException pEx) {
+            LOG.error("Could not create package, caused by: ", pEx);
+        }
+        catch (IOException ioEx) {
+            LOG.error("Could not parse the incoming attachment, caused by: ", ioEx);
+        }
+    
+    
+    }
+    
+    /**
      * Build a package that was already defined
      *
      * @param packageId
      * @return
      */
-    @POST
-    @Path("/{id}/build")
+    @GET
+    @Path("/{id}/export")
     @Produces(MediaType.APPLICATION_JSON)
-    public void buildPackage(@Context HttpServletRequest request, @Context HttpServletResponse response, @PathParam("id") String packageId) {
+    public void exportPackage(@Context HttpServletRequest request, @Context HttpServletResponse response, @PathParam("id") String packageId) {
         LOG.info("Requesting build of " + packageId);
         
         RestContext ctx = new DefaultRestContext(this, request);
     
         try {
     
-            if (!pkgService.packageExists(packageId)) {
+            if (!pkgListService.packageExists(packageId)) {
                 response.setStatus(SC_NOT_FOUND);
                 return;
             }
@@ -102,7 +167,7 @@ public class PackageManagerResource extends BaseRestResource {
             response.setHeader("Content-Disposition", "attachment; filename=\"" + packageDate + "\"");
             ServletOutputStream responseOutStr = response.getOutputStream();
             Session jcrSession = ctx.getRequestContext().getSession();
-            pkgService.build(jcrSession, packageId, responseOutStr);
+            pkgExportService.build(jcrSession, packageId, responseOutStr);
             
         }
         catch (IOException ioEx) {
@@ -133,9 +198,7 @@ public class PackageManagerResource extends BaseRestResource {
     }
     
     /**
-     *
-     * @param packageId
-     * @return
+     * TODO: Implement the deletion of the package definition
      */
     @DELETE
     @Path("/{id}")
@@ -145,9 +208,7 @@ public class PackageManagerResource extends BaseRestResource {
     }
     
     /**
-     *
-     * @param packageId
-     * @return
+     * TODO: Create a package definition using this endpoint
      */
     @PUT
     @Path("/{id}")
