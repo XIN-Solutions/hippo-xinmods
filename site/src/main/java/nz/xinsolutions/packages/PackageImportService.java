@@ -5,15 +5,22 @@ import nz.xinsolutions.cnd.CndBundle;
 import nz.xinsolutions.cnd.CndSerialiser;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.jackrabbit.commons.cnd.CndImporter;
+import org.apache.jackrabbit.commons.cnd.ParseException;
+import org.onehippo.cm.ConfigurationService;
+import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zeroturnaround.zip.ZipUtil;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.Arrays;
 import java.util.List;
 
@@ -45,7 +52,8 @@ public class PackageImportService {
      * @param pkgFile
      * @throws PackageException
      */
-    public void importFile(File pkgFile, boolean careful) throws PackageException {
+    public void importFile(Session session, File pkgFile, boolean careful) throws PackageException {
+        
         if (!isZip(pkgFile)) {
             throw new PackageException("Imported package is not a zip");
         }
@@ -78,7 +86,7 @@ public class PackageImportService {
             
             // has cnd bundle definition? import it.
             if (cndBundle != null) {
-                importCnd(cndBundle);
+                importCnd(cndBundle, session);
             }
             else {
                 LOG.warn("No cndExport.json found in the package, so no CND entries added to repo is going to be imported.");
@@ -87,7 +95,7 @@ public class PackageImportService {
             // has content files?
             if (!CollectionUtils.isEmpty(contentFiles)) {
                 for (String contentFile : contentFiles) {
-                    importZippedYaml(contentFile);
+                    importZippedYaml(contentFile, session);
                 }
             }
         
@@ -102,10 +110,18 @@ public class PackageImportService {
     /**
      * Import the content from a zipped yaml into the JCR
      *
-     * @param contentFile
+     * @param contentFile is the path to the file to import
+     * @param session is the jcr session to write this to
      */
-    protected void importZippedYaml(String contentFile) {
-        LOG.info("Importing yaml not yet implemented.");
+    protected void importZippedYaml(String contentFile, Session session) {
+        try {
+            LOG.info("Importing yaml not yet implemented.");
+            ConfigurationService configService = HippoServiceRegistry.getService(ConfigurationService.class);
+            configService.importZippedContent(new File(contentFile), session.getRootNode());
+        }
+        catch (IOException | RepositoryException ex) {
+            LOG.error("Something went wrong while trying to import `{}`, caused by: ", contentFile, ex);
+        }
     }
     
     /**
@@ -132,8 +148,20 @@ public class PackageImportService {
      *
      * @param cndBundle
      */
-    protected void importCnd(CndBundle cndBundle) {
+    protected void importCnd(CndBundle cndBundle, Session session) {
+        String cndFormatted =
+            new CndSerialiser().outputToCndFormat(session.getWorkspace(), cndBundle.getEntities());
     
+        try {
+            CndImporter.registerNodeTypes(
+                new StringReader(cndFormatted),
+                session,
+                true
+            );
+        }
+        catch (ParseException | RepositoryException | IOException ex) {
+            LOG.error("Cannot register node types from this CND `{}`, caused by:", cndFormatted, ex);
+        }
     }
     
     /**

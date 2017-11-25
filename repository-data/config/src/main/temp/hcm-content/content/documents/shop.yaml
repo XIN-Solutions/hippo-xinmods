@@ -1,0 +1,6 @@
+/content/documents/shop:
+  jcr:primaryType: hippostd:folder
+  jcr:mixinTypes: ['hippo:named', 'mix:versionable']
+  jcr:uuid: db5b509c-dde2-403d-929c-a858836a5c8a
+  hippo:name: Shop
+  hippostd:foldertype: [new-document, new-folder]
