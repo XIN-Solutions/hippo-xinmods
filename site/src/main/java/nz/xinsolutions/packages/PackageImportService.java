@@ -95,7 +95,7 @@ public class PackageImportService {
             // has content files?
             if (!CollectionUtils.isEmpty(contentFiles)) {
                 for (String contentFile : contentFiles) {
-                    importZippedYaml(contentFile, session);
+                    importZippedYaml(dir.getCanonicalPath() + "/" + contentFile, session);
                 }
             }
         

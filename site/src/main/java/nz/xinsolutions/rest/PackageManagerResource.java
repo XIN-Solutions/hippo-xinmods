@@ -105,7 +105,10 @@ public class PackageManagerResource extends BaseRestResource {
         @QueryParam("careful") boolean careful,
         @Multipart("file") Attachment stream)
     {
+        RestContext ctx = new DefaultRestContext(this, request);
+    
         try {
+            
             // attachment found?
             if (stream == null) {
                 LOG.error("No attachment found with name `file`, aborting.");
@@ -124,9 +127,12 @@ public class PackageManagerResource extends BaseRestResource {
             File tmpAttachmentFile = File.createTempFile("attachment_" + new Date().getTime(), ".zip");
             stream.transferTo(tmpAttachmentFile);
             
-            pkgImportService.importFile(tmpAttachmentFile, false);
+            pkgImportService.importFile(ctx.getRequestContext().getSession(), tmpAttachmentFile, false);
             
             LOG.info("Package temporarily stored at: " + tmpAttachmentFile.getCanonicalPath());
+        }
+        catch (RepositoryException rEx) {
+            LOG.error("Repo exception caused by: ", rEx);
         }
         catch (PackageException pEx) {
             LOG.error("Could not create package, caused by: ", pEx);

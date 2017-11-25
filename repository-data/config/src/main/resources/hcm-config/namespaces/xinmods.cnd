@@ -5,45 +5,4 @@
 <'hippotranslation'='http://www.onehippo.org/jcr/hippotranslation/nt/1.0'>
 <'hippogallery'='http://www.onehippo.org/jcr/hippogallery/nt/2.0'>
 
-[xinmods:basedocument] > hippo:document, hippostd:publishableSummary, hippostdpubwf:document
-  orderable
-
-[xinmods:categorydetails] > hippo:compound, hippostd:relaxed
-  orderable
-
-[xinmods:content] > hippostd:relaxed, hippotranslation:translated, xinmods:basedocument
-  orderable
-
-[xinmods:galleryComponent] > hippo:compound, hippostd:relaxed
-  orderable
-
 [xinmods:genericimageset] > hippogallery:imageset, hippogallery:relaxed
-
-[xinmods:imageComponent] > hippo:compound, hippostd:relaxed
-  orderable
-
-[xinmods:listComponent] > hippo:compound, hippostd:relaxed
-  orderable
-
-[xinmods:menuitem] > hippo:compound, hippostd:relaxed
-  orderable
-
-[xinmods:menu] > hippostd:relaxed, hippotranslation:translated, xinmods:basedocument
-    orderable
-    + xinmods:items (xinmods:menuitem) multiple
-
-[xinmods:postdetails] > hippo:compound, hippostd:relaxed
-  orderable
-
-[xinmods:siteconfig] > hippostd:relaxed, hippotranslation:translated, xinmods:basedocument
-  orderable
-
-[xinmods:textComponent] > hippo:compound, hippostd:relaxed
-  orderable
-
-[xinmods:textImageComponent] > hippo:compound, hippostd:relaxed
-  orderable
-
-[xinmods:twoColumn] > hippo:compound, hippostd:relaxed
-  orderable
-
