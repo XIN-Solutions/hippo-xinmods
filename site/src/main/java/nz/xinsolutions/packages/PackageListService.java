@@ -10,7 +10,7 @@ import java.util.List;
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
  * Date: 25/11/17
  *
- *
+ *  The package list service is able to retrieve and parse packages from the data source
  *
  */
 @Component
@@ -30,11 +30,18 @@ public class PackageListService {
                 "/hippo:configuration/hippo:queries/hippo:templates/new-xinmods-genericimageset-image"));
             setCnds(Arrays.asList(
                 "xinmods:basedocument",
+                "xinmods:categorydetails",
                 "xinmods:content",
-                "xinmods:postdetails",
-                "xinmods:eventdetails",
+                "xinmods:galleryComponent",
+                "xinmods:imageComponent",
+                "xinmods:listComponent",
+                "xinmods:menu",
                 "xinmods:menuitem",
-                "xinmods:menu"
+                "xinmods:postdetails",
+                "xinmods:siteconfig",
+                "xinmods:textComponent",
+                "xinmods:textImageComponent",
+                "xinmods:twoColumn"
             ));
         }});
         
