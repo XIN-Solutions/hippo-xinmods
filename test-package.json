@@ -1,0 +1,4 @@
+{
+  "filters" : ["/content/documents/"],
+  "cnds": ["xinmods:basedocument"]
+}

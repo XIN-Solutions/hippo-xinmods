@@ -1,5 +1,6 @@
 package nz.xinsolutions.packages;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
 /**
@@ -8,6 +9,7 @@ import java.util.List;
  *
  * Package definition in manager
  */
+@XmlRootElement
 public class Package {
     
     private String id;

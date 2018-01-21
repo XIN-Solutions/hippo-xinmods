@@ -39,6 +39,7 @@ public class PackageImportService {
     
     public static final String CND_FILE = "cndExport.json";
     public static final String METADATA_FILE = "metadata.json";
+    
     @Autowired private PackageListService service;
     
     /**
@@ -69,7 +70,7 @@ public class PackageImportService {
             }
             
             // if careful and package already exists? aboooort.
-            if (careful && service.packageExists(packageDesc.getId())) {
+            if (careful && service.packageExists(session, packageDesc.getId())) {
                 LOG.warn("WARNING, overwriting an existing package definition that has id: " + packageDesc.getId());
                 throw new PackageException(
                     String.format(
@@ -115,13 +116,29 @@ public class PackageImportService {
      */
     protected void importZippedYaml(String contentFile, Session session) {
         try {
-            LOG.info("Importing yaml not yet implemented.");
+            // unzip zip
+            File zipFile = new File(contentFile);
+            ZipUtil.unpack(zipFile, zipFile.getParentFile());
+            
+            String contentBasePath = getNodeNameFromFile(zipFile);
+            LOG.info("Determined root path: " + contentBasePath);
+            
+            LOG.info("Importing: {} into {}", zipFile.getName(), contentBasePath);
+            
             ConfigurationService configService = HippoServiceRegistry.getService(ConfigurationService.class);
-            configService.importZippedContent(new File(contentFile), session.getRootNode());
+            configService.importZippedContent(zipFile, session.getNode(contentBasePath));
+            
         }
         catch (IOException | RepositoryException ex) {
             LOG.error("Something went wrong while trying to import `{}`, caused by: ", contentFile, ex);
         }
+    }
+    
+    
+    private String getNodeNameFromFile(File zipFile) {
+        return zipFile.getName()
+            .replace(".zip", "")
+            .replace("_", "/");
     }
     
     /**

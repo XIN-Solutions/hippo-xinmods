@@ -48,7 +48,7 @@ public class PackageExportService {
      */
     public void build(Session jcrSession, String packageId, OutputStream outStream) throws PackageException {
      
-        Package pkg = packageListService.getPackage(packageId);
+        Package pkg = packageListService.getPackage(jcrSession, packageId);
         if (pkg == null) {
             throw new PackageException("No such package with identifier: " + packageId);
         }

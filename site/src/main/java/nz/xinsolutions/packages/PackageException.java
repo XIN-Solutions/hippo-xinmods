@@ -9,4 +9,8 @@ public class PackageException extends Exception {
     public PackageException(String msg) {
         super(msg);
     }
+    
+    public PackageException(Exception ex) {
+        super(ex);
+    }
 }

@@ -1,11 +1,11 @@
 package nz.xinsolutions.rest;
 
-import nz.xinsolutions.packages.PackageException;
-import nz.xinsolutions.packages.PackageExportService;
-import nz.xinsolutions.packages.PackageImportService;
-import nz.xinsolutions.packages.PackageListService;
+import nz.xinsolutions.packages.Package;
+import nz.xinsolutions.packages.*;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
+import org.hippoecm.repository.HippoRepository;
+import org.hippoecm.repository.HippoRepositoryFactory;
 import org.onehippo.cms7.essentials.components.rest.BaseRestResource;
 import org.onehippo.cms7.essentials.components.rest.ctx.DefaultRestContext;
 import org.onehippo.cms7.essentials.components.rest.ctx.RestContext;
@@ -72,15 +72,21 @@ public class PackageManagerResource extends BaseRestResource {
         return new FileInputStream(file);
     }
     
+    /**
+     * @return a list of all the packages
+     */
     @GET
     @Path("/list")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getAllPackages() {
+    public Response getAllPackages(@Context HttpServletRequest request) {
+        RestContext ctx = new DefaultRestContext(this, request);
+        
         try {
             LOG.info("Return a list of packages");
-            return Response.ok(pkgListService.getPackages()).build();
+            Session session = getSession(ctx);
+            return Response.ok(pkgListService.getPackages(session)).build();
         }
-        catch (PackageException ex) {
+        catch (PackageException | RepositoryException ex) {
             LOG.error("Couldn't get all packages, caused by: ", ex);
             return Response.serverError().build();
         }
@@ -127,7 +133,7 @@ public class PackageManagerResource extends BaseRestResource {
             File tmpAttachmentFile = File.createTempFile("attachment_" + new Date().getTime(), ".zip");
             stream.transferTo(tmpAttachmentFile);
             
-            pkgImportService.importFile(ctx.getRequestContext().getSession(), tmpAttachmentFile, false);
+            pkgImportService.importFile(getSession(ctx), tmpAttachmentFile, false);
             
             LOG.info("Package temporarily stored at: " + tmpAttachmentFile.getCanonicalPath());
         }
@@ -159,8 +165,9 @@ public class PackageManagerResource extends BaseRestResource {
         RestContext ctx = new DefaultRestContext(this, request);
     
         try {
+            Session jcrSession = getSession(ctx);
     
-            if (!pkgListService.packageExists(packageId)) {
+            if (!pkgListService.packageExists(jcrSession, packageId)) {
                 response.setStatus(SC_NOT_FOUND);
                 return;
             }
@@ -172,7 +179,6 @@ public class PackageManagerResource extends BaseRestResource {
             response.setHeader("Content-Type", "application/zip");
             response.setHeader("Content-Disposition", "attachment; filename=\"" + packageDate + "\"");
             ServletOutputStream responseOutStr = response.getOutputStream();
-            Session jcrSession = ctx.getRequestContext().getSession();
             pkgExportService.build(jcrSession, packageId, responseOutStr);
             
         }
@@ -186,6 +192,10 @@ public class PackageManagerResource extends BaseRestResource {
             LOG.error("Something went wrong, caused by: ", pkgEx);
         }
         
+    }
+    
+    protected Session getSession(RestContext ctx) throws RepositoryException {
+        return ctx.getRequestContext().getSession();
     }
     
     
@@ -218,9 +228,30 @@ public class PackageManagerResource extends BaseRestResource {
      */
     @PUT
     @Path("/{id}")
-    public Void createPackage(@PathParam("id") String packageId) {
+    public Response createPackage(
+        @Context HttpServletRequest request,
+        @PathParam("id") String packageId,
+        Package packageInfo
+    ) {
         LOG.info("Requesting creation of new package: " + packageId);
-        return null;
+
+        try {
+            HippoRepository repository = HippoRepositoryFactory.getHippoRepository("vm://");
+            Session jcrSession = repository.login("admin", "admin".toCharArray());
+            
+            if (pkgListService.packageExists(jcrSession, packageId)) {
+                LOG.error("Package with ID `{}` already exists", packageId);
+                return Response.serverError().build();
+            }
+            
+            packageInfo.setId(packageId);
+            pkgListService.addPackage(jcrSession, packageInfo);
+            return Response.ok().build();
+        }
+        catch (RepositoryException | PackageException ex) {
+            LOG.error("Could not complete package creation, caused by: ", ex);
+            return Response.serverError().build();
+        }
     }
 
 }

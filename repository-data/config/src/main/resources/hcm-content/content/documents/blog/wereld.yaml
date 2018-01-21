@@ -1,0 +1,246 @@
+/content/documents/blog/wereld:
+  jcr:primaryType: hippostd:folder
+  jcr:mixinTypes: ['hippo:named', 'mix:versionable']
+  jcr:uuid: 159761e8-ce38-4baa-8739-ccbf9e7beb19
+  hippo:name: Wereld
+  hippostd:foldertype: [new-document, new-folder]
+  /mijn-blog-artikel:
+    jcr:primaryType: hippo:handle
+    jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+    jcr:uuid: 8082945d-b749-4725-950d-2e51e164a2cc
+    hippo:name: Mijn blog artikel
+    /mijn-blog-artikel[1]:
+      jcr:primaryType: xinmods:content
+      jcr:mixinTypes: ['mix:referenceable']
+      jcr:uuid: 79b6bf1f-fb49-4585-9361-c8e72ccabc1e
+      hippo:availability: []
+      hippostd:state: draft
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-10-18T21:48:24.418+13:00
+      hippostdpubwf:lastModificationDate: 2017-10-18T21:48:24.418+13:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippotranslation:id: bba9549b-8a90-4dae-aeb8-e24f9c996366
+      hippotranslation:locale: document-type-locale
+      xinmods:description: Zo wat een lange omschrijving hee.
+      xinmods:pageTitle: Mijn blog artikel
+      xinmods:title: Mijn Blog Artikel is langer dan normaal
+      /xinmods:thumbnail:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:Information:
+        jcr:primaryType: xinmods:postdetails
+        xinmods:address: ''
+        xinmods:contactName: Marnix Kok
+        xinmods:email: marnixkok@outlook.com
+        xinmods:endDate: 2017-10-25T21:49:00+13:00
+        xinmods:locationName: ''
+        xinmods:startDate: 2017-10-18T21:49:00+13:00
+        xinmods:time: 4pm - 6pm
+      /xinmods:Content:
+        jcr:primaryType: xinmods:textComponent
+        xinmods:html: |-
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque euismod rhoncus massa sit amet bibendum. Pellentesque sit amet feugiat tellus. Morbi vel ex euismod, dignissim sem vel, interdum sapien. Sed congue vel massa eu varius. Nulla non nulla sit amet erat auctor imperdiet a id ipsum. Vestibulum quis consequat erat. Nam nec tristique lacus. Aenean a dolor justo. Sed hendrerit, neque quis ultricies suscipit, metus leo tincidunt enim, id ultricies nulla eros rutrum neque. Curabitur interdum massa quis mi auctor convallis id ac ante. Vestibulum nunc dolor, vehicula ut aliquet ac, mollis et dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam scelerisque, nisi id semper mollis, magna massa hendrerit mi, feugiat convallis lectus purus quis lectus. Aliquam eu placerat libero. Morbi at risus semper, egestas enim eleifend, vestibulum risus.</p>
+
+          <p>Duis elit tellus, consequat in nulla ac, hendrerit ultricies sem. Praesent ut ex ut diam vestibulum molestie. Mauris in commodo augue. In vel ex sed arcu hendrerit tincidunt non quis sapien. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean vehicula vestibulum lacus, in ornare eros tincidunt nec. Nullam vulputate elit id rhoncus semper. Sed elementum, lacus ac lobortis molestie, arcu tortor pellentesque justo, quis mattis felis ante in dui. Sed efficitur sapien eget enim ultrices cursus. Fusce hendrerit pulvinar lacus vitae vehicula. Aliquam elementum gravida libero vel dapibus. Etiam et sapien vitae tortor lobortis tristique. Phasellus consectetur ut tellus et mattis. In semper, velit ut rutrum fringilla, nunc magna scelerisque metus, nec fermentum ligula ex at velit. Phasellus efficitur urna ipsum, ac consectetur nibh tempus quis. Nunc egestas vitae erat sit amet feugiat.</p>
+        xinmods:textWrap: false
+        /xinmods:image:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+    /mijn-blog-artikel[2]:
+      jcr:primaryType: xinmods:content
+      jcr:mixinTypes: ['mix:referenceable', 'mix:versionable']
+      jcr:uuid: 8351fd28-1243-48e9-b5e9-b2c8fded3999
+      hippo:availability: [preview]
+      hippostd:state: unpublished
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-10-18T21:48:24.418+13:00
+      hippostdpubwf:lastModificationDate: 2017-10-18T21:49:48.594+13:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippotranslation:id: bba9549b-8a90-4dae-aeb8-e24f9c996366
+      hippotranslation:locale: document-type-locale
+      xinmods:description: Zo wat een lange omschrijving hee.
+      xinmods:pageTitle: Mijn blog artikel
+      xinmods:title: Mijn Blog Artikel is langer dan normaal
+      /xinmods:thumbnail:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:Information:
+        jcr:primaryType: xinmods:postdetails
+        xinmods:address: ''
+        xinmods:contactName: Marnix Kok
+        xinmods:email: marnixkok@outlook.com
+        xinmods:endDate: 2017-10-25T21:49:00+13:00
+        xinmods:locationName: ''
+        xinmods:startDate: 2017-10-18T21:49:00+13:00
+        xinmods:time: 4pm - 6pm
+      /xinmods:Content:
+        jcr:primaryType: xinmods:textComponent
+        xinmods:html: |-
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque euismod rhoncus massa sit amet bibendum. Pellentesque sit amet feugiat tellus. Morbi vel ex euismod, dignissim sem vel, interdum sapien. Sed congue vel massa eu varius. Nulla non nulla sit amet erat auctor imperdiet a id ipsum. Vestibulum quis consequat erat. Nam nec tristique lacus. Aenean a dolor justo. Sed hendrerit, neque quis ultricies suscipit, metus leo tincidunt enim, id ultricies nulla eros rutrum neque. Curabitur interdum massa quis mi auctor convallis id ac ante. Vestibulum nunc dolor, vehicula ut aliquet ac, mollis et dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam scelerisque, nisi id semper mollis, magna massa hendrerit mi, feugiat convallis lectus purus quis lectus. Aliquam eu placerat libero. Morbi at risus semper, egestas enim eleifend, vestibulum risus.</p>
+
+          <p>Duis elit tellus, consequat in nulla ac, hendrerit ultricies sem. Praesent ut ex ut diam vestibulum molestie. Mauris in commodo augue. In vel ex sed arcu hendrerit tincidunt non quis sapien. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean vehicula vestibulum lacus, in ornare eros tincidunt nec. Nullam vulputate elit id rhoncus semper. Sed elementum, lacus ac lobortis molestie, arcu tortor pellentesque justo, quis mattis felis ante in dui. Sed efficitur sapien eget enim ultrices cursus. Fusce hendrerit pulvinar lacus vitae vehicula. Aliquam elementum gravida libero vel dapibus. Etiam et sapien vitae tortor lobortis tristique. Phasellus consectetur ut tellus et mattis. In semper, velit ut rutrum fringilla, nunc magna scelerisque metus, nec fermentum ligula ex at velit. Phasellus efficitur urna ipsum, ac consectetur nibh tempus quis. Nunc egestas vitae erat sit amet feugiat.</p>
+        xinmods:textWrap: false
+        /xinmods:image:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+    /mijn-blog-artikel[3]:
+      jcr:primaryType: xinmods:content
+      jcr:mixinTypes: ['mix:referenceable']
+      jcr:uuid: 0e0ae6e4-c95e-446e-b8e5-e2471292c0d6
+      hippo:availability: [live]
+      hippostd:state: published
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-10-18T21:48:24.418+13:00
+      hippostdpubwf:lastModificationDate: 2017-10-18T21:49:48.594+13:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippostdpubwf:publicationDate: 2017-10-18T21:49:52.518+13:00
+      hippotranslation:id: bba9549b-8a90-4dae-aeb8-e24f9c996366
+      hippotranslation:locale: document-type-locale
+      xinmods:description: Zo wat een lange omschrijving hee.
+      xinmods:pageTitle: Mijn blog artikel
+      xinmods:title: Mijn Blog Artikel is langer dan normaal
+      /xinmods:thumbnail:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:Information:
+        jcr:primaryType: xinmods:postdetails
+        xinmods:address: ''
+        xinmods:contactName: Marnix Kok
+        xinmods:email: marnixkok@outlook.com
+        xinmods:endDate: 2017-10-25T21:49:00+13:00
+        xinmods:locationName: ''
+        xinmods:startDate: 2017-10-18T21:49:00+13:00
+        xinmods:time: 4pm - 6pm
+      /xinmods:Content:
+        jcr:primaryType: xinmods:textComponent
+        xinmods:html: |-
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque euismod rhoncus massa sit amet bibendum. Pellentesque sit amet feugiat tellus. Morbi vel ex euismod, dignissim sem vel, interdum sapien. Sed congue vel massa eu varius. Nulla non nulla sit amet erat auctor imperdiet a id ipsum. Vestibulum quis consequat erat. Nam nec tristique lacus. Aenean a dolor justo. Sed hendrerit, neque quis ultricies suscipit, metus leo tincidunt enim, id ultricies nulla eros rutrum neque. Curabitur interdum massa quis mi auctor convallis id ac ante. Vestibulum nunc dolor, vehicula ut aliquet ac, mollis et dolor. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aliquam scelerisque, nisi id semper mollis, magna massa hendrerit mi, feugiat convallis lectus purus quis lectus. Aliquam eu placerat libero. Morbi at risus semper, egestas enim eleifend, vestibulum risus.</p>
+
+          <p>Duis elit tellus, consequat in nulla ac, hendrerit ultricies sem. Praesent ut ex ut diam vestibulum molestie. Mauris in commodo augue. In vel ex sed arcu hendrerit tincidunt non quis sapien. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean vehicula vestibulum lacus, in ornare eros tincidunt nec. Nullam vulputate elit id rhoncus semper. Sed elementum, lacus ac lobortis molestie, arcu tortor pellentesque justo, quis mattis felis ante in dui. Sed efficitur sapien eget enim ultrices cursus. Fusce hendrerit pulvinar lacus vitae vehicula. Aliquam elementum gravida libero vel dapibus. Etiam et sapien vitae tortor lobortis tristique. Phasellus consectetur ut tellus et mattis. In semper, velit ut rutrum fringilla, nunc magna scelerisque metus, nec fermentum ligula ex at velit. Phasellus efficitur urna ipsum, ac consectetur nibh tempus quis. Nunc egestas vitae erat sit amet feugiat.</p>
+        xinmods:textWrap: false
+        /xinmods:image:
+          jcr:primaryType: hippogallerypicker:imagelink
+          hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+          hippo:facets: []
+          hippo:modes: []
+          hippo:values: []
+  /categorie-informatie:
+    jcr:primaryType: hippo:handle
+    jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+    jcr:uuid: 111a22e0-ab0e-47bd-a452-c4a6379c27ad
+    hippo:name: Categorie Informatie
+    /categorie-informatie[1]:
+      jcr:primaryType: xinmods:content
+      jcr:mixinTypes: ['mix:referenceable']
+      jcr:uuid: 57462928-b494-4876-8dc8-32daba0cb42a
+      hippo:availability: []
+      hippostd:state: draft
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-10-18T21:58:36.875+13:00
+      hippostdpubwf:lastModificationDate: 2017-10-18T21:58:36.875+13:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippotranslation:id: 7771fc3d-066a-491c-9fe7-cb829c6c60cd
+      hippotranslation:locale: document-type-locale
+      xinmods:description: Fusce fringilla consequat molestie. Sed congue ante et
+        efficitur sollicitudin.
+      xinmods:pageTitle: Wereld
+      xinmods:title: Wereld
+      /xinmods:thumbnail:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:Information:
+        jcr:primaryType: xinmods:categorydetails
+        xinmods:description: Fusce fringilla consequat molestie. Sed congue ante et
+          efficitur sollicitudin. Nam in dui felis. Vestibulum ultricies massa vitae
+          feugiat dapibus. Nullam eget blandit tortor. Morbi commodo consequat lacus
+          sit amet egestas. Nunc varius arcu dolor, eget lobortis nibh gravida in.
+          Ut tempor, diam malesuada auctor pretium, lectus diam elementum quam, eleifend
+          tincidunt justo elit at metus. Mauris sed posuere massa.
+        /xinmods:baseFolder:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: 159761e8-ce38-4baa-8739-ccbf9e7beb19
+    /categorie-informatie[2]:
+      jcr:primaryType: xinmods:content
+      jcr:mixinTypes: ['mix:referenceable', 'mix:versionable']
+      jcr:uuid: 7e5b010f-31b7-40ff-89a5-8de123d44966
+      hippo:availability: [preview]
+      hippostd:state: unpublished
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-10-18T21:58:36.875+13:00
+      hippostdpubwf:lastModificationDate: 2017-10-18T21:59:16.463+13:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippotranslation:id: 7771fc3d-066a-491c-9fe7-cb829c6c60cd
+      hippotranslation:locale: document-type-locale
+      xinmods:description: Fusce fringilla consequat molestie. Sed congue ante et
+        efficitur sollicitudin.
+      xinmods:pageTitle: Wereld
+      xinmods:title: Wereld
+      /xinmods:thumbnail:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:Information:
+        jcr:primaryType: xinmods:categorydetails
+        xinmods:description: Fusce fringilla consequat molestie. Sed congue ante et
+          efficitur sollicitudin. Nam in dui felis. Vestibulum ultricies massa vitae
+          feugiat dapibus. Nullam eget blandit tortor. Morbi commodo consequat lacus
+          sit amet egestas. Nunc varius arcu dolor, eget lobortis nibh gravida in.
+          Ut tempor, diam malesuada auctor pretium, lectus diam elementum quam, eleifend
+          tincidunt justo elit at metus. Mauris sed posuere massa.
+        /xinmods:baseFolder:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: 159761e8-ce38-4baa-8739-ccbf9e7beb19
+    /categorie-informatie[3]:
+      jcr:primaryType: xinmods:content
+      jcr:mixinTypes: ['mix:referenceable']
+      jcr:uuid: d02d7dda-faad-4d1e-8522-4ace942c85bb
+      hippo:availability: [live]
+      hippostd:state: published
+      hippostdpubwf:createdBy: admin
+      hippostdpubwf:creationDate: 2017-10-18T21:58:36.875+13:00
+      hippostdpubwf:lastModificationDate: 2017-10-18T21:59:16.463+13:00
+      hippostdpubwf:lastModifiedBy: admin
+      hippostdpubwf:publicationDate: 2017-10-18T21:59:18.548+13:00
+      hippotranslation:id: 7771fc3d-066a-491c-9fe7-cb829c6c60cd
+      hippotranslation:locale: document-type-locale
+      xinmods:description: Fusce fringilla consequat molestie. Sed congue ante et
+        efficitur sollicitudin.
+      xinmods:pageTitle: Wereld
+      xinmods:title: Wereld
+      /xinmods:thumbnail:
+        jcr:primaryType: hippogallerypicker:imagelink
+        hippo:docbase: cafebabe-cafe-babe-cafe-babecafebabe
+        hippo:facets: []
+        hippo:modes: []
+        hippo:values: []
+      /xinmods:Information:
+        jcr:primaryType: xinmods:categorydetails
+        xinmods:description: Fusce fringilla consequat molestie. Sed congue ante et
+          efficitur sollicitudin. Nam in dui felis. Vestibulum ultricies massa vitae
+          feugiat dapibus. Nullam eget blandit tortor. Morbi commodo consequat lacus
+          sit amet egestas. Nunc varius arcu dolor, eget lobortis nibh gravida in.
+          Ut tempor, diam malesuada auctor pretium, lectus diam elementum quam, eleifend
+          tincidunt justo elit at metus. Mauris sed posuere massa.
+        /xinmods:baseFolder:
+          jcr:primaryType: hippo:mirror
+          hippo:docbase: 159761e8-ce38-4baa-8739-ccbf9e7beb19
