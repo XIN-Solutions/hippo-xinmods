@@ -13,19 +13,25 @@ Import a package:
 $ curl -X PUT -F "file=@package2.zip;type=application/zip" http://localhost:8080/site/custom-api/packages/import -v
 ```
 
-Create a package:
+Create a package definition:
 
 ```sh
 curl -X PUT -H "Content-Type: application/json" -d @test-package.json "http://localhost:8080/site/custom-api/packages/test-package2" -v
 ```
 
-Delete a package:
+Change/Edit a package definition:
+
+```sh
+curl -X POST -H "Content-Type: application/json" -d @test-package.json "http://localhost:8080/site/custom-api/packages/test-package2" -v
+```
+
+Delete a package definition:
 
 ```sh
 curl -X DELETE -H "Content-Type: application/json" "http://localhost:8080/site/custom-api/packages/test-package2" -v
 ```
 
-List packages:
+List package definitions:
 
 ```sh
 curl -X GET -H "Content-Type: application/json" "http://localhost:8080/site/custom-api/packages/list" -v

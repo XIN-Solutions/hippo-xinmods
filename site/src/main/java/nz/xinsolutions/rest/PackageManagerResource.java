@@ -270,6 +270,40 @@ public class PackageManagerResource extends BaseRestResource {
         }
     }
     
+    
+    /**
+     * TODO: Create a package definition using this endpoint
+     */
+    @POST
+    @Path("/{id}")
+    public Response editPackage(
+        @Context HttpServletRequest request,
+        @PathParam("id") String packageId,
+        Package packageInfo
+    ) {
+        LOG.info("Requesting creation of new package: " + packageId);
+        
+        try {
+            Session jcrSession = loginAdministrative();
+            
+            // should exist.
+            if (!pkgListService.packageExists(jcrSession, packageId)) {
+                LOG.error("Package with ID `{}` does not exist, aborting.", packageId);
+                return Response.serverError().build();
+            }
+            
+            packageInfo.setId(packageId);
+
+            pkgListService.deletePackage(jcrSession, packageId);
+            pkgListService.addPackage(jcrSession, packageInfo);
+            return Response.ok().build();
+        }
+        catch (RepositoryException | PackageException ex) {
+            LOG.error("Could not complete package creation, caused by: ", ex);
+            return Response.serverError().build();
+        }
+    }
+    
     /**
      * TODO: Admin credentials should be read from somewhere safe
      * @return an administrator session
