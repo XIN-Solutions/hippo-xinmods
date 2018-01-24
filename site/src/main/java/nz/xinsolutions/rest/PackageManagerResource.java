@@ -218,10 +218,28 @@ public class PackageManagerResource extends BaseRestResource {
      */
     @DELETE
     @Path("/{id}")
-    public Void deletePackage(@PathParam("id") String packageId) {
+    public Response deletePackage(@PathParam("id") String packageId) {
         LOG.info("Requesting deletion of " + packageId);
-        return null;
+
+        try {
+            Session jcrSession = loginAdministrative();
+        
+            if (!pkgListService.packageExists(jcrSession, packageId)) {
+                LOG.error("Package with ID `{}` doesn't exist", packageId);
+                return Response.serverError().build();
+            }
+        
+            pkgListService.deletePackage(jcrSession, packageId);
+            return Response.ok().build();
+        }
+        catch (RepositoryException | PackageException ex) {
+            LOG.error("Could not complete package creation, caused by: ", ex);
+            return Response.serverError().build();
+        }
+        
     }
+    
+
     
     /**
      * TODO: Create a package definition using this endpoint
@@ -236,16 +254,14 @@ public class PackageManagerResource extends BaseRestResource {
         LOG.info("Requesting creation of new package: " + packageId);
 
         try {
-            HippoRepository repository = HippoRepositoryFactory.getHippoRepository("vm://");
-            Session jcrSession = repository.login("admin", "admin".toCharArray());
+            Session jcrSession = loginAdministrative();
             
             if (pkgListService.packageExists(jcrSession, packageId)) {
-                LOG.error("Package with ID `{}` already exists", packageId);
+                LOG.error("Package with ID `{}` already exists, aborting.", packageId);
                 return Response.serverError().build();
             }
             
-            packageInfo.setId(packageId);
-            pkgListService.addPackage(jcrSession, packageInfo);
+            pkgListService.deletePackage(jcrSession, packageId);
             return Response.ok().build();
         }
         catch (RepositoryException | PackageException ex) {
@@ -253,5 +269,14 @@ public class PackageManagerResource extends BaseRestResource {
             return Response.serverError().build();
         }
     }
-
+    
+    /**
+     * TODO: Admin credentials should be read from somewhere safe
+     * @return an administrator session
+     * @throws RepositoryException
+     */
+    protected Session loginAdministrative() throws RepositoryException {
+        HippoRepository repository = HippoRepositoryFactory.getHippoRepository("vm://");
+        return repository.login("admin", "admin".toCharArray());
+    }
 }

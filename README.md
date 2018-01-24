@@ -1,5 +1,47 @@
+REST Endpoints
+================
+
+Export a package:
+
+```sh
+$ curl -X GET -H Content-Type: application/json -H Accept: application/json http://localhost:8080/site/custom-api/packages/blog-package/export -o package2.zip -v
+```
+
+Import a package:
+
+```sh
+$ curl -X PUT -F "file=@package2.zip;type=application/zip" http://localhost:8080/site/custom-api/packages/import -v
+```
+
+Create a package:
+
+```sh
+curl -X PUT -H "Content-Type: application/json" -d @test-package.json "http://localhost:8080/site/custom-api/packages/test-package2" -v
+```
+
+Delete a package:
+
+```sh
+curl -X DELETE -H "Content-Type: application/json" "http://localhost:8080/site/custom-api/packages/test-package2" -v
+```
+
+List packages:
+
+```sh
+curl -X GET -H "Content-Type: application/json" "http://localhost:8080/site/custom-api/packages/list" -v
+```
+
+
+
+
+
 Running locally
 ===============
+
+```sh
+mvn -DskipTests=true verify && mvn -Pcargo.run -Drepo.path=storage
+```
+
 
 This project uses the Maven Cargo plugin to run Essentials, the CMS and site locally in Tomcat.
 From the project root folder, execute:

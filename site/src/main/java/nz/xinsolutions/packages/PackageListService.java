@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import javax.jcr.Session;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
@@ -105,6 +106,25 @@ public class PackageListService {
         this.jcrPersister.persistPackages(session, packages);
     }
     
+    /**
+     * Delete a package with id <code>packageId</code> from the list of packages, then persist it.
+     *
+     * @param jcrSession    is the session to get the packages with
+     * @param packageId     is the identifier to get
+     * @throws PackageException
+     */
+    public void deletePackage(Session jcrSession, String packageId) throws PackageException {
+        
+        List<Package> packages =
+            getPackages(jcrSession)
+                .stream()
+                .filter(pkg -> !pkg.getId().equals(packageId))
+                .collect(Collectors.toList())
+            ;
+        
+        this.jcrPersister.persistPackages(jcrSession, packages);
+        
+    }
     
     /**
      * Get package information for package with id <code>id</code>
@@ -119,7 +139,7 @@ public class PackageListService {
             .filter( pkg -> pkg.getId().equals(id) )
             .findFirst()
             .orElse(null)
-            ;
+        ;
     }
     
     /**
@@ -132,5 +152,5 @@ public class PackageListService {
     public boolean packageExists(Session session, String packageId) throws PackageException {
         return getPackage(session, packageId) != null;
     }
-    
+
 }
