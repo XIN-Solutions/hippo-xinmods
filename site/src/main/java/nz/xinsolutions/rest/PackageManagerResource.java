@@ -22,7 +22,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -57,20 +58,6 @@ public class PackageManagerResource extends BaseRestResource {
      */
     @Autowired private PackageImportService pkgImportService;
     
-    /**
-     * Retrieve the HTML for the angular application
-     *
-     * @return  the input stream
-     * @throws FileNotFoundException
-     */
-    @GET
-    @Path("/")
-    @Produces(MediaType.TEXT_HTML)
-    public InputStream packageIndex() throws FileNotFoundException {
-        // TODO: Make this less shitty
-        File file = new File("/home/marnix/tmp/hippo/xinmods/packageManager.html");
-        return new FileInputStream(file);
-    }
     
     /**
      * @return a list of all the packages

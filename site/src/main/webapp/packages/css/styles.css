@@ -1,0 +1,55 @@
+body {
+    overflow-y: scroll;
+}
+
+[data-loading="{{1}}"] {
+    display: none;
+}
+
+.right {
+    float: right;
+}
+
+.ButtonBar {
+    margin-bottom: 2em;
+}
+
+.NoPackages {
+    margin-top: 2em;
+    font-size: 1.3em;
+    font-style: italic;
+}
+
+.Title {
+    margin-bottom: 0.5em;
+}
+
+.Title__icon {
+    color: #46B181;
+    padding-right: 0.5em;
+}
+
+.Package {}
+.Package__title {
+    position: relative;
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+}
+
+.Package__body {
+
+}
+
+.Package__options {
+    background-color: #f4f4f4;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #eee;
+
+}
+
+.alert-warning {
+    background-color: #FFE2C9;
+    color: #333;
+    border-color: #FFC595;
+}

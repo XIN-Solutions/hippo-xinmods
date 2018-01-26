@@ -1,0 +1,105 @@
+<!doctype>
+<html>
+
+    <head>
+        <link href="https://bootswatch.com/4/lumen/bootstrap.css" rel="stylesheet" type="text/css">
+        <link href="css/styles.css" type="text/css" rel="stylesheet">
+
+        <title>Packages | XIN Solutions</title>
+
+    </head>
+    <body ng-app="app">
+
+        <div ng-controller="packages" data-loading="{{1}}">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+                        <h1 class="Title">
+                            <i class="Title__icon glyphicon glyphicon-folder-open"></i>
+                            Packages
+                        </h1>
+
+                        <div class="ButtonBar">
+
+                            <button class="btn btn-primary btn-lg" ng-click="addPackage()">
+                                <i class="glyphicon glyphicon-upload"><!-- --></i>
+                                Ingest package
+                            </button>
+                            <button class="btn btn-lg" ng-click="createPackage()">
+                                <i class="glyphicon glyphicon-plus"><!-- --></i>
+                                New package
+                            </button>
+
+                            <button class="btn btn-lg" ng-click="refresh()">
+                                <i class="glyphicon glyphicon-refresh"><!-- --></i>
+                                Refresh
+                            </button>
+                        </div>
+
+                        <div ng-show="noPackages()" class="NoPackages">
+                            No packages available in the repository
+                        </div>
+
+                        <div ng-repeat="pkg in packages">
+                            <div class="Package panel panel-default">
+                                <div class="Package__title panel-heading" ng-click="collapse(pkg)">
+                                    <div class="right">
+                                        <i ng-show="pkg.collapsed" class="glyphicon glyphicon-plus"></i>
+                                        <i ng-hide="pkg.collapsed" class="glyphicon glyphicon-minus"></i>
+                                    </div>
+
+                                    Package: {{pkg.id}}
+                                </div>
+                                <div ng-hide="pkg.collapsed" class="Package__options panel-body">
+                                    <div class="right">
+                                        <button class="btn"><i class="glyphicon glyphicon-download"></i>&nbsp;&nbsp;Download</button>
+                                        <button class="btn"><i class="glyphicon glyphicon-remove"></i> Delete</button>
+                                    </div>
+                                    <button class="btn"><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp;Edit</button>
+                                    <button class="btn" ng-click="buildPackage(pkg.id)"><i class="glyphicon glyphicon-refresh"></i>&nbsp;&nbsp;Build</button>
+                                    <button class="btn"><i class="glyphicon glyphicon-asterisk"></i>&nbsp;&nbsp;Install</button>
+
+                                </div>
+                                <div ng-hide="pkg.collapsed" class="Package__body panel-body">
+
+                                    <div ng-show="pkg.modified" class="alert alert-warning Package__modified" role="alert">
+                                        The package was modified.
+                                    </div>
+
+
+                                    <h3>Filters</h3>
+                                    <div class="well">
+                                        <ul ng-repeat="filter in pkg.filters">
+                                            <li><code>{{filter}}</code></li>
+                                        </ul>
+                                    </div>
+
+                                    <h3>CND entities</h3>
+                                    <div class="well">
+                                        <ul ng-repeat="cnd in pkg.cnds">
+                                            <li><code>{{cnd}}</code></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- include external libraries -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://fastcdn.org/Underscore.js/1.8.3/underscore-min.js"></script>
+
+        <!-- package manger -->
+        <script src="js/app.js"></script>
+        <script src="js/endpoint.js"></script>
+        <script src="js/packages.js"></script>
+
+    </body>
+</html>

@@ -78,6 +78,12 @@
   <filter>
     <filter-name>HstFilter</filter-name>
     <filter-class>org.hippoecm.hst.container.HstFilter</filter-class>
+    <init-param>
+      <param-name>suffixExclusions</param-name>
+      <param-value>
+          .html, .shtml, .css, .js
+      </param-value>
+    </init-param>
   </filter>
 
   <filter-mapping>
@@ -89,7 +95,6 @@
     <filter-name>XSSUrlFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-
   <filter-mapping>
     <filter-name>HstFilter</filter-name>
     <url-pattern>/*</url-pattern>
@@ -167,6 +172,21 @@
     <init-param>
       <param-name>jarPathPrefix</param-name>
       <param-value>/META-INF/web-resources</param-value>
+    </init-param>
+    <init-param>
+      <param-name>allowedResourcePaths</param-name>
+      <param-value>
+        ^/.*\.do,
+        ^/.*\.js,
+        ^/.*\.css,
+        ^/.*\.png,
+        ^/.*\.gif,
+        ^/.*\.ico,
+        ^/.*\.jpg,
+        ^/.*\.jpeg,
+        ^/.*\.swf,
+        ^/.*\.txt
+      </param-value>
     </init-param>
   </servlet>
 
