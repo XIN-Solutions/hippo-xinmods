@@ -2,7 +2,12 @@
 <html>
 
     <head>
-        <link href="https://bootswatch.com/4/lumen/bootstrap.css" rel="stylesheet" type="text/css">
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="libs/bootstrap.min.css" type="text/css">
+        <link rel="stylesheet" href="libs/bootstrap-theme.min.css" type="text/css">
+
+
         <link href="css/styles.css" type="text/css" rel="stylesheet">
 
         <title>Packages | XIN Solutions</title>
@@ -10,28 +15,31 @@
     </head>
     <body ng-app="app">
 
-        <div ng-controller="packages" data-loading="{{1}}">
+        <div ng-controller="ListController" data-loading="{{1}}">
             <div class="container">
                 <div class="row">
 
-                    <div class="col-lg-12 col-md-12 col-xs-12 col-sm-12">
+                    <div class="
+                            col-lg-offset-1 col-md-offset-1 col-sm-offset-1
+                            col-lg-10 col-md-10 col-sm-10 col-xs-12
+                    ">
                         <h1 class="Title">
                             <i class="Title__icon glyphicon glyphicon-folder-open"></i>
-                            Packages 2
+                            Packages
                         </h1>
 
                         <div class="ButtonBar">
 
-                            <button class="btn btn-primary btn-lg" ng-click="addPackage()">
+                            <button class="btn btn-primary" ng-click="ingestPackage()">
                                 <i class="glyphicon glyphicon-upload"><!-- --></i>
                                 Ingest package
                             </button>
-                            <button class="btn btn-lg" ng-click="createPackage()">
+                            <button class="btn btn-default" ng-click="createPackage()">
                                 <i class="glyphicon glyphicon-plus"><!-- --></i>
                                 New package
                             </button>
 
-                            <button class="btn btn-lg" ng-click="refresh()">
+                            <button class="btn btn-default" ng-click="refresh()">
                                 <i class="glyphicon glyphicon-refresh"><!-- --></i>
                                 Refresh
                             </button>
@@ -53,12 +61,16 @@
                                 </div>
                                 <div ng-hide="pkg.collapsed" class="Package__options panel-body">
                                     <div class="right">
-                                        <button class="btn"><i class="glyphicon glyphicon-download"></i>&nbsp;&nbsp;Download</button>
-                                        <button class="btn"><i class="glyphicon glyphicon-remove"></i> Delete</button>
+                                        <button class="btn btn-default" ng-click="deletePackage(pkg.id)">
+                                            <i class="glyphicon glyphicon-remove"></i> Delete
+                                        </button>
                                     </div>
-                                    <button class="btn"><i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp;Edit</button>
-                                    <button class="btn" ng-click="buildPackage(pkg.id)"><i class="glyphicon glyphicon-refresh"></i>&nbsp;&nbsp;Build</button>
-                                    <button class="btn"><i class="glyphicon glyphicon-asterisk"></i>&nbsp;&nbsp;Install</button>
+                                    <button class="btn btn-default" ng-click="editPackage(pkg.id)">
+                                        <i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp;Edit
+                                    </button>
+                                    <button class="btn btn-default" ng-click="downloadPackage(pkg.id)">
+                                        <i class="glyphicon glyphicon-refresh"></i>&nbsp;&nbsp;Download
+                                    </button>
 
                                 </div>
                                 <div ng-hide="pkg.collapsed" class="Package__body panel-body">
@@ -91,15 +103,15 @@
         </div>
 
         <!-- include external libraries -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <script src="https://fastcdn.org/Underscore.js/1.8.3/underscore-min.js"></script>
+        <script src="libs/angular.min.js"></script>
+        <script src="libs/jquery.min.js"></script>
+        <script src="libs/bootstrap.min.js"></script>
+        <script src="libs/underscore-min.js"></script>
 
         <!-- package manger -->
         <script src="js/app.js"></script>
         <script src="js/endpoint.js"></script>
-        <script src="js/packages.js"></script>
+        <script src="js/listController.js"></script>
 
     </body>
 </html>

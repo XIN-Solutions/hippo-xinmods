@@ -28,6 +28,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static javax.servlet.http.HttpServletResponse.*;
+import static nz.xinsolutions.rest.CORSHelper.enableCORS;
 
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
@@ -71,11 +72,11 @@ public class PackageManagerResource extends BaseRestResource {
         try {
             LOG.info("Return a list of packages");
             Session session = getSession(ctx);
-            return Response.ok(pkgListService.getPackages(session)).build();
+            return enableCORS(Response.ok(pkgListService.getPackages(session))).build();
         }
         catch (PackageException | RepositoryException ex) {
             LOG.error("Couldn't get all packages, caused by: ", ex);
-            return Response.serverError().build();
+            return errorResponse();
         }
     }
     
@@ -92,7 +93,7 @@ public class PackageManagerResource extends BaseRestResource {
     @PUT
     @Path("/import")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public void importPackage(
+    public Response importPackage(
         @Context HttpServletRequest request,
         @Context HttpServletResponse response,
         @QueryParam("careful") boolean careful,
@@ -106,14 +107,14 @@ public class PackageManagerResource extends BaseRestResource {
             if (stream == null) {
                 LOG.error("No attachment found with name `file`, aborting.");
                 response.setStatus(SC_BAD_REQUEST);
-                return;
+                return errorResponse();
             }
             
             // attachment of the correct type?
             if (!stream.getContentType().getSubtype().equals("zip")) {
                 LOG.error("Incoming stream was not of type `zip`, aborting.");
                 response.setStatus(SC_BAD_REQUEST);
-                return;
+                return errorResponse();
             }
             
             // copy file onto disk
@@ -123,6 +124,7 @@ public class PackageManagerResource extends BaseRestResource {
             pkgImportService.importFile(getSession(ctx), tmpAttachmentFile, false);
             
             LOG.info("Package temporarily stored at: " + tmpAttachmentFile.getCanonicalPath());
+            return emptyResponse();
         }
         catch (RepositoryException rEx) {
             LOG.error("Repo exception caused by: ", rEx);
@@ -133,9 +135,13 @@ public class PackageManagerResource extends BaseRestResource {
         catch (IOException ioEx) {
             LOG.error("Could not parse the incoming attachment, caused by: ", ioEx);
         }
-    
-    
+        return errorResponse();
     }
+    
+    protected Response emptyResponse() {
+        return enableCORS(Response.noContent()).build();
+    }
+    
     
     /**
      * Build a package that was already defined
@@ -156,7 +162,7 @@ public class PackageManagerResource extends BaseRestResource {
     
             if (!pkgListService.packageExists(jcrSession, packageId)) {
                 response.setStatus(SC_NOT_FOUND);
-                return;
+                CORSHelper.enableCORS(response);
             }
     
             String date = getFilenameDate(getNowStamp());
@@ -167,7 +173,6 @@ public class PackageManagerResource extends BaseRestResource {
             response.setHeader("Content-Disposition", "attachment; filename=\"" + packageDate + "\"");
             ServletOutputStream responseOutStr = response.getOutputStream();
             pkgExportService.build(jcrSession, packageId, responseOutStr);
-            
         }
         catch (IOException ioEx) {
             LOG.error("Could not retrieve output stream for response object, caused by: ", ioEx);
@@ -179,25 +184,6 @@ public class PackageManagerResource extends BaseRestResource {
             LOG.error("Something went wrong, caused by: ", pkgEx);
         }
         
-    }
-    
-    protected Session getSession(RestContext ctx) throws RepositoryException {
-        return ctx.getRequestContext().getSession();
-    }
-    
-    
-    /**
-     * @return the now date
-     */
-    protected Date getNowStamp() {
-        return new Date();
-    }
-    
-    /**
-     * @return the formatted date for the filename for <code>date</code>.
-     */
-    protected String getFilenameDate(Date date) {
-        return new SimpleDateFormat(DATE_PATTERN).format(date);
     }
     
     /**
@@ -213,15 +199,15 @@ public class PackageManagerResource extends BaseRestResource {
         
             if (!pkgListService.packageExists(jcrSession, packageId)) {
                 LOG.error("Package with ID `{}` doesn't exist", packageId);
-                return Response.serverError().build();
+                return enableCORS(Response.serverError()).build();
             }
         
             pkgListService.deletePackage(jcrSession, packageId);
-            return Response.ok().build();
+            return enableCORS(Response.ok()).build();
         }
         catch (RepositoryException | PackageException ex) {
             LOG.error("Could not complete package creation, caused by: ", ex);
-            return Response.serverError().build();
+            return enableCORS(Response.serverError()).build();
         }
         
     }
@@ -245,15 +231,15 @@ public class PackageManagerResource extends BaseRestResource {
             
             if (pkgListService.packageExists(jcrSession, packageId)) {
                 LOG.error("Package with ID `{}` already exists, aborting.", packageId);
-                return Response.serverError().build();
+                return enableCORS(Response.serverError()).build();
             }
             
             pkgListService.deletePackage(jcrSession, packageId);
-            return Response.ok().build();
+            return enableCORS(Response.ok()).build();
         }
         catch (RepositoryException | PackageException ex) {
             LOG.error("Could not complete package creation, caused by: ", ex);
-            return Response.serverError().build();
+            return enableCORS(Response.serverError()).build();
         }
     }
     
@@ -276,18 +262,18 @@ public class PackageManagerResource extends BaseRestResource {
             // should exist.
             if (!pkgListService.packageExists(jcrSession, packageId)) {
                 LOG.error("Package with ID `{}` does not exist, aborting.", packageId);
-                return Response.serverError().build();
+                return enableCORS(Response.serverError()).build();
             }
             
             packageInfo.setId(packageId);
 
             pkgListService.deletePackage(jcrSession, packageId);
             pkgListService.addPackage(jcrSession, packageInfo);
-            return Response.ok().build();
+            return enableCORS(Response.ok()).build();
         }
         catch (RepositoryException | PackageException ex) {
             LOG.error("Could not complete package creation, caused by: ", ex);
-            return Response.serverError().build();
+            return enableCORS(Response.serverError()).build();
         }
     }
     
@@ -300,4 +286,44 @@ public class PackageManagerResource extends BaseRestResource {
         HippoRepository repository = HippoRepositoryFactory.getHippoRepository("vm://");
         return repository.login("admin", "admin".toCharArray());
     }
+    
+    @OPTIONS
+    @Path("{path : .*}")
+    public Response options() {
+        return Response.ok("")
+            .header("Access-Control-Allow-Origin", "*")
+            .header("Access-Control-Allow-Headers", "origin, content-type, accept, authorization")
+            .header("Access-Control-Allow-Credentials", "true")
+            .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD")
+            .header("Access-Control-Max-Age", "1209600")
+            .build();
+    }
+    
+    /**
+     * @return an error response
+     */
+    protected Response errorResponse() {
+        return enableCORS(Response.serverError()).build();
+    }
+    
+    
+    protected Session getSession(RestContext ctx) throws RepositoryException {
+        return ctx.getRequestContext().getSession();
+    }
+    
+    
+    /**
+     * @return the now date
+     */
+    protected Date getNowStamp() {
+        return new Date();
+    }
+    
+    /**
+     * @return the formatted date for the filename for <code>date</code>.
+     */
+    protected String getFilenameDate(Date date) {
+        return new SimpleDateFormat(DATE_PATTERN).format(date);
+    }
+    
 }

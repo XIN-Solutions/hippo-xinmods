@@ -1,6 +1,6 @@
 (function(undefined) {
 
-    app.controller("packages", function($scope, endpoint) {
+    app.controller("ListController", function($scope, endpoint) {
 
         /**
          * Add to scope
@@ -35,28 +35,39 @@
             },
 
             /**
-             * Add a package from a certain URL
+             * Ingest a package
              */
-            addPackage : function() {
-
-                var pkg = prompt("Ingest package from URL:");
-                if (!pkg) {
-                    console.log("Cancelled");
-                    return;
-                }
-                console.log("Ingesting package from: ", pkg);
+            ingestPackage : function() {
+                console.log("Ingesting package");
+                document.location.href = "ingest.html";
             },
 
             /**
              * Create a new package
              */
             createPackage : function() {
-                var id = prompt("Package ID of new package:");
-                if (!id) {
-                    console.log("Cancelled");
-                    return;
+                document.location.href = "package.html";
+            },
+
+            /**
+             * Go to the edit page
+             * @param id is the package identifier to change
+             */
+            editPackage : function(id) {
+                document.location.href = "package.html?id=" + id;
+            },
+
+            /**
+             * Ask to delete definition
+             *
+             * @param id        is the package definition to delete
+             */
+            deletePackage : function(id) {
+                if (confirm("Are you sure you wish to delete the package definition?\n\nThis will not remove the contents in the package from the repository")) {
+                    endpoint.deletePackage(id).then(function() {
+                        $scope.refresh();
+                    });
                 }
-                console.log("New package: ", id);
             },
 
             /**
@@ -64,8 +75,8 @@
              *
              * @param id  the identifier to use
              */
-            buildPackage : function(id) {
-                endpoint.buildPackage(id);
+            downloadPackage : function(id) {
+                endpoint.downloadPackage(id);
             },
 
             /**

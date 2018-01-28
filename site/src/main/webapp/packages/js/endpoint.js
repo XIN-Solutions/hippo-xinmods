@@ -6,7 +6,7 @@
          * Where to look for the endpoints
          * @type {String}
          */
-        var BASE_URL = "/site/custom-api";
+        var BASE_URL = "http://localhost:8080/site/custom-api";
 
 
         var package = {
@@ -37,17 +37,32 @@
                 });
             },
 
+            /**
+             * Delete a package
+             *
+             * @param pkgId     is the package definition to delete.
+             */
+            deletePackage : function(pkgId) {
+                return $http({
+                    method: 'delete',
+                    url: BASE_URL + "/packages/" + pkgId
+                });
+            },
+
+            /**
+             * @returns {string} the ingestion url to post the form to
+             */
+            getIngestUrl : function() {
+                return BASE_URL + "/packages/import";
+            },
 
             /**
              * Build a package with a certain identifier
              *
              * @return {[type]} [description]
              */
-            buildPackage : function(id) {
-                return $http({
-                    method: "post",
-                    url: BASE_URL + "/packages/" + id + "/build"
-                });
+            downloadPackage : function(id) {
+                return window.open(BASE_URL + "/packages/" + id + "/export");
             }
 
         };

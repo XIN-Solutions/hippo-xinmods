@@ -1,0 +1,73 @@
+<!doctype>
+<html>
+
+    <head>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="libs/bootstrap.min.css" type="text/css">
+        <link rel="stylesheet" href="libs/bootstrap-theme.min.css" type="text/css">
+
+
+        <link href="css/styles.css" type="text/css" rel="stylesheet">
+
+        <title>Packages | XIN Solutions</title>
+
+    </head>
+    <body ng-app="app" class="Modal_Content">
+
+        <div class="Modal_Top"><!-- --></div>
+
+        <div ng-controller="IngestController" data-loading="{{1}}" >
+            <div class="container">
+                <div class="row">
+
+                    <div class="
+                            col-lg-offset-3 col-md-offset-3 col-sm-offset-2
+                            col-lg-6 col-md-6 col-sm-8 col-xs-12
+                        ">
+
+
+                        <div class="ButtonBar">
+                            <button class="btn btn-default" onclick="javascript: document.location.href='list.html'">
+                                <i class="glyphicon glyphicon-arrow-left"></i>
+                                Back
+                            </button>
+                        </div>
+
+                        <p>Upload a package from disk for ingestion &hellip;</p>
+
+                        <div class="alert alert-info" role="alert">
+                            Hitting the submit button will upload and immediately install the package to the repository.
+                        </div>
+
+                        <div class="well well-lg">
+                            <form action="{{action}}" method="post" enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <label for="file">File to upload</label>
+                                    <input id="file" name="file" type="file">
+                                </div>
+
+
+                                <button class="btn btn-md btn-info">Ingest</button>
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- include external libraries -->
+        <script src="libs/angular.min.js"></script>
+        <script src="libs/jquery.min.js"></script>
+        <script src="libs/bootstrap.min.js"></script>
+        <script src="libs/underscore-min.js"></script>
+
+        <!-- package manger -->
+        <script src="js/app.js"></script>
+        <script src="js/endpoint.js"></script>
+        <script src="js/ingestController.js"></script>
+
+    </body>
+</html>
