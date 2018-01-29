@@ -5,6 +5,7 @@ import nz.xinsolutions.cnd.CndBundle;
 import nz.xinsolutions.cnd.CndSerialiser;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.commons.cnd.CndImporter;
 import org.apache.jackrabbit.commons.cnd.ParseException;
 import org.onehippo.cm.ConfigurationService;
@@ -21,8 +22,10 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.zeroturnaround.zip.commons.FileUtilsV2_2.readFileToString;
 
@@ -136,17 +139,40 @@ public class PackageImportService {
             ZipUtil.unpack(zipFile, zipFile.getParentFile());
             
             String contentBasePath = getNodeNameFromFile(zipFile);
-            LOG.info("Determined root path: " + contentBasePath);
+            String parentPath = getParentPathOf(contentBasePath);
+            LOG.info("Determined root path: " + parentPath);
             
-            LOG.info("Importing: {} into {}", zipFile.getName(), contentBasePath);
+            LOG.info("Importing: {} into {}", zipFile.getName(), parentPath);
             
             ConfigurationService configService = HippoServiceRegistry.getService(ConfigurationService.class);
-            configService.importZippedContent(zipFile, session.getNode(contentBasePath));
+            
+            // TODO: add node exists check
+            configService.importZippedContent(zipFile, session.getNode(parentPath));
+            
+            session.save();
             
         }
         catch (IOException | RepositoryException ex) {
             LOG.error("Something went wrong while trying to import `{}`, caused by: ", contentFile, ex);
         }
+    }
+    
+    /**
+     * @return the parent path (minus the last /element)
+     */
+    protected String getParentPathOf(String contentBasePath) {
+        if (StringUtils.isEmpty(contentBasePath)) {
+            return null;
+        }
+        
+        List<String> elements =
+            new ArrayList<>(
+                Arrays.asList(contentBasePath.split("/"))
+            );
+        
+        elements.remove(elements.size() - 1);
+        
+        return elements.stream().collect(Collectors.joining("/"));
     }
     
     
