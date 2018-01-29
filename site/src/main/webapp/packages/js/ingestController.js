@@ -3,9 +3,18 @@ app.controller("IngestController", ['$scope', 'endpoint', function($scope, endpo
     _.extend($scope, {
 
         action : "",
+        form: null,
 
         initialise : function() {
-            $scope.action = endpoint.getIngestUrl();
+            this.form = document.getElementById("uploadForm");
+            this.form.action = endpoint.getIngestUrl();
+            this.form.method = 'post';
+
+            document.getElementById("redirectTo").value = document.location.href;
+        },
+
+        backToList : function() {
+        	document.location.href = "list.html";
         }
 
     });

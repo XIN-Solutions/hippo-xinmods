@@ -13,11 +13,12 @@
         <title>Packages | XIN Solutions</title>
 
     </head>
-    <body ng-app="app" class="Modal_Content">
+    <body class="Modal_Content">
 
         <div class="Modal_Top"><!-- --></div>
 
-        <div ng-controller="IngestController" data-loading="{{1}}" >
+        <div ng-app="app"  ng-controller="IngestController" data-loading="{{1}}" ></div>
+        <div>
             <div class="container">
                 <div class="row">
 
@@ -39,19 +40,46 @@
                         <div class="alert alert-info" role="alert">
                             Hitting the submit button will upload and immediately install the package to the repository.
                         </div>
+                        <form id="uploadForm" target="_blank" enctype="multipart/form-data">
 
-                        <div class="well well-lg">
-                            <form action="{{action}}" method="post" enctype="multipart/form-data">
+                            <div class="well well-lg">
                                 <div class="form-group">
                                     <label for="file">File to upload</label>
                                     <input id="file" name="file" type="file">
                                 </div>
 
+                                <label for="importContent">
+                                    <input type="checkbox" value="true" name="importContent" id="importContent"> Ingest packaged content
+                                </label>
+                                <p class="help-block">
+                                    Check this to box to import the content present in the package.
+                                </p>
 
-                                <button class="btn btn-md btn-info">Ingest</button>
+                                <label for="importCND">
+                                    <input type="checkbox" value="true" name="importCND" id="importCND"> Ingest packaged CNDs
+                                </label>
+                                <p class="help-block">
+                                    Check this to box to import the CND present in the package (this may be necessary for the content to work).
+                                </p>
 
-                            </form>
-                        </div>
+                                <label for="importPackageDef">
+                                    <input type="checkbox" value="true" name="importPackageDef" id="importPackageDef" checked> Keep package definition
+                                </label>
+                                <p class="help-block">
+                                    Check this box if you wish to keep the package definition 
+                                </p>
+
+                                <input type="hidden" id="redirectTo" name="redirectTo" value="">
+                            </div>
+
+                            <!-- button bar -->
+                            <div class="ButtonBar ButtonBar--bottom">
+                                <button class="btn right btn-md btn-primary" type="submit"><i class="glyphicon glyphicon-upload"><!-- --></i> Ingest package</button>
+                                <a class="btn btn-link" onclick="javascript: document.location.href='list.html'">Cancel</a>
+                            </div>
+
+                        </form>
+
                     </div>
 
                 </div>

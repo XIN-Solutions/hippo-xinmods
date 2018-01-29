@@ -6,12 +6,38 @@ body {
     display: none;
 }
 
+.clearfix {
+    position: relative;
+    overflow: hidden;
+}
+
 .right {
     float: right;
 }
 
+.right--space {
+    margin-right: 5px;
+}
+
+.spaced {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.btn-flat--top {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+}
+
 .ButtonBar {
     margin-bottom: 2em;
+}
+
+.ButtonBar.ButtonBar--bottom {
+    border-top: 1px solid #eee;
+    margin-top: 1em;
+    padding-top: 1em;
 }
 
 .NoPackages {

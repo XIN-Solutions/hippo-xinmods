@@ -40,7 +40,7 @@ public class PackageImportService {
     public static final String CND_FILE = "cndExport.json";
     public static final String METADATA_FILE = "metadata.json";
     
-    @Autowired private PackageListService service;
+    @Autowired private PackageListService listService;
     
     /**
      * Logger
@@ -53,7 +53,12 @@ public class PackageImportService {
      * @param pkgFile
      * @throws PackageException
      */
-    public void importFile(Session session, File pkgFile, boolean careful) throws PackageException {
+    public void importFile(
+                Session session, File pkgFile,
+                boolean importContent,
+                boolean importCnd,
+                boolean importPackageDef) throws PackageException
+    {
         
         if (!isZip(pkgFile)) {
             throw new PackageException("Imported package is not a zip");
@@ -69,8 +74,8 @@ public class PackageImportService {
                 throw new PackageException("No package description found (metadata.json), aborting.");
             }
             
-            // if careful and package already exists? aboooort.
-            if (careful && service.packageExists(session, packageDesc.getId())) {
+            // if package already exists? aboooort.
+            if (listService.packageExists(session, packageDesc.getId())) {
                 LOG.warn("WARNING, overwriting an existing package definition that has id: " + packageDesc.getId());
                 throw new PackageException(
                     String.format(
@@ -81,27 +86,37 @@ public class PackageImportService {
             }
             
             // check whether package requirements are met
-            if (careful) {
-                validatePackageAgainstRepo(packageDesc);
+            validatePackageAgainstRepo(packageDesc);
+    
+            if (importPackageDef) {
+                listService.addPackage(session, packageDesc);
+            } else {
+                LOG.info("Not keeping package definition.");
             }
-            
+    
             // has cnd bundle definition? import it.
-            if (cndBundle != null) {
+            if (importCnd && cndBundle != null) {
                 importCnd(cndBundle, session);
+            }
+            else if (!importCnd) {
+                LOG.info("Skipping the CND import as per import instructions.");
             }
             else {
                 LOG.warn("No cndExport.json found in the package, so no CND entries added to repo is going to be imported.");
             }
            
             // has content files?
-            if (!CollectionUtils.isEmpty(contentFiles)) {
+            if (importContent && !CollectionUtils.isEmpty(contentFiles)) {
                 for (String contentFile : contentFiles) {
                     importZippedYaml(dir.getCanonicalPath() + "/" + contentFile, session);
                 }
+            } else if (!importContent) {
+                LOG.info("Skipping importing the content as per import instructions.");
             }
-        
+    
             // clean up
             cleanUpDir(dir);
+            
         }
         catch (IOException ioEx) {
             throw new PackageException("Could not load package, cause by: " + ioEx.getMessage());

@@ -38,6 +38,34 @@
             },
 
             /**
+             * Returns a promise to the package content response
+             * 
+             * @param  {[type]} pkgId [description]
+             * @return {[type]}       [description]
+             */
+            getPackage : function(pkgId) {
+                return $http({
+                    method: 'get',
+                    url: BASE_URL + "/packages/" + pkgId
+                });
+            },
+
+            /**
+             * Create a package
+             */
+            createPackage : function(pkgId, packageInfo) {
+                return $http.put(BASE_URL + "/packages/" + pkgId, packageInfo);
+            },
+
+
+            /**
+             * Update a package
+             */
+            updatePackage : function(pkgId, packageInfo) {
+                return $http.post(BASE_URL + "/packages/" + pkgId, packageInfo);
+            },
+
+            /**
              * Delete a package
              *
              * @param pkgId     is the package definition to delete.

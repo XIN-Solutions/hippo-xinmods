@@ -38,7 +38,6 @@
              * Ingest a package
              */
             ingestPackage : function() {
-                console.log("Ingesting package");
                 document.location.href = "ingest.html";
             },
 
@@ -63,7 +62,10 @@
              * @param id        is the package definition to delete
              */
             deletePackage : function(id) {
-                if (confirm("Are you sure you wish to delete the package definition?\n\nThis will not remove the contents in the package from the repository")) {
+                if (confirm(
+                        "Are you sure you wish to delete the package definition?\n" + 
+                        "This will not remove the contents in the package from the repository")
+                    ) {
                     endpoint.deletePackage(id).then(function() {
                         $scope.refresh();
                     });
