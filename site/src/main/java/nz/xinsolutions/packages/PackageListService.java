@@ -27,48 +27,6 @@ public class PackageListService {
      */
     @Autowired private PackageDefinitionJcrPersister jcrPersister;
     
-    private List<Package> packages;
-    
-//
-//    /**
-//     * Fake list of packages
-//     */
-//    private List<Package> packages = new ArrayList<Package>() {{
-//
-//        add(new Package() {{
-//            setId("blog-package");
-//            setFilters(Arrays.asList(
-//                "/content/documents/blog",
-//                "/hippo:namespaces/xinmods",
-//                "/hippo:configuration/hippo:queries/hippo:templates/new-xinmods-genericimageset-folder",
-//                "/hippo:configuration/hippo:queries/hippo:templates/new-xinmods-genericimageset-image"));
-//            setCnds(Arrays.asList(
-//                "xinmods:basedocument",
-//                "xinmods:categorydetails",
-//                "xinmods:content",
-//                "xinmods:galleryComponent",
-//                "xinmods:imageComponent",
-//                "xinmods:listComponent",
-//                "xinmods:menu",
-//                "xinmods:menuitem",
-//                "xinmods:postdetails",
-//                "xinmods:siteconfig",
-//                "xinmods:textComponent",
-//                "xinmods:textImageComponent",
-//                "xinmods:twoColumn"
-//            ));
-//        }});
-//
-//        add(new Package() {{
-//            setId("shop-package");
-//            setRequiredCnds(Arrays.asList("xinmods:content"));
-//            setFilters(Arrays.asList("/content/documents/shop"));
-//            setCnds(Arrays.asList("xinmods:content", "xinmods:postdetails", "xinmods:eventdetails"));
-//        }});
-//
-//    }};
-//
-//
     /**
      * Get a list of all the packages
      *

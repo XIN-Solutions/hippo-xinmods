@@ -1,6 +1,7 @@
 package nz.xinsolutions.packages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import nz.xinsolutions.core.JcrHelper;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +51,7 @@ public class PackageDefinitionJcrPersister {
     public void persistPackages(Session session, List<Package> packages) throws PackageException {
         
         try {
-            ensurePackageNodeExists(session, getStorageLocation());
+            ensurePackageNodeExists(getStorageLocation());
 
             if (packages == null) {
                 LOG.info("Nothing to persist");
@@ -75,7 +76,7 @@ public class PackageDefinitionJcrPersister {
      */
     public List<Package> loadPackages(Session session) throws PackageException {
         try {
-            ensurePackageNodeExists(session, getStorageLocation());
+            ensurePackageNodeExists(getStorageLocation());
             Node pkgNode = getPackageNode(session, getStorageLocation());
             String nodeDefValue = getPackageDefinitionProperty(pkgNode);
             if (StringUtils.isEmpty(nodeDefValue)) {
@@ -165,14 +166,24 @@ public class PackageDefinitionJcrPersister {
     /**
      * Make sure a node of type nt:unstructured exists at the root of the repository.
      *
-     * @param session               is the jcr session to use
      * @param storageLocation       is the storage location that should exist
      * @throws RepositoryException  something went wrong in the JCR.
      */
-    protected void ensurePackageNodeExists(Session session, String storageLocation) throws RepositoryException {
-        if (!session.nodeExists("/" + storageLocation)) {
-            session.getRootNode().addNode(storageLocation, NT_UNSTRUCTURED);
-            session.save();
+    protected void ensurePackageNodeExists(String storageLocation) throws RepositoryException {
+        Session adminSession = null;
+        try {
+            adminSession = JcrHelper.loginAdministrative();
+            
+            if (!adminSession.nodeExists("/" + storageLocation)) {
+                adminSession.getRootNode().addNode(storageLocation, NT_UNSTRUCTURED);
+                adminSession.save();
+            }
+            
+        }
+        finally {
+            if (adminSession != null && adminSession.isLive()) {
+                adminSession.logout();
+            }
         }
     }
     

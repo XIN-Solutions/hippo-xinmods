@@ -4,8 +4,6 @@ import nz.xinsolutions.packages.Package;
 import nz.xinsolutions.packages.*;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
-import org.hippoecm.repository.HippoRepository;
-import org.hippoecm.repository.HippoRepositoryFactory;
 import org.onehippo.cms7.essentials.components.rest.BaseRestResource;
 import org.onehippo.cms7.essentials.components.rest.ctx.DefaultRestContext;
 import org.onehippo.cms7.essentials.components.rest.ctx.RestContext;
@@ -29,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static javax.servlet.http.HttpServletResponse.*;
+import static nz.xinsolutions.core.JcrHelper.loginAdministrative;
 import static nz.xinsolutions.rest.CORSHelper.enableCORS;
 
 /**
@@ -337,16 +336,6 @@ public class PackageManagerResource extends BaseRestResource {
                 jcrSession.logout();
             }
         }
-    }
-    
-    /**
-     * TODO: Admin credentials should be read from somewhere safe
-     * @return an administrator session
-     * @throws RepositoryException
-     */
-    protected Session loginAdministrative() throws RepositoryException {
-        HippoRepository repository = HippoRepositoryFactory.getHippoRepository("vm://");
-        return repository.login("admin", "admin".toCharArray());
     }
     
     /**

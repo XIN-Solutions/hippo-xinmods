@@ -4,8 +4,8 @@ definitions:
       uri: http://www.onehippo.org/xinmods/nt/1.0
       cnd: namespaces/xinmods.cnd
   config:
-    /hippo:configuration/hippo:modules/webfiles/hippo:moduleconfig:
-      watchedModules: [repository-data/webfiles]
+#    /hippo:configuration/hippo:modules/webfiles/hippo:moduleconfig:
+#      watchedModules: [repository-data/webfiles]
     /hippo:configuration/hippo:groups/author:
       hipposys:members:
         operation: add

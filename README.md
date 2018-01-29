@@ -3,37 +3,46 @@ REST Endpoints
 
 Export a package:
 
-```sh
+```bash
 $ curl -X GET -H Content-Type: application/json -H Accept: application/json http://localhost:8080/site/custom-api/packages/blog-package/export -o package2.zip -v
 ```
 
 Import a package:
 
-```sh
+```bash
 $ curl -X PUT -F "file=@package2.zip;type=application/zip" http://localhost:8080/site/custom-api/packages/import -v
 ```
 
 Create a package definition:
 
-```sh
+```bash
 curl -X PUT -H "Content-Type: application/json" -d @test-package.json "http://localhost:8080/site/custom-api/packages/test-package2" -v
+```
+
+test-package.json
+
+```json
+{
+     "filters" : ["/content/documents/"],
+     "cnds": ["xinmods:basedocument", "xinmods:blogdocument"]
+}
 ```
 
 Change/Edit a package definition:
 
-```sh
+```bash
 curl -X POST -H "Content-Type: application/json" -d @test-package.json "http://localhost:8080/site/custom-api/packages/test-package2" -v
 ```
 
 Delete a package definition:
 
-```sh
+```bash
 curl -X DELETE -H "Content-Type: application/json" "http://localhost:8080/site/custom-api/packages/test-package2" -v
 ```
 
 List package definitions:
 
-```sh
+```bash
 curl -X GET -H "Content-Type: application/json" "http://localhost:8080/site/custom-api/packages/list" -v
 ```
 
@@ -44,10 +53,15 @@ curl -X GET -H "Content-Type: application/json" "http://localhost:8080/site/cust
 Running locally
 ===============
 
-```sh
+```bash
 mvn -DskipTests=true verify && mvn -Pcargo.run -Drepo.path=storage
 ```
 
+Clean everything without content:
+
+```bash
+rm storage -Rf && mvn -DskipTests=true clean verify && mvn -Pcargo.run,without-content -Drepo.path=storage
+```
 
 This project uses the Maven Cargo plugin to run Essentials, the CMS and site locally in Tomcat.
 From the project root folder, execute:

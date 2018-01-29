@@ -246,6 +246,15 @@
       </modules>
     </profile>
 
+    <!--
+      <profile>
+        <id>with-repository-data</id>
+        <modules>
+          <module>repository-data</module>
+        </modules>
+      </profile>
+    -->
+
     <profile>
       <id>cargo.run</id>
       <properties>
