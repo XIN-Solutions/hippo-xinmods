@@ -50,6 +50,9 @@ public class MultiPathExporter {
                 "zip file: " + zipFile.getCanonicalPath() + "\n" +
                 "moving to: " + partialFile.getCanonicalPath()
             );
+            
+            // TODO: create hcm-content in zip
+            // TODO: move directories in root into hcm-content folder
     
             zipFile.renameTo(partialFile);
         }
