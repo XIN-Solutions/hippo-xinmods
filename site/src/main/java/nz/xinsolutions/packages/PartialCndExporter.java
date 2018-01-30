@@ -57,7 +57,7 @@ public class PartialCndExporter {
                 NodeType nodeType = ntIt.nextNodeType();
                 
                 // make sure this is something we're interested in
-                if (!isInterestingNodeType(allTypes, nodeType)) {
+                if (!isInterestingNodeType(allTypes, nodeType.getName())) {
                     continue;
                 }
                 
@@ -75,8 +75,20 @@ public class PartialCndExporter {
     /**
      * @return true if it's an interesting node type
      */
-    protected boolean isInterestingNodeType(List<String> allTypes, NodeType nodeType) {
-        return allTypes.contains(nodeType.getName());
+    protected boolean isInterestingNodeType(List<String> allTypes, String nodeTypeName) {
+
+        if (allTypes.contains(nodeTypeName)) {
+            return true;
+        }
+
+        for (String typeDesc: allTypes) {
+            // wildcard specific
+            if (typeDesc.endsWith(":") && nodeTypeName.startsWith(typeDesc)) {
+                return true;
+            }
+        }
+
+        return false;
     }
     
     
