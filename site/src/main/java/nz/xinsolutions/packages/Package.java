@@ -1,6 +1,7 @@
 package nz.xinsolutions.packages;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,8 +17,30 @@ public class Package {
     private List<String> filters;
     private List<String> cnds;
     private List<String> requiredCnds;
-    
-    
+
+    /**
+     * Clone this package with a different package identifier.
+     *
+     * @param dstName   is the new package identifiers
+     *
+     * @return the package instance to store
+     */
+    public Package cloneTo(String dstName) {
+        Package pkg = new Package();
+
+        pkg.setId(dstName);
+        pkg.setFilters(new ArrayList<>(this.filters));
+        pkg.setCnds(new ArrayList<>(this.cnds));
+        pkg.setRequiredCnds(new ArrayList<>(this.requiredCnds));
+
+        return pkg;
+    }
+
+    // ---------------------------------------------------------------------------
+    //      Accessors
+    // ---------------------------------------------------------------------------
+
+
     public String getId() {
         return id;
     }
@@ -49,4 +72,5 @@ public class Package {
     public void setRequiredCnds(List<String> requiredCnds) {
         this.requiredCnds = requiredCnds;
     }
+
 }

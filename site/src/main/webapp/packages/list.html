@@ -65,13 +65,15 @@
                                             <i class="glyphicon glyphicon-remove"></i> Delete
                                         </button>
                                     </div>
-                                    <button class="btn btn-default" ng-click="editPackage(pkg.id)">
+                                    <button class="btn btn-info" ng-click="editPackage(pkg.id)">
                                         <i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp;Edit
                                     </button>
                                     <button class="btn btn-default" ng-click="downloadPackage(pkg.id)">
                                         <i class="glyphicon glyphicon-refresh"></i>&nbsp;&nbsp;Download
                                     </button>
-
+                                    <button class="btn" ng-click="clonePackage(pkg.id)">
+                                        <i class="glyphicon glyphicon-share"></i>&nbsp;&nbsp;Clone
+                                    </button>
                                 </div>
                                 <div ng-hide="pkg.collapsed" class="Package__body panel-body">
 

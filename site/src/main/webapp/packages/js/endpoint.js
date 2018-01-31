@@ -8,23 +8,6 @@
          */
         var BASE_URL = "http://localhost:8080/site/custom-api";
 
-
-        var package = {
-            collapsed: true,
-            modified: false,
-            origin: "",
-            filters: [
-                "/content/documents/shop1",
-                "/content/documents/shop2"
-            ],
-            cnds : [
-                "xinmods:shop",
-                "xinmods:content",
-                "xinmods:shopcategory",
-                "xinmods:product"
-            ]
-        };
-
         return {
 
             /**
@@ -75,6 +58,24 @@
                     method: 'delete',
                     url: BASE_URL + "/packages/" + pkgId
                 });
+            },
+
+
+            /**
+             * Clone a package definition and give it a different name
+             *
+             * @param fromPkgId     the package to clone
+             * @param toPkgId       the new package definition 
+             */
+            clonePackage : function(fromPkgId, toPkgId) {
+                return (
+                    $http.post(
+                            BASE_URL + "/packages/clone", {
+                                fromPackage : fromPkgId,
+                                toPackage: toPkgId
+                            }
+                    )
+                );
             },
 
             /**

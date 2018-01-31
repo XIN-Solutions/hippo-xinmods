@@ -21,7 +21,9 @@
                     .getPackages()
                     .then( function(payload)  {
                         $scope.packages = payload.data;
-                        _.each($scope.packages, function(pkg) {pkg.collapsed = true});
+                        _.each($scope.packages, function(pkg, idx) { 
+                            pkg.collapsed = (idx > 0); 
+                        });
                     })
                     .catch( function(err) {console.log(err)} )
                 ;
@@ -54,6 +56,21 @@
              */
             editPackage : function(id) {
                 document.location.href = "package.html?id=" + id;
+            },
+
+            clonePackage : function(id) {
+                var newId = prompt("Name of cloned package definition?");
+                if (newId) {
+                    endpoint
+                        .clonePackage(id, newId)
+                        .then(function(response) {
+                            $scope.refresh();
+                        })
+                        .catch(function(err) {
+                            console.log("Error occured during package cloning: ", err);
+                        })
+                    ;
+                } 
             },
 
             /**

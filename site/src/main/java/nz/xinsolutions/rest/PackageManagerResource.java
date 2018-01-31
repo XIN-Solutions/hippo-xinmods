@@ -2,6 +2,7 @@ package nz.xinsolutions.rest;
 
 import nz.xinsolutions.packages.Package;
 import nz.xinsolutions.packages.*;
+import nz.xinsolutions.rest.model.ClonePackagePayload;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.onehippo.cms7.essentials.components.rest.BaseRestResource;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 import static javax.servlet.http.HttpServletResponse.*;
 import static nz.xinsolutions.core.JcrHelper.loginAdministrative;
@@ -180,10 +182,69 @@ public class PackageManagerResource extends BaseRestResource {
         return errorResponse();
     }
     
-    protected Response emptyResponse() {
-        return enableCORS(Response.ok("Success")).build();
+
+
+    /**
+     * Clone a package definition
+     *
+     * @param payload clone instructions information
+     * @return a response object
+     */
+    @POST
+    @Path("/clone")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response clonePackage(ClonePackagePayload payload) {
+
+        String dstName = payload.getToPackage();
+        String srcName = payload.getFromPackage();
+
+        LOG.info("Trying to clone " + srcName + " to " + dstName);
+
+
+        Session jcrSession = null;
+        try {
+            jcrSession = loginAdministrative();
+
+            // source doesn't exists?
+            if (!pkgListService.packageExists(jcrSession, srcName)) {
+                LOG.error("Package `{}` does not exist", srcName);
+                return errorResponse();
+            }
+
+            // destination exists?
+            if (pkgListService.packageExists(jcrSession, dstName)) {
+                LOG.error("Package `{}` already exists", dstName);
+                return errorResponse();
+            }
+
+            Package fromPackage = pkgListService.getPackage(jcrSession, srcName);
+            Package newPackage = fromPackage.cloneTo(dstName);
+            pkgListService.addPackage(jcrSession, newPackage);
+
+            return (
+                enableCORS(
+                    Response.ok(
+                        new HashMap<String, String>() {{
+                            put("msg", "Cloning success");
+                        }}
+                    )
+                ).build()
+            );
+        }
+        catch (RepositoryException rEx) {
+            LOG.error("Repository exception, caused by: ", rEx);
+        }
+        catch (PackageException pkgEx) {
+            LOG.error("Something went wrong, caused by: ", pkgEx);
+        }
+        finally {
+            if (jcrSession != null && jcrSession.isLive()) {
+                jcrSession.logout();
+            }
+        }
+
+        return enableCORS(Response.ok()).build();
     }
-    
     
     /**
      * Build a package that was already defined
@@ -358,8 +419,14 @@ public class PackageManagerResource extends BaseRestResource {
     protected Response errorResponse() {
         return enableCORS(Response.serverError()).build();
     }
-    
-    
+
+    /**
+     * @return an empty cors enabled response
+     */
+    protected Response emptyResponse() {
+        return enableCORS(Response.ok("Success")).build();
+    }
+
     protected Session getSession(RestContext ctx) throws RepositoryException {
         return ctx.getRequestContext().getSession();
     }
