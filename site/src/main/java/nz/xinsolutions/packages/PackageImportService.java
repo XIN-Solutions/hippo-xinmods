@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.xinsolutions.cnd.CndBundle;
 import nz.xinsolutions.cnd.CndSerialiser;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.commons.cnd.CndImporter;
@@ -116,9 +117,10 @@ public class PackageImportService {
             } else if (!importContent) {
                 LOG.info("Skipping importing the content as per import instructions.");
             }
-    
+
+
             // clean up
-            cleanUpDir(dir);
+            cleanUpAttachment(pkgFile, dir);
             
         }
         catch (IOException ioEx) {
@@ -133,9 +135,11 @@ public class PackageImportService {
      * @param session is the jcr session to write this to
      */
     protected void importZippedYaml(String contentFile, Session session) {
+
+        File zipFile = new File(contentFile);
+
         try {
             // unzip zip
-            File zipFile = new File(contentFile);
             ZipUtil.unpack(zipFile, zipFile.getParentFile());
             
             String contentBasePath = getNodeNameFromFile(zipFile);
@@ -150,13 +154,36 @@ public class PackageImportService {
             configService.importZippedContent(zipFile, session.getNode(parentPath));
             
             session.save();
-            
+
         }
         catch (IOException | RepositoryException ex) {
             LOG.error("Something went wrong while trying to import `{}`, caused by: ", contentFile, ex);
         }
+        finally {
+
+            // clean up
+            cleanUpAttachmentFiles(contentFile, zipFile);
+
+        }
     }
-    
+
+    /**
+     * This method cleans up after itself when the package has been properly imported
+     * @param contentFile
+     * @param zipFile
+     * @throws IOException
+     */
+    protected void cleanUpAttachmentFiles(String contentFile, File zipFile)  {
+        try {
+            String extractedContentFile = contentFile + "_extracted";
+            FileUtils.deleteDirectory(new File(extractedContentFile));
+            zipFile.delete();
+        }
+        catch (IOException ioEx) {
+            LOG.error("Could not clean up, caused by: ", ioEx);
+        }
+    }
+
     /**
      * @return the parent path (minus the last /element)
      */
@@ -192,12 +219,15 @@ public class PackageImportService {
     }
     
     /**
-     * Clean up the folder
+     * Clean up the folder and attachment file
      *
+     * @param pkgFile
      * @param dir
      */
-    protected void cleanUpDir(File dir) {
-        LOG.error("Not cleaning up yet.");
+    protected void cleanUpAttachment(File pkgFile, File dir) throws IOException {
+        LOG.info("Cleaning up package file");
+        pkgFile.delete();
+        FileUtils.deleteDirectory(dir);
     }
     
     /**

@@ -30,14 +30,14 @@
       <artifactId>hippo-package-cms-dependencies</artifactId>
       <type>pom</type>
     </dependency>
-    <dependency>
+ <!--   <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-addon-channel-manager-frontend</artifactId>
     </dependency>
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-addon-channel-manager-repository</artifactId>
-    </dependency>
+    </dependency>-->
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-plugin-gallerypicker</artifactId>

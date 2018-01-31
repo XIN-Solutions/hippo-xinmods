@@ -108,6 +108,14 @@
           <groupId>org.onehippo.cms7</groupId>
           <artifactId>hippo-repository-engine</artifactId>
       </dependency>
+
+      <!-- https://mvnrepository.com/artifact/com.github.fge/java7-fs-more -->
+      <dependency>
+        <groupId>com.github.fge</groupId>
+        <artifactId>java7-fs-more</artifactId>
+        <version>0.2.0</version>
+      </dependency>
+
   </dependencies>
   <build>
     <resources>
