@@ -82,18 +82,22 @@
                                     </div>
 
 
-                                    <h3>Filters</h3>
-                                    <div class="well">
-                                        <ul ng-repeat="filter in pkg.filters">
-                                            <li><code>{{filter}}</code></li>
-                                        </ul>
+                                    <div ng-show="pkg.filters">
+                                        <h3>Filters</h3>
+                                        <div class="well">
+                                            <ul ng-repeat="filter in pkg.filters">
+                                                <li><code>{{filter}}</code></li>
+                                            </ul>
+                                        </div>
                                     </div>
 
-                                    <h3>CND entities</h3>
-                                    <div class="well">
-                                        <ul ng-repeat="cnd in pkg.cnds">
-                                            <li><code>{{cnd}}</code></li>
-                                        </ul>
+                                    <div ng-show="pkg.cnds">
+                                        <h3>CND entities</h3>
+                                        <div class="well">
+                                            <ul ng-repeat="cnd in pkg.cnds">
+                                                <li><code>{{cnd}}</code></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
