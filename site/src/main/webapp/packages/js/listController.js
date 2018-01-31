@@ -124,7 +124,7 @@
                     document.location.href = url;
                 }
                 else {
-                    location.reload();
+                    document.location.href = document.location.pathname;
                 }
             },
 
