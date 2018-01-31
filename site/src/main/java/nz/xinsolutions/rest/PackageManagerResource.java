@@ -297,12 +297,12 @@ public class PackageManagerResource extends BaseRestResource {
         
     }
 
-    protected String getPkgFilename(String packageId, String postfix) {
-        return packageId + (StringUtils.isNotBlank(postfix) ? ("-" + postfix) : "") + ".zip";
-    }
 
     /**
-     * TODO: Implement the deletion of the package definition
+     * Delete the package definition
+     *
+     * @param packageId     is the package id to delete
+     * @return  a response object
      */
     @DELETE
     @Path("/{id}")
@@ -336,7 +336,7 @@ public class PackageManagerResource extends BaseRestResource {
 
     
     /**
-     * TODO: Create a package definition using this endpoint
+     * Create a new package
      */
     @PUT
     @Path("/{id}")
@@ -373,7 +373,7 @@ public class PackageManagerResource extends BaseRestResource {
     
     
     /**
-     * TODO: Create a package definition using this endpoint
+     * Edit a package definition
      */
     @POST
     @Path("/{id}")
@@ -435,9 +435,19 @@ public class PackageManagerResource extends BaseRestResource {
         return enableCORS(Response.ok("Success")).build();
     }
 
+    /**
+     * @return the session from the current rest context
+     */
     protected Session getSession(RestContext ctx) throws RepositoryException {
         return ctx.getRequestContext().getSession();
     }
 
-    
+
+    /**
+     * @return the package filename when exporting.
+     */
+    protected String getPkgFilename(String packageId, String postfix) {
+        return packageId + (StringUtils.isNotBlank(postfix) ? ("-" + postfix) : "") + ".zip";
+    }
+
 }

@@ -22,7 +22,7 @@
                     .then( function(payload)  {
                         $scope.packages = payload.data;
                         _.each($scope.packages, function(pkg, idx) { 
-                            pkg.collapsed = (idx > 0); 
+                            pkg.collapsed = true; 
                         });
                     })
                     .catch( function(err) {console.log(err)} )
@@ -97,6 +97,9 @@
             downloadPackage : function(id) {
                 var date = moment().format("d/M/YYYY");
                 var postfix = prompt('Filename postfix:', date);
+                if (postfix === null) {
+                    return;
+                }
                 endpoint.downloadPackage(id, postfix);
             },
 
