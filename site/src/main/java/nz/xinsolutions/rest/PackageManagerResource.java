@@ -196,11 +196,10 @@ public class PackageManagerResource extends BaseRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public void exportPackage(@Context HttpServletRequest request, @Context HttpServletResponse response, @PathParam("id") String packageId) {
         LOG.info("Requesting build of " + packageId);
-        
-        RestContext ctx = new DefaultRestContext(this, request);
-    
+
+        Session jcrSession = null;
         try {
-            Session jcrSession = getSession(ctx);
+            jcrSession = loginAdministrative();
     
             if (!pkgListService.packageExists(jcrSession, packageId)) {
                 response.setStatus(SC_NOT_FOUND);
@@ -224,6 +223,11 @@ public class PackageManagerResource extends BaseRestResource {
         }
         catch (PackageException pkgEx) {
             LOG.error("Something went wrong, caused by: ", pkgEx);
+        }
+        finally {
+            if (jcrSession != null && jcrSession.isLive()) {
+                jcrSession.logout();
+            }
         }
         
     }

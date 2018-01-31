@@ -54,7 +54,7 @@ public class HippoEventBusListener {
      */
     @Subscribe
     public void handleEvent(HippoEvent event) {
-    
+
         LOG.info(
             "PUBLISH EVENT: " +
             ", cat " + event.category() +
@@ -72,8 +72,14 @@ public class HippoEventBusListener {
         String jsonMessage = Jackson.toJsonString(map);
 
         LOG.info("Sending JSON to topic: " + jsonMessage);
-        
-        this.sns.publish(AWS_SNS_TOPIC, jsonMessage);
+
+        try {
+
+            this.sns.publish(AWS_SNS_TOPIC, jsonMessage);
+        }
+        catch (Exception ex) {
+            LOG.error("Could not send message to SNS `{}`.", AWS_SNS_TOPIC);
+        }
     }
     
     
