@@ -45,6 +45,13 @@
                             </button>
                         </div>
 
+                        <div ng-show="flashText()">
+                            <div class="alert alert-{{flashType()}}" role="alert">
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                {{flashText()}}
+                            </div>
+                        </div>
+
                         <div ng-show="noPackages()" class="NoPackages">
                             No packages available in the repository
                         </div>
@@ -71,7 +78,7 @@
                                     <button class="btn btn-default" ng-click="downloadPackage(pkg.id)">
                                         <i class="glyphicon glyphicon-refresh"></i>&nbsp;&nbsp;Download
                                     </button>
-                                    <button class="btn" ng-click="clonePackage(pkg.id)">
+                                    <button class="btn btn-default" ng-click="clonePackage(pkg.id)">
                                         <i class="glyphicon glyphicon-share"></i>&nbsp;&nbsp;Clone
                                     </button>
                                 </div>
@@ -82,7 +89,7 @@
                                     </div>
 
 
-                                    <div ng-show="pkg.filters">
+                                    <div ng-show="pkg.filters.length > 0">
                                         <h3>Filters</h3>
                                         <div class="well">
                                             <ul ng-repeat="filter in pkg.filters">
@@ -91,7 +98,7 @@
                                         </div>
                                     </div>
 
-                                    <div ng-show="pkg.cnds">
+                                    <div ng-show="pkg.cnds.length > 0">
                                         <h3>CND entities</h3>
                                         <div class="well">
                                             <ul ng-repeat="cnd in pkg.cnds">

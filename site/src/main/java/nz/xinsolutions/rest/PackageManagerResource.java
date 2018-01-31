@@ -393,8 +393,6 @@ public class PackageManagerResource extends BaseRestResource {
                 LOG.error("Package with ID `{}` does not exist, aborting.", packageId);
                 return enableCORS(Response.serverError()).build();
             }
-            
-            packageInfo.setId(packageId);
 
             pkgListService.deletePackage(jcrSession, packageId);
             pkgListService.addPackage(jcrSession, packageInfo);

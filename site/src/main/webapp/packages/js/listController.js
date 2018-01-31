@@ -21,6 +21,10 @@
                     .getPackages()
                     .then( function(payload)  {
                         $scope.packages = payload.data;
+                        $scope.packages.sort(function(a, b) {
+                            return a.id > b.id;
+                        });
+
                         _.each($scope.packages, function(pkg, idx) { 
                             pkg.collapsed = true; 
                         });
@@ -64,7 +68,9 @@
                     endpoint
                         .clonePackage(id, newId)
                         .then(function(response) {
-                            $scope.refresh();
+                            $scope.refresh({
+                                flash : "Package cloned into '" + newId + "'."
+                            });
                         })
                         .catch(function(err) {
                             console.log("Error occured during package cloning: ", err);
@@ -84,7 +90,10 @@
                         "This will not remove the contents in the package from the repository")
                     ) {
                     endpoint.deletePackage(id).then(function() {
-                        $scope.refresh();
+                        $scope.refresh({
+                            flash : "Package definition deletion for '" + id + "' completed.",
+                            flashType: 'warning'
+                        });
                     });
                 }
             },
@@ -106,8 +115,17 @@
             /**
              * Refresh the page
              */
-            refresh : function() {
-                location.reload();
+            refresh : function(options) {
+                if (options) {
+                    var serParams = _.map(options, function(val, key) {
+                        return key + "=" + encodeURIComponent(val);
+                    });
+                    var url = document.location.pathname + "?" + serParams.join("&");
+                    document.location.href = url;
+                }
+                else {
+                    location.reload();
+                }
             },
 
             /**
@@ -115,7 +133,22 @@
              */
             noPackages : function() {
                 return !this.packages || this.packages.length === 0;
+            },
+
+            /**
+             * @return {string} flash text to show at the top of the page
+             */
+            flashText : function() {
+                return (new URL(document.location)).searchParams.get('flash')
+            },
+
+            /**
+             * @return {string} type of flash (bootstrap alert css modifier class)
+             */
+            flashType : function() {
+                return (new URL(document.location)).searchParams.get('flashType') || 'success';
             }
+
 
         });
 
