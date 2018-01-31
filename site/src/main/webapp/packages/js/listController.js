@@ -95,7 +95,9 @@
              * @param id  the identifier to use
              */
             downloadPackage : function(id) {
-                endpoint.downloadPackage(id);
+                var date = moment().format("d/M/YYYY");
+                var postfix = prompt('Filename postfix:', date);
+                endpoint.downloadPackage(id, postfix);
             },
 
             /**

@@ -70,10 +70,10 @@
             clonePackage : function(fromPkgId, toPkgId) {
                 return (
                     $http.post(
-                            BASE_URL + "/packages/clone", {
-                                fromPackage : fromPkgId,
-                                toPackage: toPkgId
-                            }
+                        BASE_URL + "/packages/clone", {
+                            fromPackage : fromPkgId,
+                            toPackage: toPkgId
+                        }
                     )
                 );
             },
@@ -90,8 +90,8 @@
              *
              * @return {[type]} [description]
              */
-            downloadPackage : function(id) {
-                return window.open(BASE_URL + "/packages/" + id + "/export");
+            downloadPackage : function(id, postfix) {
+                return window.open(BASE_URL + "/packages/" + id + "/export?postfix=" + encodeURIComponent(postfix));
             }
 
         };

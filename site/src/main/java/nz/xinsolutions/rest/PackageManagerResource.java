@@ -3,6 +3,7 @@ package nz.xinsolutions.rest;
 import nz.xinsolutions.packages.Package;
 import nz.xinsolutions.packages.*;
 import nz.xinsolutions.rest.model.ClonePackagePayload;
+import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.onehippo.cms7.essentials.components.rest.BaseRestResource;
@@ -24,7 +25,6 @@ import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -255,7 +255,12 @@ public class PackageManagerResource extends BaseRestResource {
     @GET
     @Path("/{id}/export")
     @Produces(MediaType.APPLICATION_JSON)
-    public void exportPackage(@Context HttpServletRequest request, @Context HttpServletResponse response, @PathParam("id") String packageId) {
+    public void exportPackage(
+                @Context HttpServletRequest request,
+                @Context HttpServletResponse response,
+                @PathParam("id") String packageId,
+                @QueryParam("postfix") String postfix)
+    {
         LOG.info("Requesting build of " + packageId);
 
         Session jcrSession = null;
@@ -266,13 +271,12 @@ public class PackageManagerResource extends BaseRestResource {
                 response.setStatus(SC_NOT_FOUND);
                 CORSHelper.enableCORS(response);
             }
-    
-            String date = getFilenameDate(getNowStamp());
-            String packageDate = packageId + "-" + date + ".zip";
+
+            String pkgFilename = getPkgFilename(packageId, postfix);
             
             response.setStatus(SC_OK);
             response.setHeader("Content-Type", "application/zip");
-            response.setHeader("Content-Disposition", "attachment; filename=\"" + packageDate + "\"");
+            response.setHeader("Content-Disposition", "attachment; filename=\"" + pkgFilename + "\"");
             ServletOutputStream responseOutStr = response.getOutputStream();
             pkgExportService.build(jcrSession, packageId, responseOutStr);
         }
@@ -292,7 +296,11 @@ public class PackageManagerResource extends BaseRestResource {
         }
         
     }
-    
+
+    protected String getPkgFilename(String packageId, String postfix) {
+        return packageId + (StringUtils.isNotBlank(postfix) ? ("-" + postfix) : "") + ".zip";
+    }
+
     /**
      * TODO: Implement the deletion of the package definition
      */
@@ -430,20 +438,6 @@ public class PackageManagerResource extends BaseRestResource {
     protected Session getSession(RestContext ctx) throws RepositoryException {
         return ctx.getRequestContext().getSession();
     }
-    
-    
-    /**
-     * @return the now date
-     */
-    protected Date getNowStamp() {
-        return new Date();
-    }
-    
-    /**
-     * @return the formatted date for the filename for <code>date</code>.
-     */
-    protected String getFilenameDate(Date date) {
-        return new SimpleDateFormat(DATE_PATTERN).format(date);
-    }
+
     
 }
