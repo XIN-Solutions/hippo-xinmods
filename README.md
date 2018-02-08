@@ -1,5 +1,13 @@
-REST Endpoints
-================
+# Packages
+
+xinMODS adds simple package management to the interface allowing you to add functional modules to a bare-bones CMS deployment 
+without redeployments or restarting. 
+
+On your instance go to this URL: http://localhost:8080/site/packages/list.html
+
+It shows you an interface to a set of endpoints described loosely below.
+
+## REST Endpoints
 
 Export a package:
 
@@ -48,10 +56,116 @@ curl -X GET -H "Content-Type: application/json" "http://localhost:8080/site/cust
 
 
 
+# Extension points
+
+XINmods makes it easier to integrate external tools into the CMS by offering a number of easy to use integration points:
+
+* Adding buttons to the document toolbar 
+* Adding a plugin to the dashboard
+* Adding an administrator panel
+* Adding a reporting panel
+
+What follows is a description of the configuration structures required to create these extension points. Once you have 
+set them up, you can easily create a package to their paths that will allow you to reimport them when you desire.  
+
+## Toolbar plugin
+
+To the default workflow (here: `/hippo:configuration/hippo:workflows/default/handle/frontend:renderer`) add a node 
+with the following structure.
+
+```
+toolbar-option1/
+    jcr:primaryType = frontend:plugin
+    wicket.id = ${item}
+    plugin.class = nz.xinsolutions.extensions.XinInjectionToolbarPlugin
+    
+    # Where to go if the menu item is clicked
+    action = http://url/to/go/to?path={path}
+    
+    # If specified, will show in submenu with that title
+    submenu = SubMenuName
+    
+    title = Label on button
+    
+    icon = enumeration string from Icon class (default: GEAR)
+    
+    # Only show the option sometimes
+    types[] = xinmods:product 
+
+```
+
+## Content properties
+
+The remaining extension points have a common approach to injecting content. Assume the different plugin types below
+all share these properties. 
+
+```
+    html = 'HTML to render'
+    js = 'Javascript to write on the page'
+    headCSS[] = one or more urls to stylesheets (will be rendered in <head/>)
+    headJS[] = one or more urls to javascripts (will be rendered in <head/>)
+
+```
 
 
-Running locally
-===============
+### Dashboard plugin
+
+To add a widget to the dashboard add a node here: `/hippo:configuration/hippo:frontend/cms/cms-dashshortcuts`
+
+Using the content properties described above create a node as follows:
+
+```
+    jcr:primaryType = frontend:plugin
+    plugin.class = nz.xinsolutions.extensions.XinInjectionPlugin
+```
+
+### Admin panel
+
+To add an administration panel add a node here: `/hippo:configuration/hippo:frontend/cms/cms-admin`
+
+Using the content properties described above create a node as follows:
+
+```
+    jcr:primaryType = frontend:plugin
+    plugin.class = nz.xinsolutions.extensions.XinInjectionAdminPanelDefinition
+    
+    title = Title of admin panel
+    help = Description of admin panel
+    icon = URL to icon for admin panel
+```
+
+### Reporting Panel
+
+To add a reporting panel add two nodes here: `/hippo:configuration/hippo:frontend/cms/hippo-reports`
+
+First of all a report definition node (eg. `my-new-report`) -- it does not need any of the injection properties:
+
+```
+    jcr:primaryType = frontend:plugin
+    plugin.class = nz.xinsolutions.extensions.XinInjectionReportDefinition
+    
+    service.id = service.report.my-new-report
+    
+    title = Title of reporting panel
+    help = Description of reporting panel
+    icon = URL to icon for reporting panel  
+```
+
+Secondly a report panel plugin node (eg. `my-new-report-plugin`) -- this one contains the injection properties.
+
+```
+    jcr:primaryType = frontend:plugin
+    plugin.class = nz.xinsolutions.extensions.nz.xinsolutions.extensions.XinInjectionReportPlugin
+    wicket.id = service.report.my-new-report
+    
+    html = <something to inject>
+    js = 
+    headJS =
+    headCSS = 
+    
+```
+
+# Running locally
 
 ```bash
 mvn -DskipTests=true verify && mvn -Pcargo.run -Drepo.path=storage
@@ -62,93 +176,3 @@ Clean everything without content:
 ```bash
 rm storage -Rf && mvn -DskipTests=true clean verify && mvn -Pcargo.run,without-content -Drepo.path=storage
 ```
-
-This project uses the Maven Cargo plugin to run Essentials, the CMS and site locally in Tomcat.
-From the project root folder, execute:
-
-  mvn clean verify
-  mvn -P cargo.run
-
-By default this includes and bootstraps repository content from the repository-data/content module,
-which is deployed by cargo to the Tomcat shared/lib.
-If you want or need to start *without* bootstrapping the local content module, for example when testing
-against an existing repository, you can specify the *additional* Maven profile without-content to do so:
-
-  mvn -P cargo.run,without-content
-
-This additional profile will modify the target location for the content module to the Tomcat temp/ folder so that
-it won't be seen and picked up during the repository bootstrap process.
-
-Access the Hippo Essentials at http://localhost:8080/essentials.
-After your project is set up, access the CMS at http://localhost:8080/cms and the site at http://localhost:8080/site.
-Logs are located in target/tomcat8x/logs
-
-Building distributions
-======================
-
-To build Tomcat distribution tarballs:
-
-  mvn clean verify
-  mvn -P dist
-    or
-  mvn -P dist-with-content
-
-The 'dist' profile will produce in the /target directory a distribution tarball, containing the main deployable wars and
-shared libraries.
-
-The 'dist-with-content' profile will produce a distribution-with-content tarball, containing as well the
-bootstrap-content jar in the shared/lib directory. This kind of distribution is meant to be used for deployments on
-empty repositories, for instance deployment on a new environment.
-
-See also src/main/assembly/*.xml if you need to customize the distributions.
-
-Using JRebel
-============
-
-Set the environment variable REBEL_HOME to the directory containing jrebel.jar.
-
-Build with:
-
-  mvn clean verify -Djrebel
-
-Start with:
-
-  mvn -P cargo.run -Djrebel
-
-Best Practice for development
-=============================
-
-Use the option -Drepo.path=/some/path/to/repository during start up. This will avoid
-your repository to be cleared when you do a mvn clean.
-
-For example start your project with:
-
-  mvn -P cargo.run -Drepo.path=/home/usr/tmp/repo
-
-or with jrebel:
-
-  mvn -P cargo.run -Drepo.path=/home/usr/tmp/repo -Djrebel
-
-Hot deploy
-==========
-
-To hot deploy, redeploy or undeploy the CMS or site:
-
-  cd cms (or site)
-  mvn cargo:redeploy (or cargo:undeploy, or cargo:deploy)
-
-Automatic Export
-================
-
-Automatic export of repository changes to the filesystem is turned on by default. To control this behavior, log into
-http://localhost:8080/cms/console and press the "Enable/Disable Auto Export" button at the top right. To set this
-as the default for your project edit the file
-./repository-data/config/src/main/resources/configuration/modules/autoexport-module.xml
-
-Monitoring with JMX Console
-===========================
-You may run the following command:
-
-  jconsole
-
-Now open the local process org.apache.catalina.startup.Bootstrap start

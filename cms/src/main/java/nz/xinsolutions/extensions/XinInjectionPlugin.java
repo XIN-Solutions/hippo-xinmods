@@ -36,7 +36,7 @@ public class XinInjectionPlugin extends RenderPlugin implements IHeaderContribut
     public XinInjectionPlugin(IPluginContext context, IPluginConfig config) {
         super(context, config);
         
-        LOG.info("Initialising external link dashboard plugin");
+        LOG.info("Initialising injection dashboard plugin");
         this.injection = InjectDto.fromConfig(config);
         setRenderBodyOnly(true);
 
