@@ -69,15 +69,20 @@ public class JavascriptEnabledStdWorkflow extends StdWorkflow {
 
         LOG.debug("Initialising the javascript enabled workflow item: {} opens {}", this.title, url);
 
-        if (StringUtils.isNotBlank(url)) {
-            url = url.replace("{path}", docPath);
-        }
+        url = replaceUrlMarkers(url, docPath);
 
         add(getTextLabelComponent(url));
         add(getIconComponent(url));
         add(onClickAttribute(url));
 
 
+    }
+
+    private String replaceUrlMarkers(String url, String docPath) {
+        if (StringUtils.isNotBlank(url)) {
+            url = url.replace("{path}", docPath);
+        }
+        return url;
     }
 
     /**
@@ -145,7 +150,11 @@ public class JavascriptEnabledStdWorkflow extends StdWorkflow {
     }
 
     private AttributeAppender onClickAttribute(String url) {
-        return AttributeModifier.append("onclick", "javascript: window.open('" + url + "');");
+        if (StringUtils.isNotBlank(url)) {
+            return AttributeModifier.append("onclick", "javascript: window.open('" + url + "');");
+        }
+
+        return AttributeModifier.append("onclick", "javascript: alert('No `url` set for toolbar button');");
     }
 
     /**
