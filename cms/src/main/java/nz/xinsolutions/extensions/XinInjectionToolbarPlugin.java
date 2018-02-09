@@ -40,7 +40,8 @@ public class XinInjectionToolbarPlugin extends AbstractDocumentWorkflowPlugin {
         String subMenu = getSubMenu(config);
         String action = getAction(config);
         String[] validTypes = getValidTypes(config);
-        
+        boolean publishedOnly = isForPublishedOnly(config);
+
         try {
             Node handle = ((WorkflowDescriptorModel) getDefaultModel()).getNode();
             String docType = ((Node)handle.getNodes().next()).getPrimaryNodeType().getName();
@@ -49,7 +50,7 @@ public class XinInjectionToolbarPlugin extends AbstractDocumentWorkflowPlugin {
     
             // add a button
             this.add(
-                new JavascriptEnabledStdWorkflow(config.getName(), subMenu, iconId, title,  action, handle.getPath()) {
+                new JavascriptEnabledStdWorkflow(handle, publishedOnly, config.getName(), subMenu, iconId, title,  action) {
 
                     /**
                      * {@inheritDoc}
@@ -75,6 +76,14 @@ public class XinInjectionToolbarPlugin extends AbstractDocumentWorkflowPlugin {
 
     private String getAction(IPluginConfig config) {
         return (String) config.get("action");
+    }
+
+
+    /**
+     * @return true if only showing this item when the document is published
+     */
+    protected boolean isForPublishedOnly(IPluginConfig config) {
+        return config.getAsBoolean("publishedOnly", false);
     }
 
 

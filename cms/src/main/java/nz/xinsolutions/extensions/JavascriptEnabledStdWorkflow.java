@@ -15,8 +15,13 @@ import org.hippoecm.frontend.plugins.standards.icon.HippoIcon;
 import org.hippoecm.frontend.plugins.standards.list.resolvers.CssClass;
 import org.hippoecm.frontend.plugins.standards.list.resolvers.TitleAttribute;
 import org.hippoecm.frontend.skin.Icon;
+import org.hippoecm.repository.util.WorkflowUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.Node;
+import javax.jcr.RepositoryException;
+import java.util.Optional;
 
 /**
  * This class overrides the default StdWorkflow class used to create workflow menu items in the
@@ -36,6 +41,11 @@ public class JavascriptEnabledStdWorkflow extends StdWorkflow {
     private static final String ICON_ID = "icon";
 
     /**
+     * Published only
+     */
+    private boolean publishedOnly;
+
+    /**
      * Contains menu item title
      */
     private String title;
@@ -51,6 +61,11 @@ public class JavascriptEnabledStdWorkflow extends StdWorkflow {
     private String subMenu;
 
     /**
+     * Document node this workflow is for
+     */
+    private Node document;
+
+    /**
      * Initialise the data-members of this class
      *
      * @param id            is the identifier of this menu item
@@ -59,13 +74,17 @@ public class JavascriptEnabledStdWorkflow extends StdWorkflow {
      * @param title         is the label used in the menu item
      * @param url           is the URL to send the user to when they click it.
      */
-    public JavascriptEnabledStdWorkflow(String id, String subMenu, String iconId, String title, String url, String docPath) {
+    public JavascriptEnabledStdWorkflow(Node document, boolean publishedOnly, String id, String subMenu, String iconId, String title, String url) throws RepositoryException {
 
         super(id, id);
 
+        this.publishedOnly = publishedOnly;
         this.iconId = iconId;
         this.title = title;
         this.subMenu = subMenu;
+        this.document = document;
+
+        String docPath = document.getPath();
 
         LOG.debug("Initialising the javascript enabled workflow item: {} opens {}", this.title, url);
 
@@ -77,6 +96,18 @@ public class JavascriptEnabledStdWorkflow extends StdWorkflow {
 
 
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isEnabled() {
+        if (!publishedOnly) {
+            return true;
+        }
+        return documentIsPublished(publishedOnly, document);
+    }
+
 
     private String replaceUrlMarkers(String url, String docPath) {
         if (StringUtils.isNotBlank(url)) {
@@ -151,11 +182,31 @@ public class JavascriptEnabledStdWorkflow extends StdWorkflow {
 
     private AttributeAppender onClickAttribute(String url) {
         if (StringUtils.isNotBlank(url)) {
-            return AttributeModifier.append("onclick", "javascript: window.open('" + url + "');");
+            if (isEnabled()) {
+                return AttributeModifier.append("onclick", "javascript: window.open('" + url + "');");
+            } else {
+                return AttributeModifier.append("onclick", "javascript: ;");
+            }
         }
 
-        return AttributeModifier.append("onclick", "javascript: alert('No `url` set for toolbar button');");
+        return AttributeModifier.append("onclick", "javascript: alert('No `action` set for toolbar button');");
     }
+
+
+    /**
+     * @return true if the option is enabled
+     */
+    protected boolean documentIsPublished(boolean publishedOnly, Node handle) {
+        try {
+            Optional<Node> variant = WorkflowUtils.getDocumentVariantNode(handle, WorkflowUtils.Variant.PUBLISHED);
+            return variant.isPresent() && WorkflowUtils.hasAvailability(variant.get(), "live");
+        }
+        catch (RepositoryException rEx) {
+            LOG.error("Repository exception occurred while discovering node availability, caused by: ", rEx);
+        }
+        return false;
+    }
+
 
     /**
      * {@inheritDoc}
