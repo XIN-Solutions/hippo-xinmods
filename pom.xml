@@ -12,13 +12,14 @@
   <description>XINmods</description>
   <groupId>nz.xinsolutions</groupId>
   <artifactId>xinmods</artifactId>
-  <version>1.1-SNAPSHOT</version>
+  <version>1.1</version>
   <packaging>pom</packaging>
 
 
   <scm>
     <connection>scm:git:ssh://marnixkok.nl:/home/marnix/git/~marnix/xin/hippo-backend.git</connection>
     <developerConnection>scm:git:ssh://marnixkok.nl:/home/marnix/git/~marnix/xin/hippo-backend.git</developerConnection>
+    <tag>xinmods-1.1</tag>
   </scm>
 
   <!-- 
@@ -28,24 +29,24 @@
     DO NOT remove these tags but instead fill them in appropriately as needed, 
     UNLESS the inherited values are valid for your project.
   -->
-  <url/>
-  <inceptionYear/>
-  <organization/>
+  <url />
+  <inceptionYear />
+  <organization />
   <licenses>
-    <license/>
+    <license />
   </licenses>
   <mailingLists>
-    <mailingList/>
+    <mailingList />
   </mailingLists>
   <developers>
-    <developer/>
+    <developer />
   </developers>
   <contributors>
-    <contributor/>
+    <contributor />
   </contributors>
-  <issueManagement/>
+  <issueManagement />
   
-  <ciManagement/>
+  <ciManagement />
   <distributionManagement>
     <repository>
       <id>release</id>
@@ -184,7 +185,7 @@
                     <versionRange>[0.0,)</versionRange>
                   </pluginExecutionFilter>
                   <action>
-                    <ignore/>
+                    <ignore />
                   </action>
                 </pluginExecution>
               </pluginExecutions>
