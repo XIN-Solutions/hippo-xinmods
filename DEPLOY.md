@@ -4,11 +4,17 @@ Make sure to install the official Oracle Java JDK 1.8 and have your alternatives
 
 # Create hippo distribution
 
-$ mvn -Pdist,without-content verify
+Checkout the tag you wish to build a distribution for:
+
+	$ mvn -Pdist,without-content verify
 
 The `target/*tar.gz` file contains the distributed version of the hippo instance, complete with shared libs and common libs
 
 !! Make sure `common/lib/jcl-over-slf4j-1.7.25.jar` does not exist.
+
+To install new releases you no longer need all of the distribution, you would unpack only the `shared`, `common` and `webapps` folders like so:
+
+	$ tar xvzf dist-version.tar.gz shared common webapps
 
 # Tomcat Setup
 
@@ -299,8 +305,6 @@ Create /etc/apache2/sites-available/hippo.conf:
 	    ProxyPassReverseCookiePath /site /
 
 	</VirtualHost>
-
-
 
 Make sure to replace the host names with proper host names. 
 
