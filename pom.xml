@@ -44,22 +44,16 @@
     <contributor/>
   </contributors>
   <issueManagement/>
-  <!--
-  <scm>
-    <connection/>
-    <developerConnection/>
-    <url/>
-  </scm>
-  -->
+  
   <ciManagement/>
   <distributionManagement>
     <repository>
-      <id>-</id>
-      <url>-</url>
+      <id>release</id>
+      <url>file:///opt/deploy-repo</url>
     </repository>
     <snapshotRepository>
-      <id>-</id>
-      <url>-</url>
+      <id>snapshot</id>
+      <url>file:///opt/deploy-repo</url>
     </snapshotRepository>
   </distributionManagement>
   <!-- End of emptied/overridden metadata from parent hippo-cms7-release pom. -->
