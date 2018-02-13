@@ -44,14 +44,14 @@
              * Ingest a package
              */
             ingestPackage : function() {
-                document.location.href = "ingest.html";
+                document.location.href = "ingest.jsp";
             },
 
             /**
              * Create a new package
              */
             createPackage : function() {
-                document.location.href = "package.html";
+                document.location.href = "package.jsp";
             },
 
             /**
@@ -59,7 +59,7 @@
              * @param id is the package identifier to change
              */
             editPackage : function(id) {
-                document.location.href = "package.html?id=" + id;
+                document.location.href = "package.jsp?id=" + id;
             },
 
             clonePackage : function(id) {

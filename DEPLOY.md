@@ -282,10 +282,31 @@ Create `/etc/apache2/sites-available/hippo.conf`:
             Order deny,allow
             Allow from all
         </Location>
-    
+
+        #
+        # -- substitute resulting links with correct domain
+        #
         AddOutputFilterByType SUBSTITUTE application/json
         Substitute "s|http://localhost(:8080)?/site/|http://api.hippo.local/|i"
-    
+
+        #
+        # -- preflight option checks dont send Authorization header causing
+        # -- to fail JAAS Realm definition, returning 401. Sending 204 with OPTIONS
+        # -- response here.
+        #
+        Header always set Access-Control-Allow-Origin "*"                                                                                          
+        Header always set Access-Control-Allow-Credentials "true"                                                                                  
+        Header always set Access-Control-Allow-Methods "POST, GET, OPTIONS, DELETE, PUT, HEAD"                                                     
+        Header always set Access-Control-Max-Age "1000"                                                                                            
+        Header always set Access-Control-Allow-Headers "x-requested-with, Content-Type, origin, authorization, accept, client-security-token"      
+                                                                                                                                                   
+        # -- Added a rewrite to respond with a 204 SUCCESS on every OPTIONS request
+        # -- L flag causes breaking of processing chain
+        RewriteEngine On
+        RewriteCond %{REQUEST_METHOD} OPTIONS
+        RewriteRule ^(.*)$ $1 [R=204,L]
+
+            
         RequestHeader set Host "localhost"
         ProxyPreserveHost On
         ProxyPass /api/xin/ http://127.0.0.1:8080/site/custom-api/
@@ -293,12 +314,10 @@ Create `/etc/apache2/sites-available/hippo.conf`:
         ProxyPassReverse /site/ http://127.0.0.1:8080/site/
         ProxyPassReverseCookiePath /site /
     
-    
     </VirtualHost>
-    
 
 
-Make sure to replace the host names with proper host names.  Enable to virtualhost by typing:
+Make sure to replace the host names with proper host names.  Enable the virtual host by typing:
 
     $ a2ensite hippo
 

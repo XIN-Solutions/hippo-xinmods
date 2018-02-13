@@ -45,6 +45,7 @@ public class EnsureUserRoleBlockingFilter implements Filter {
      */
     public static final String INIT_PARAM_GROUPS = "groups";
     public static final String QUERY_GROUP_MEMBERSHIPS = "//element(*, hipposys:group)[jcr:contains(@hipposys:members, '%s')]";
+    public static final String METHOD_OPTIONS = "OPTIONS";
 
     /**
      * Valid groups
@@ -82,6 +83,12 @@ public class EnsureUserRoleBlockingFilter implements Filter {
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        if (METHOD_OPTIONS.equals(httpRequest.getMethod())) {
+            LOG.debug("Don't care about blocking OPTIONS requests");
+            chain.doFilter(request, response);
+            return;
+        }
 
         // login to repo and check memberships
         try (AutoCloseableSession adminSession = closeableSession(loginAdministrative())) {

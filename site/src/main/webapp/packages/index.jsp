@@ -15,6 +15,8 @@
     </head>
     <body ng-app="app">
 
+        <%@include file="dynamic.jsp" %>
+
         <div ng-controller="ListController" data-loading="{{1}}">
             <div class="container">
                 <div class="row">

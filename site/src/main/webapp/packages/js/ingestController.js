@@ -14,7 +14,7 @@ app.controller("IngestController", ['$scope', 'endpoint', function($scope, endpo
         },
 
         backToList : function() {
-        	document.location.href = "list.html";
+        	document.location.href = "index.jsp";
         }
 
     });

@@ -1,4 +1,4 @@
-(function(undefined) {
+(function(Config, undefined) {
 
     app.service("endpoint", function($q, $http) {
 
@@ -6,7 +6,9 @@
          * Where to look for the endpoints
          * @type {String}
          */
-        var BASE_URL = "http://localhost:8080/site/custom-api";
+        var BASE_URL = Config.XinApiUrl;
+
+        $http.defaults.headers.common.Authorization = Config.ApiAuth;
 
         return {
 
@@ -98,4 +100,4 @@
 
     });
 
-})();
+})(window.Config);

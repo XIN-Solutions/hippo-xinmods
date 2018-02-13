@@ -90,7 +90,7 @@ var PackageWizardController = app.controller("PackageWizardController", ['$scope
         },
 
         back : function() {
-            document.location.href = "list.html";
+            document.location.href = "index.jsp";
         }
 
 

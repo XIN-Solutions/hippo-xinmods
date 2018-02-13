@@ -80,7 +80,7 @@
     <filter-class>nz.xinsolutions.rest.security.EnsureUserRoleBlockingFilter</filter-class>
     <init-param>
       <param-name>groups</param-name>
-      <param-value>packagemanager</param-value>
+      <param-value>admin,packagemanager</param-value>
     </init-param>
   </filter>
 
@@ -89,7 +89,7 @@
     <filter-class>nz.xinsolutions.rest.security.EnsureUserRoleBlockingFilter</filter-class>
     <init-param>
       <param-name>groups</param-name>
-      <param-value>restuser</param-value>
+      <param-value>admin,restuser</param-value>
     </init-param>
   </filter>
 
@@ -129,6 +129,7 @@
     <filter-name>XSSUrlFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+  
   <filter-mapping>
     <filter-name>HstFilter</filter-name>
     <url-pattern>/*</url-pattern>
@@ -265,6 +266,12 @@
   </servlet-mapping>
 
   <security-constraint>
+
+    <!-- protect the /packages path -->
+    <web-resource-collection>
+      <web-resource-name>Packages application</web-resource-name>
+      <url-pattern>/packages/*</url-pattern>
+    </web-resource-collection>
 
     <!-- protect the /custom-api path -->
     <web-resource-collection>

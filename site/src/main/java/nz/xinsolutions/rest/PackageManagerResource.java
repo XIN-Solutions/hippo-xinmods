@@ -5,7 +5,6 @@ import nz.xinsolutions.core.JcrSessionHelper;
 import nz.xinsolutions.packages.Package;
 import nz.xinsolutions.packages.*;
 import nz.xinsolutions.rest.model.ClonePackagePayload;
-import nz.xinsolutions.rest.security.CORSHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
@@ -33,7 +32,6 @@ import java.util.HashMap;
 
 import static javax.servlet.http.HttpServletResponse.*;
 import static nz.xinsolutions.core.JcrSessionHelper.loginAdministrative;
-import static nz.xinsolutions.rest.security.CORSHelper.enableCORS;
 
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
@@ -77,7 +75,7 @@ public class PackageManagerResource extends BaseRestResource {
         try {
             Session session = getSession(ctx);
             LOG.info("Return a list of packages");
-            return enableCORS(Response.ok(pkgListService.getPackages(session))).build();
+            return Response.ok(pkgListService.getPackages(session)).build();
         }
         catch (Exception ex) {
             LOG.error("Couldn't get all packages, caused by: ", ex);
@@ -97,10 +95,10 @@ public class PackageManagerResource extends BaseRestResource {
             Package pkg = pkgListService.getPackage(session, packageId);
             if (pkg == null) {
                 LOG.info("Package with id `{}` not found", packageId);
-                return enableCORS(Response.status(404)).build();
+                return Response.status(404).build();
             }
             
-            return enableCORS(Response.ok(pkg)).build();
+            return Response.ok(pkg).build();
         }
         catch (Exception ex) {
             LOG.error("Something went wrong while trying to retrieve package with id `{}`", packageId);
@@ -159,11 +157,7 @@ public class PackageManagerResource extends BaseRestResource {
             
             LOG.info("Package temporarily stored at: " + tmpAttachmentFile.getCanonicalPath());
             
-            return
-                enableCORS(
-                    Response.temporaryRedirect(URI.create(redirectTo))
-                ).build()
-            ;
+            return Response.temporaryRedirect(URI.create(redirectTo)).build();
         }
         catch (RepositoryException rEx) {
             LOG.error("Repo exception caused by: ", rEx);
@@ -218,14 +212,12 @@ public class PackageManagerResource extends BaseRestResource {
             pkgListService.addPackage(jcrSession, newPackage);
 
             return (
-                enableCORS(
                     Response.ok(
                         new HashMap<String, String>() {{
                             put("msg", "Cloning success");
                         }}
-                    )
-                ).build()
-            );
+                    ).build()
+                );
         }
         catch (RepositoryException rEx) {
             LOG.error("Repository exception, caused by: ", rEx);
@@ -239,7 +231,7 @@ public class PackageManagerResource extends BaseRestResource {
             }
         }
 
-        return enableCORS(Response.ok()).build();
+        return Response.ok().build();
     }
     
     /**
@@ -265,7 +257,7 @@ public class PackageManagerResource extends BaseRestResource {
     
             if (!pkgListService.packageExists(jcrSession, packageId)) {
                 response.setStatus(SC_NOT_FOUND);
-                CORSHelper.enableCORS(response);
+                return;
             }
 
             String pkgFilename = getPkgFilename(packageId, postfix);
@@ -311,15 +303,15 @@ public class PackageManagerResource extends BaseRestResource {
         
             if (!pkgListService.packageExists(jcrSession, packageId)) {
                 LOG.error("Package with ID `{}` doesn't exist", packageId);
-                return enableCORS(Response.serverError()).build();
+                return Response.serverError().build();
             }
         
             pkgListService.deletePackage(jcrSession, packageId);
-            return enableCORS(Response.ok()).build();
+            return Response.ok().build();
         }
         catch (RepositoryException | PackageException ex) {
             LOG.error("Could not complete package creation, caused by: ", ex);
-            return enableCORS(Response.serverError()).build();
+            return Response.serverError().build();
         }
         finally {
             if (jcrSession != null && jcrSession.isLive()) {
@@ -349,16 +341,16 @@ public class PackageManagerResource extends BaseRestResource {
             
             if (pkgListService.packageExists(jcrSession, packageId)) {
                 LOG.error("Package with ID `{}` already exists, aborting.", packageId);
-                return enableCORS(Response.serverError()).build();
+                return Response.serverError().build();
             }
             
             packageInfo.setId(packageId);
             pkgListService.addPackage(jcrSession, packageInfo);
-            return enableCORS(Response.ok()).build();
+            return Response.ok().build();
         }
         catch (RepositoryException | PackageException ex) {
             LOG.error("Could not complete package creation, caused by: ", ex);
-            return enableCORS(Response.serverError()).build();
+            return Response.serverError().build();
         }
         finally {
             if (jcrSession != null && jcrSession.isLive()) {
@@ -387,16 +379,16 @@ public class PackageManagerResource extends BaseRestResource {
             // should exist.
             if (!pkgListService.packageExists(jcrSession, packageId)) {
                 LOG.error("Package with ID `{}` does not exist, aborting.", packageId);
-                return enableCORS(Response.serverError()).build();
+                return Response.serverError().build();
             }
 
             pkgListService.deletePackage(jcrSession, packageId);
             pkgListService.addPackage(jcrSession, packageInfo);
-            return enableCORS(Response.ok()).build();
+            return Response.ok().build();
         }
         catch (RepositoryException | PackageException ex) {
             LOG.error("Could not complete package creation, caused by: ", ex);
-            return enableCORS(Response.serverError()).build();
+            return Response.serverError().build();
         }
         finally {
             if (jcrSession != null && jcrSession.isLive()) {
@@ -404,29 +396,20 @@ public class PackageManagerResource extends BaseRestResource {
             }
         }
     }
-    
-    /**
-     * Make sure to respond appropriately to an OPTIONS
-     * @return
-     */
-    @OPTIONS
-    @Path("{path : .*}")
-    public Response options() {
-        return enableCORS(Response.ok("")).build();
-    }
+
     
     /**
      * @return an error response
      */
     protected Response errorResponse() {
-        return enableCORS(Response.serverError()).build();
+        return Response.serverError().build();
     }
 
     /**
      * @return an empty cors enabled response
      */
     protected Response emptyResponse() {
-        return enableCORS(Response.ok("Success")).build();
+        return Response.ok("Success").build();
     }
 
     /**

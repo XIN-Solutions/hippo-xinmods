@@ -15,6 +15,8 @@
     </head>
     <body ng-app="app" class="Modal_Content">
 
+        <%@include file="dynamic.jsp" %>
+
         <div class="Modal_Top"><!-- --></div>
 
         <div ng-controller="PackageWizardController" data-loading="{{1}}">
@@ -27,7 +29,7 @@
                         ">
 
                         <div class="ButtonBar">
-                            <button class="btn btn-default" onclick="javascript: document.location.href='list.html'">
+                            <button class="btn btn-default" onclick="javascript: document.location.href='index.jsp'">
                                 <i class="glyphicon glyphicon-arrow-left"></i>
                                 Back
                             </button>

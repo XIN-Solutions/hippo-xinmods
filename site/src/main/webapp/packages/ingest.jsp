@@ -15,6 +15,8 @@
     </head>
     <body class="Modal_Content">
 
+        <%@include file="dynamic.jsp" %>
+
         <div class="Modal_Top"><!-- --></div>
 
         <div ng-app="app"  ng-controller="IngestController" data-loading="{{1}}" ></div>
@@ -29,7 +31,7 @@
 
 
                         <div class="ButtonBar">
-                            <button class="btn btn-default" onclick="javascript: document.location.href='list.html'">
+                            <button class="btn btn-default" onclick="javascript: document.location.href='index.jsp'">
                                 <i class="glyphicon glyphicon-arrow-left"></i>
                                 Back
                             </button>
@@ -75,7 +77,7 @@
                             <!-- button bar -->
                             <div class="ButtonBar ButtonBar--bottom">
                                 <button class="btn right btn-md btn-primary" type="submit"><i class="glyphicon glyphicon-upload"><!-- --></i> Ingest package</button>
-                                <a class="btn btn-link" onclick="javascript: document.location.href='list.html'">Cancel</a>
+                                <a class="btn btn-link" onclick="javascript: document.location.href='index.jsp'">Cancel</a>
                             </div>
 
                         </form>
