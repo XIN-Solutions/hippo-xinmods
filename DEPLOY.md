@@ -10,7 +10,7 @@ Checkout the tag you wish to build a distribution for:
 
 The `target/*tar.gz` file contains the distributed version of the hippo instance, complete with shared libs and common libs
 
-!! Make sure `common/lib/jcl-over-slf4j-1.7.25.jar` does not exist.
+**!!** Make sure `common/lib/jcl-over-slf4j-1.7.25.jar` does not exist.
 
 To install new releases you no longer need all of the distribution, you would unpack only the `shared`, `common` and `webapps` folders like so:
 
@@ -25,42 +25,42 @@ To setup tomcat:
 * unzip the hippo distribution
 * create bin/setenv.sh
 
-	JAVA_HOME="/opt/jdk1.8.0_161"
-	REP_OPTS="-Drepo.upgrade=false -Drepo.config=file:${CATALINA_BASE}/conf/repository.xml -Drepo.path=./storage"
-	L4J_OPTS="-Dlog4j.configurationFile=file:${CATALINA_BASE}/conf/log4j2.xml"
-	JVM_OPTS="-server -Xmx512m -Xms128m"
-	CATALINA_OPTS="${JVM_OPTS} ${REP_OPTS} ${L4J_OPTS}"
+        JAVA_HOME="/opt/jdk1.8.0_161"
+        REP_OPTS="-Drepo.upgrade=false -Drepo.config=file:${CATALINA_BASE}/conf/repository.xml -Drepo.path=./storage"
+        L4J_OPTS="-Dlog4j.configurationFile=file:${CATALINA_BASE}/conf/log4j2.xml"
+        JVM_OPTS="-server -Xmx512m -Xms128m"
+        CATALINA_OPTS="${JVM_OPTS} ${REP_OPTS} ${L4J_OPTS}"
 
 * setup conf/tomcat-users.xml 
 
-	<?xml version="1.0" encoding="UTF-8"?>
-	<tomcat-users xmlns="http://tomcat.apache.org/xml"
-	              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	              xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
-	              version="1.0">
-
-	  <role rolename="tomcat" />
-	  <role rolename="manager-gui" />
-	  <role rolename="admin-gui" />
-
-	  <user username="tomcat" password="admin" roles="tomcat,manager-gui,admin-gui"/>
-	</tomcat-users>
+        <?xml version="1.0" encoding="UTF-8"?>
+        <tomcat-users xmlns="http://tomcat.apache.org/xml"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://tomcat.apache.org/xml tomcat-users.xsd"
+                      version="1.0">
+    
+          <role rolename="tomcat" />
+          <role rolename="manager-gui" />
+          <role rolename="admin-gui" />
+    
+          <user username="tomcat" password="<password>" roles="tomcat,manager-gui,admin-gui"/>
+        </tomcat-users>
 
 * setup conf/catalina.properties
-** replace value for `common.loader` with the one below:
+    * replace value for `common.loader` with the one below:
 
-	common.loader="${catalina.base}/common/lib/*.jar", "${catalina.base}/lib","${catalina.base}/lib","${catalina.base}/lib/*.jar","${catalina.home}/lib","${catalina.home}/lib/*.jar"
+	        common.loader="${catalina.base}/common/lib/*.jar", "${catalina.base}/lib","${catalina.base}/lib","${catalina.base}/lib/*.jar","${catalina.home}/lib","${catalina.home}/lib/*.jar"
 
-** create `shared.loader` property with these values:
+    * create `shared.loader` property with these values:
 
-	shared.loader="${catalina.base}/shared/lib/*.jar"
+        	shared.loader="${catalina.base}/shared/lib/*.jar"
 
 * make sure Tomcat only binds to localhost. Go into `tomcat/conf/server.xml` and change the Connector to read:
 
-    <Connector port="8080" protocol="HTTP/1.1"
-               address="127.0.0.1"
-               connectionTimeout="20000"
-               redirectPort="8443" />
+        <Connector port="8080" protocol="HTTP/1.1"
+                   address="127.0.0.1"
+                   connectionTimeout="20000"
+                   redirectPort="8443" />
 
 
 
@@ -217,96 +217,90 @@ Create repository.xml at `tomcat/conf/repository.xml`:
 # Setup Apache Virtualhost
 
 Install apache:
-
-$ sudo apt-get install apache2
-$ sudo a2enmod proxy_http
-$ sudo a2enmod headers
-$ sudo a2enmod substitute
+    
+    $ sudo apt-get install apache2
+    $ sudo a2enmod proxy_http
+    $ sudo a2enmod headers
+    $ sudo a2enmod substitute
 
 Create new Virtualhost file. It contains three definitions:
 
-* cms.hippo.local
-* api.hippo.local
-* package.hippo.local
+* http://cms.hippo.local/
+* http://cms.hippo.local/packages/list.html
+* http://api.hippo.local/api/xin (goes to custom-api/)
+* http://api.hippo.local/api/* (goes to api/)
+
 
 Make sure to adjust the hostnames to your taste. It assumes your tomcat is running on port 8080.
 
-Create /etc/apache2/sites-available/hippo.conf:
+Create `/etc/apache2/sites-available/hippo.conf`:
+    
+    #
+    #       CMS definition
+    #
+    <VirtualHost *:80>
+    
+        ServerName cms.hippo.local
+    
+        <Location />
+            Order deny,allow
+            Allow from all
+        </Location>
+    
+        ProxyPreserveHost Off 
+    
+        # /packages should redirect to the package manager
+        ProxyPass /packages/ http://127.0.0.1:8080/site/packages/
+        ProxyPassReverse /packages/ http://127.0.0.1:8080/site/packages/
+        ProxyPassReverseCookiePath /site/packages /packages/
+    
+        # / should go to the CMS
+        ProxyPass / http://127.0.0.1:8080/cms/
+        ProxyPassReverse /cms/ http://127.0.0.1:8080/cms/
+        ProxyPassReverseCookiePath /cms /
+        
+    </VirtualHost>
+    
+    #
+    #       CaaS delivery virtualhost
+    #
+    <VirtualHost *:80>
+    
+        ServerName api.hippo.local
+    
+        <Location />
+            Order deny,allow
+            Deny from all
+        </Location>
+    
+        <Location /api/>
+            Order deny,allow
+            Allow from all
+        </Location>
+    
+        <Location /binaries/>
+            Order deny,allow
+            Allow from all
+        </Location>
+    
+        AddOutputFilterByType SUBSTITUTE application/json
+        Substitute "s|http://localhost(:8080)?/site/|http://api.hippo.local/|i"
+    
+        RequestHeader set Host "localhost"
+        ProxyPreserveHost On
+        ProxyPass /api/xin/ http://127.0.0.1:8080/site/custom-api/
+        ProxyPass / http://127.0.0.1:8080/site/
+        ProxyPassReverse /site/ http://127.0.0.1:8080/site/
+        ProxyPassReverseCookiePath /site /
+    
+    
+    </VirtualHost>
+    
 
-	#
-	#       CMS definition virtualhost
-	#
-	<VirtualHost *:80>
 
-	    ServerName cms.hippo.local
+Make sure to replace the host names with proper host names.  Enable to virtualhost by typing:
 
-	    <Location />
-	        Order deny,allow
-	        Allow from all
-	    </Location>
-
-	    ProxyPreserveHost Off 
-	    ProxyPass / http://127.0.0.1:8080/cms/
-	    ProxyPassReverse /cms/ http://127.0.0.1:8080/cms/
-	    ProxyPassReverseCookiePath /cms /
-	    
-	</VirtualHost>
-
-	#
-	#   Package Manager Virtualhost
-	#
-	<VirtualHost *:80>
-
-	    ServerName packages.hippo.local
-
-	    <Location />
-	        Order deny,allow
-	        Allow from all
-	    </Location>
-
-	    ProxyPreserveHost Off 
-	    ProxyPass / http://127.0.0.1:8080/site/packages/
-	    ProxyPassReverse /site/packages/ http://127.0.0.1:8080/site/packages/
-	    ProxyPassReverseCookiePath /site/packages /
-	        
-	</VirtualHost>
-
-	#
-	#       CaaS delivery virtualhost
-	#
-	<VirtualHost *:80>
-
-	    ServerName api.hippo.local
-
-	    <Location /xin/>
-	        Order deny,allow
-	        Allow from all
-	    </Location>
-
-	    <Location /api/>
-	        Order deny,allow
-	        Allow from all
-	    </Location>
-
-	    <Location /binaries/>
-	        Order deny,allow
-	        Allow from all
-	    </Location>
-
-	    AddOutputFilterByType SUBSTITUTE application/json
-	    Substitute "s|http://localhost(:8080)?/site/|http://api.hippo.local/|i"
-
-	    RequestHeader set Host "localhost"
-	    ProxyPreserveHost On
-	    
-	    ProxyPass /xin/ http://127.0.0.1:8080/site/custom-api/
-	    ProxyPass / http://127.0.0.1:8080/site/
-	    ProxyPassReverse /site/ http://127.0.0.1:8080/site/
-	    ProxyPassReverseCookiePath /site /
-
-	</VirtualHost>
-
-Make sure to replace the host names with proper host names. 
+    $ a2ensite hippo
 
 
 # Useful scripts

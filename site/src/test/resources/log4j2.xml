@@ -25,6 +25,7 @@
     <Logger name="javax.ws.rs.core" level="warn"/>
     <Logger name="org.apache.commons.pool" level="warn"/>
     <Logger name="org.apache.commons.beanutils" level="warn"/>
+    <Logger name="org.hippoecm.hst" level="debug"/>
 
     <!-- too many caching warnings -->
     <Logger name="org.apache.jackrabbit.core.state" level="error"/>
@@ -43,7 +44,7 @@
     <!-- project logging -->
     <Logger name="nz.xinsolutions" level="debug"/>
 
-    <Root level="warn">
+    <Root level="debug">
       <AppenderRef ref="console"/>
     </Root>
 

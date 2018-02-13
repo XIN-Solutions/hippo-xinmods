@@ -5,3 +5,4 @@
   hst:ismapped: false
   hst:namedpipeline: RestApiPipeline
   hst:types: [rest]
+  hst:subjectbasedsession: true

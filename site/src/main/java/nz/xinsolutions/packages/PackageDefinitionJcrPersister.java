@@ -1,7 +1,7 @@
 package nz.xinsolutions.packages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nz.xinsolutions.core.JcrHelper;
+import nz.xinsolutions.core.JcrSessionHelper;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -172,7 +172,7 @@ public class PackageDefinitionJcrPersister {
     protected void ensurePackageNodeExists(String storageLocation) throws RepositoryException {
         Session adminSession = null;
         try {
-            adminSession = JcrHelper.loginAdministrative();
+            adminSession = JcrSessionHelper.loginAdministrative();
             
             if (!adminSession.nodeExists("/" + storageLocation)) {
                 adminSession.getRootNode().addNode(storageLocation, NT_UNSTRUCTURED);

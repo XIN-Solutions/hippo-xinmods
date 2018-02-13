@@ -1,8 +1,11 @@
 package nz.xinsolutions.rest;
 
+import nz.xinsolutions.core.AutoCloseableSession;
+import nz.xinsolutions.core.JcrSessionHelper;
 import nz.xinsolutions.packages.Package;
 import nz.xinsolutions.packages.*;
 import nz.xinsolutions.rest.model.ClonePackagePayload;
+import nz.xinsolutions.rest.security.CORSHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
@@ -29,8 +32,8 @@ import java.util.Date;
 import java.util.HashMap;
 
 import static javax.servlet.http.HttpServletResponse.*;
-import static nz.xinsolutions.core.JcrHelper.loginAdministrative;
-import static nz.xinsolutions.rest.CORSHelper.enableCORS;
+import static nz.xinsolutions.core.JcrSessionHelper.loginAdministrative;
+import static nz.xinsolutions.rest.security.CORSHelper.enableCORS;
 
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
@@ -70,20 +73,20 @@ public class PackageManagerResource extends BaseRestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPackages(@Context HttpServletRequest request) {
         RestContext ctx = new DefaultRestContext(this, request);
-        
+
         try {
-            LOG.info("Return a list of packages");
             Session session = getSession(ctx);
+            LOG.info("Return a list of packages");
             return enableCORS(Response.ok(pkgListService.getPackages(session))).build();
         }
-        catch (PackageException | RepositoryException ex) {
+        catch (Exception ex) {
             LOG.error("Couldn't get all packages, caused by: ", ex);
             return errorResponse();
         }
     }
-    
-    
-    
+
+
+
     @GET
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -128,12 +131,9 @@ public class PackageManagerResource extends BaseRestResource {
         
         @Multipart("file") Attachment stream)
     {
-        Session jcrSession = null;
-        
-        try {
-            // do important importing things with the administrative user.
-            jcrSession = loginAdministrative();
-            
+
+        try (AutoCloseableSession jcrSession = JcrSessionHelper.closeableSession(loginAdministrative())) {
+
             // attachment found?
             if (stream == null) {
                 LOG.error("No attachment found with name `file`, aborting.");
@@ -168,17 +168,13 @@ public class PackageManagerResource extends BaseRestResource {
         catch (RepositoryException rEx) {
             LOG.error("Repo exception caused by: ", rEx);
         }
-        catch (PackageException pEx) {
-            LOG.error("Could not create package, caused by: ", pEx);
-        }
         catch (IOException ioEx) {
             LOG.error("Could not parse the incoming attachment, caused by: ", ioEx);
         }
-        finally {
-            if (jcrSession != null && jcrSession.isLive()) {
-                jcrSession.logout();
-            }
+        catch (Exception pEx) {
+            LOG.error("Could not create package, caused by: ", pEx);
         }
+
         return errorResponse();
     }
     
