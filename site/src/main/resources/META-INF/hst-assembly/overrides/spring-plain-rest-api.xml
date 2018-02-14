@@ -17,7 +17,7 @@
       <list>
         <bean class="org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider">
           <constructor-arg>
-            <bean class="nz.xinsolutions.rest.ContentResource"/>
+            <bean class="nz.xinsolutions.rest.ContentQueryResource"/>
           </constructor-arg>
         </bean>
         <bean class="org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider">

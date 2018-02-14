@@ -1,6 +1,6 @@
 package nz.xinsolutions.beans;
 
-import nz.xinsolutions.rest.security.BasicAuthUtility;
+import nz.xinsolutions.core.security.BasicAuthUtility;
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;

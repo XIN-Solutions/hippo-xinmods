@@ -1,11 +1,10 @@
 package nz.xinsolutions.packages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nz.xinsolutions.core.JcrSessionHelper;
+import nz.xinsolutions.core.jackrabbit.JcrSessionHelper;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.jcr.Node;
@@ -26,14 +25,7 @@ import static org.onehippo.repository.util.JcrConstants.NT_UNSTRUCTURED;
  */
 @Component
 public class PackageDefinitionJcrPersister {
-    
-    public static final String PROP_DEFINITIONS = "definitions";
-    /**
-     * List service
-     */
-    @Autowired
-    private PackageListService listService;
-    
+
     /**
      * Logger
      */
@@ -42,11 +34,18 @@ public class PackageDefinitionJcrPersister {
     /**
      * Package location if not pre-configured
      */
-    public static final String STORAGE_LOCATION = "content/packages";
-    
-    
+    private static final String STORAGE_LOCATION = "content/packages";
+
+    /**
+     * Definitions property
+     */
+    private static final String PROP_DEFINITIONS = "definitions";
+
     /**
      * Persist all package definitions into the JCR at a preconfigured location
+     *
+     * @param session   The session to use for writing.
+     * @param packages  List of packages to write the JSON of into the JCR
      */
     public void persistPackages(Session session, List<Package> packages) throws PackageException {
         
@@ -71,8 +70,9 @@ public class PackageDefinitionJcrPersister {
     
     /**
      * Loads a list of packages.
-     * @param session
-     * @throws PackageException
+     *
+     * @param session   Load the packages with this sessoin.
+     * @throws PackageException thrown when can't read (insufficient access?)
      */
     public List<Package> loadPackages(Session session) throws PackageException {
         try {
@@ -98,8 +98,10 @@ public class PackageDefinitionJcrPersister {
      *
      * @param session           is the JCR session we're using
      * @param storageLocation   is the location the packages node should live at
-     * @return
-     * @throws RepositoryException
+     *
+     * @return the package definition node
+     *
+     * @throws RepositoryException when it can't find the node
      */
     protected Node getPackageNode(Session session, String storageLocation) throws RepositoryException {
         return session.getNode("/" + storageLocation);
@@ -108,9 +110,9 @@ public class PackageDefinitionJcrPersister {
     /**
      * This method writes a string to the definition property of the pkgNode jcr node.
      *
-     * @param pkgNode
-     * @param packageDefJson
-     * @throws RepositoryException
+     * @param pkgNode           the package node to write to
+     * @param packageDefJson    the json to write into the node
+     * @throws RepositoryException is thrown when something goes wrong writing it.
      */
     protected void writeDefinitionTo(Node pkgNode, String packageDefJson) throws RepositoryException {
         if (pkgNode == null) {
@@ -132,9 +134,9 @@ public class PackageDefinitionJcrPersister {
     /**
      * Load the package definitions (a json string) from the passed in node
      *
-     * @param pkgNode                   is the package information node
-     * @return                          a json formatted string or null
-     * @throws RepositoryException
+     * @param pkgNode                   is the package information node.
+     * @return                          a json formatted string or null.
+     * @throws RepositoryException      is thrown when something goes wrong retrieving the node.
      */
     protected String getPackageDefinitionProperty(Node pkgNode) throws RepositoryException {
         if (pkgNode == null) {
@@ -152,9 +154,9 @@ public class PackageDefinitionJcrPersister {
     /**
      * Get a json representation of the package list.
      *
-     * @param packages  is a list of packages
-     * @return a string with the json format of the packages
-     * @throws IOException
+     * @param packages  is a list of packages.
+     * @return a string with the json format of the packages.
+     * @throws IOException when the package list cannot be mapped to JSON.
      */
     protected String getPackageListAsJsonString(List<Package> packages) throws IOException {
         ObjectMapper mapper = new ObjectMapper();

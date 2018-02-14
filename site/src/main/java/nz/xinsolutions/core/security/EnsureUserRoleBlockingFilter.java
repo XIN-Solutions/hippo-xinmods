@@ -1,6 +1,6 @@
-package nz.xinsolutions.rest.security;
+package nz.xinsolutions.core.security;
 
-import nz.xinsolutions.core.AutoCloseableSession;
+import nz.xinsolutions.core.jackrabbit.AutoCloseableSession;
 import org.apache.commons.lang.StringUtils;
 import org.hippoecm.hst.core.container.ContainerConstants;
 import org.slf4j.Logger;
@@ -20,8 +20,8 @@ import java.util.Collection;
 import java.util.List;
 
 import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
-import static nz.xinsolutions.core.JcrSessionHelper.closeableSession;
-import static nz.xinsolutions.core.JcrSessionHelper.loginAdministrative;
+import static nz.xinsolutions.core.jackrabbit.JcrSessionHelper.closeableSession;
+import static nz.xinsolutions.core.jackrabbit.JcrSessionHelper.loginAdministrative;
 
 /**
  * Blocks further calls by setting 403 if incoming requests aren't authenticated, and

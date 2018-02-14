@@ -1,4 +1,4 @@
-package nz.xinsolutions.rest.security;
+package nz.xinsolutions.core.security;
 
 import org.apache.jackrabbit.util.Base64;
 import org.slf4j.Logger;

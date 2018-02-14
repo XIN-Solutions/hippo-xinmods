@@ -1,4 +1,4 @@
-package nz.xinsolutions.rest.model;
+package nz.xinsolutions.beans;
 
 /**
  * Author: Marnix Kok <mkok@btes.co.nz>

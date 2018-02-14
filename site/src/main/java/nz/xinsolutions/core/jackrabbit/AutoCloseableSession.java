@@ -1,4 +1,4 @@
-package nz.xinsolutions.core;
+package nz.xinsolutions.core.jackrabbit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

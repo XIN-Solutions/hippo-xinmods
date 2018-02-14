@@ -1,4 +1,4 @@
-package nz.xinsolutions.rest.security;
+package nz.xinsolutions.core.security;
 
 import org.hippoecm.hst.core.container.ContainerConstants;
 import org.slf4j.Logger;

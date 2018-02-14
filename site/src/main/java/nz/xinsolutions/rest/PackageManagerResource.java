@@ -1,16 +1,13 @@
 package nz.xinsolutions.rest;
 
-import nz.xinsolutions.core.AutoCloseableSession;
-import nz.xinsolutions.core.JcrSessionHelper;
+import nz.xinsolutions.core.Rest;
 import nz.xinsolutions.packages.Package;
 import nz.xinsolutions.packages.*;
-import nz.xinsolutions.rest.model.ClonePackagePayload;
+import nz.xinsolutions.beans.ClonePackagePayload;
 import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.Multipart;
 import org.onehippo.cms7.essentials.components.rest.BaseRestResource;
-import org.onehippo.cms7.essentials.components.rest.ctx.DefaultRestContext;
-import org.onehippo.cms7.essentials.components.rest.ctx.RestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +23,10 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.util.Date;
 import java.util.HashMap;
 
 import static javax.servlet.http.HttpServletResponse.*;
-import static nz.xinsolutions.core.JcrSessionHelper.loginAdministrative;
 
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
@@ -39,14 +34,13 @@ import static nz.xinsolutions.core.JcrSessionHelper.loginAdministrative;
  */
 @Path("/packages/")
 @Consumes(MediaType.APPLICATION_JSON)
-public class PackageManagerResource extends BaseRestResource {
+public class PackageManagerResource extends BaseRestResource implements Rest {
     
     /**
      * Logger
      */
     private static final Logger LOG = LoggerFactory.getLogger(PackageManagerResource.class);
-    public static final String DATE_PATTERN = "Y-M-d";
-    
+
     /**
      * Package list service bound here
      */
@@ -70,10 +64,8 @@ public class PackageManagerResource extends BaseRestResource {
     @Path("/list")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPackages(@Context HttpServletRequest request) {
-        RestContext ctx = new DefaultRestContext(this, request);
-
         try {
-            Session session = getSession(ctx);
+            Session session = getSession(this, request);
             LOG.info("Return a list of packages");
             return Response.ok(pkgListService.getPackages(session)).build();
         }
@@ -89,9 +81,8 @@ public class PackageManagerResource extends BaseRestResource {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPackage(@Context HttpServletRequest request, @PathParam("id") String packageId) {
-        RestContext ctx = new DefaultRestContext(this, request);
         try {
-            Session session = getSession(ctx);
+            Session session = getSession(this, request);
             Package pkg = pkgListService.getPackage(session, packageId);
             if (pkg == null) {
                 LOG.info("Package with id `{}` not found", packageId);
@@ -107,13 +98,8 @@ public class PackageManagerResource extends BaseRestResource {
     }
     
     /**
-     * This package imports the contents and CND elements of a package in the zip file for the <code>file</code> query parameter.
-     * If there is 'autorun.groovy' in the package, it will be executed in the context of this request as well with access to
-     * the repository.
-     *
-     * @param request
-     * @param response
-     * @param stream
+     * This package imports the contents and CND elements of a package in the zip file for
+     * the <code>file</code> query parameter.
      */
     @POST
     @Path("/import")
@@ -130,7 +116,8 @@ public class PackageManagerResource extends BaseRestResource {
         @Multipart("file") Attachment stream)
     {
 
-        try (AutoCloseableSession jcrSession = JcrSessionHelper.closeableSession(loginAdministrative())) {
+        try {
+            Session jcrSession = getSession(this, request);
 
             // attachment found?
             if (stream == null) {
@@ -157,7 +144,10 @@ public class PackageManagerResource extends BaseRestResource {
             
             LOG.info("Package temporarily stored at: " + tmpAttachmentFile.getCanonicalPath());
             
-            return Response.temporaryRedirect(URI.create(redirectTo)).build();
+            return Response.ok(
+                    "Package was imported succesfully, you can " +
+                           "<a href='#' onclick='window.close();'>close this window</a>."
+                        ).build();
         }
         catch (RepositoryException rEx) {
             LOG.error("Repo exception caused by: ", rEx);
@@ -183,17 +173,15 @@ public class PackageManagerResource extends BaseRestResource {
     @POST
     @Path("/clone")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response clonePackage(ClonePackagePayload payload) {
+    public Response clonePackage(@Context HttpServletRequest request, ClonePackagePayload payload) {
 
         String dstName = payload.getToPackage();
         String srcName = payload.getFromPackage();
 
         LOG.info("Trying to clone " + srcName + " to " + dstName);
 
-
-        Session jcrSession = null;
         try {
-            jcrSession = loginAdministrative();
+            Session jcrSession = getSession(this, request);
 
             // source doesn't exists?
             if (!pkgListService.packageExists(jcrSession, srcName)) {
@@ -225,11 +213,6 @@ public class PackageManagerResource extends BaseRestResource {
         catch (PackageException pkgEx) {
             LOG.error("Something went wrong, caused by: ", pkgEx);
         }
-        finally {
-            if (jcrSession != null && jcrSession.isLive()) {
-                jcrSession.logout();
-            }
-        }
 
         return Response.ok().build();
     }
@@ -237,12 +220,15 @@ public class PackageManagerResource extends BaseRestResource {
     /**
      * Build a package that was already defined
      *
-     * @param packageId
-     * @return
+     * @param packageId is the package to export.
+     * @param request is the request object
+     * @param response is the response object
+     * @param postfix is the information to add to the filename
      */
     @GET
     @Path("/{id}/export")
     @Produces(MediaType.APPLICATION_JSON)
+    @SuppressWarnings("VoidMethodAnnotatedWithGET")
     public void exportPackage(
                 @Context HttpServletRequest request,
                 @Context HttpServletResponse response,
@@ -251,9 +237,8 @@ public class PackageManagerResource extends BaseRestResource {
     {
         LOG.info("Requesting build of " + packageId);
 
-        Session jcrSession = null;
         try {
-            jcrSession = loginAdministrative();
+            Session jcrSession = getSession(this, request);
     
             if (!pkgListService.packageExists(jcrSession, packageId)) {
                 response.setStatus(SC_NOT_FOUND);
@@ -277,11 +262,6 @@ public class PackageManagerResource extends BaseRestResource {
         catch (PackageException pkgEx) {
             LOG.error("Something went wrong, caused by: ", pkgEx);
         }
-        finally {
-            if (jcrSession != null && jcrSession.isLive()) {
-                jcrSession.logout();
-            }
-        }
         
     }
 
@@ -294,12 +274,11 @@ public class PackageManagerResource extends BaseRestResource {
      */
     @DELETE
     @Path("/{id}")
-    public Response deletePackage(@PathParam("id") String packageId) {
+    public Response deletePackage(@Context HttpServletRequest request, @PathParam("id") String packageId) {
         LOG.info("Requesting deletion of " + packageId);
 
-        Session jcrSession = null;
         try {
-            jcrSession = loginAdministrative();
+            Session jcrSession = getSession(this, request);
         
             if (!pkgListService.packageExists(jcrSession, packageId)) {
                 LOG.error("Package with ID `{}` doesn't exist", packageId);
@@ -312,11 +291,6 @@ public class PackageManagerResource extends BaseRestResource {
         catch (RepositoryException | PackageException ex) {
             LOG.error("Could not complete package creation, caused by: ", ex);
             return Response.serverError().build();
-        }
-        finally {
-            if (jcrSession != null && jcrSession.isLive()) {
-                jcrSession.logout();
-            }
         }
         
     }
@@ -335,9 +309,8 @@ public class PackageManagerResource extends BaseRestResource {
     ) {
         LOG.info("Requesting creation of new package: " + packageId);
         
-        Session jcrSession = null;
         try {
-            jcrSession = loginAdministrative();
+            Session jcrSession = getSession(this, request);
             
             if (pkgListService.packageExists(jcrSession, packageId)) {
                 LOG.error("Package with ID `{}` already exists, aborting.", packageId);
@@ -346,16 +319,12 @@ public class PackageManagerResource extends BaseRestResource {
             
             packageInfo.setId(packageId);
             pkgListService.addPackage(jcrSession, packageInfo);
+
             return Response.ok().build();
         }
         catch (RepositoryException | PackageException ex) {
             LOG.error("Could not complete package creation, caused by: ", ex);
             return Response.serverError().build();
-        }
-        finally {
-            if (jcrSession != null && jcrSession.isLive()) {
-                jcrSession.logout();
-            }
         }
     }
     
@@ -372,9 +341,8 @@ public class PackageManagerResource extends BaseRestResource {
     ) {
         LOG.info("Requesting creation of new package: " + packageId);
     
-        Session jcrSession = null;
         try {
-            jcrSession = loginAdministrative();
+            Session jcrSession = getSession(this, request);
             
             // should exist.
             if (!pkgListService.packageExists(jcrSession, packageId)) {
@@ -390,34 +358,8 @@ public class PackageManagerResource extends BaseRestResource {
             LOG.error("Could not complete package creation, caused by: ", ex);
             return Response.serverError().build();
         }
-        finally {
-            if (jcrSession != null && jcrSession.isLive()) {
-                jcrSession.logout();
-            }
-        }
     }
 
-    
-    /**
-     * @return an error response
-     */
-    protected Response errorResponse() {
-        return Response.serverError().build();
-    }
-
-    /**
-     * @return an empty cors enabled response
-     */
-    protected Response emptyResponse() {
-        return Response.ok("Success").build();
-    }
-
-    /**
-     * @return the session from the current rest context
-     */
-    protected Session getSession(RestContext ctx) throws RepositoryException {
-        return ctx.getRequestContext().getSession();
-    }
 
 
     /**

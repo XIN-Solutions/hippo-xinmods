@@ -1,6 +1,6 @@
-package nz.xinsolutions.core;
+package nz.xinsolutions.core.jackrabbit;
 
-import nz.xinsolutions.rest.security.BasicAuthUtility;
+import nz.xinsolutions.core.security.BasicAuthUtility;
 import org.hippoecm.repository.HippoRepository;
 import org.hippoecm.repository.HippoRepositoryFactory;
 import org.slf4j.Logger;
