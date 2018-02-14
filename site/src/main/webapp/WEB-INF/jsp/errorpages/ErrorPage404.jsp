@@ -1,5 +1,5 @@
 <%@ page isErrorPage="true" %>
-<% if (request.getHeader("Content-Type").contains("html")) { %>
+<% if (request.getHeader("Content-Type") != null && request.getHeader("Content-Type").contains("html")) { %>
 <!doctype html>
   <%@ include file="/WEB-INF/jspf/htmlTags.jspf" %>
   <% response.setStatus(404); %>
