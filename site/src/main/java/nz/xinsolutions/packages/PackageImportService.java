@@ -2,10 +2,12 @@ package nz.xinsolutions.packages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import nz.xinsolutions.cnd.CndBundle;
+import nz.xinsolutions.cnd.CndNamespace;
 import nz.xinsolutions.cnd.CndSerialiser;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.commons.cnd.CndImporter;
 import org.apache.jackrabbit.commons.cnd.ParseException;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.zeroturnaround.zip.ZipUtil;
 
+import javax.jcr.NamespaceRegistry;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import java.io.File;
@@ -239,8 +242,11 @@ public class PackageImportService {
     protected void importCnd(CndBundle cndBundle, Session session) {
         String cndFormatted =
             new CndSerialiser().outputToCndFormat(session.getWorkspace(), cndBundle.getEntities());
-    
+
+
         try {
+            ensureAllNamespacesExist(session, cndBundle.getNamespaces());
+
             CndImporter.registerNodeTypes(
                 new StringReader(cndFormatted),
                 session,
@@ -251,7 +257,31 @@ public class PackageImportService {
             LOG.error("Cannot register node types from this CND `{}`, caused by:", cndFormatted, ex);
         }
     }
-    
+
+    /**
+     * This method adds missing namespaces as per their prefix and URI descriptions in the
+     * namespaces list.
+     *
+     * @param session       the JCR session to operate on
+     * @param namespaces    the namespaces we need to check
+     */
+    protected void ensureAllNamespacesExist(Session session, List<CndNamespace> namespaces) throws RepositoryException {
+        NamespaceRegistry registry = session.getWorkspace().getNamespaceRegistry();
+        String[] prefixes = registry.getPrefixes();
+
+        List<CndNamespace> missing =
+            namespaces
+                .stream()
+                .filter(ns -> !ArrayUtils.contains(prefixes, ns.getName()))
+                .collect(Collectors.toList())
+            ;
+
+        for (CndNamespace ns : missing) {
+            LOG.info("Registering missing namespace: `{}` at `{}`", ns.getName(), ns.getUri());
+            registry.registerNamespace(ns.getName(), ns.getUri());
+        }
+    }
+
     /**
      * @return a list of content files that are part of the zip
      */
