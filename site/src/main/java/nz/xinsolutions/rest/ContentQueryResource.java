@@ -148,8 +148,6 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
                 return notFoundResponse();
             }
 
-            List<HippoBean> childBeans = bean.getChildBeans(HippoBean.class);
-
             Map<String, Object> result = new LinkedHashMap<String, Object>() {{
 
                 put(KEY_SUCCESS, true);
@@ -157,9 +155,12 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
 
                 put(KEY_PATH, path);
                 put(KEY_TYPE, bean.getNode().getPrimaryNodeType().getName());
-                put(KEY_UUID, bean.getCanonicalUUID());
 
-                put(KEY_CHILDREN, convertToResponseObject(childBeans, ctxVars.getApiUrl()));
+                if (bean instanceof HippoDocument) {
+                    put(KEY_UUID, ((HippoDocument) bean).getCanonicalHandleUUID());
+                } else {
+                    put(KEY_UUID, bean.getCanonicalUUID());
+                }
             }};
 
             return (
