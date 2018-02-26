@@ -5,4 +5,4 @@ definitions:
       jcr:primaryType: hst:sites
       /xinmods:
         jcr:primaryType: hst:site
-        hst:content: /content/documents
+        hst:content: /content
