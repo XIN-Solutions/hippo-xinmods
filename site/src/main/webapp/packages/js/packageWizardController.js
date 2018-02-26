@@ -75,7 +75,7 @@ var PackageWizardController = app.controller("PackageWizardController", ['$scope
         createPackage : function() {
             var name = this.name;
             endpoint.createPackage(name, this.packageStructure()).then(function() {
-                document.location.href = "list.html?flash=" + encodeURIComponent("Succesfully created package: `" + name + "`.");
+                document.location.href = "index.jsp?flash=" + encodeURIComponent("Succesfully created package: `" + name + "`.");
             });
         },
 
@@ -85,7 +85,7 @@ var PackageWizardController = app.controller("PackageWizardController", ['$scope
         updatePackage : function() {
             var pkgId = this.packageIdParam();
             endpoint.updatePackage(pkgId, this.packageStructure()).then(function() {
-                document.location.href = "list.html?flash=" + encodeURIComponent("Succesfully updated package");
+                document.location.href = "index.jsp?flash=" + encodeURIComponent("Succesfully updated package");
             });
         },
 

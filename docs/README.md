@@ -3,7 +3,7 @@
 xinMODS adds simple package management to the interface allowing you to add functional modules to a bare-bones CMS deployment 
 without redeployments or restarting. 
 
-On your instance go to this URL: http://localhost:8080/site/packages/list.html
+On your instance go to this URL: http://localhost:8080/site/packages/
 
 It shows you an interface to a set of endpoints described loosely below.
 

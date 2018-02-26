@@ -226,7 +226,7 @@ Install apache:
 Create new Virtualhost file. It contains three definitions:
 
 * http://cms.hippo.local/
-* http://cms.hippo.local/packages/list.html
+* http://cms.hippo.local/packages/
 * http://api.hippo.local/api/xin (goes to custom-api/)
 * http://api.hippo.local/api/* (goes to api/)
 
