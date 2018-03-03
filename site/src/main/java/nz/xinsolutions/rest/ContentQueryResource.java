@@ -126,12 +126,62 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
      * Convert a node path to a uuid for use in the documents API.
      *
      * @param request   is the incoming request
+     * @param uuid      is the path we're interested in converting.
+     * @return a response object with relevant status messages
+     */
+    @GET
+    @Path("/uuid-to-path/")
+    public Response uuidToPath(@Context HttpServletRequest request, @QueryParam(value = KEY_UUID) String uuid) {
+
+        RestContext ctx = newRestContext(this, request);
+        ContextVariablesBean ctxVars = newContextVariablesInstance(request);
+
+        try {
+            if (StringUtils.isEmpty(uuid)) {
+                LOG.info("The UUID is empty");
+                return null;
+            }
+
+            HippoBean bean = (HippoBean) ctx.getRequestContext().getObjectBeanManager().getObjectByUuid(uuid);
+
+            if (bean == null) {
+                return notFoundResponse();
+            }
+
+            Map<String, Object> result = new LinkedHashMap<String, Object>() {{
+
+                put(KEY_SUCCESS, true);
+                put(KEY_MESSAGE, "Found.");
+
+                put(KEY_UUID, uuid);
+                put(KEY_TYPE, bean.getNode().getPrimaryNodeType().getName());
+                put(KEY_PATH, bean.getPath());
+            }};
+
+            return (
+                Response
+                    .status(200)
+                    .entity(result)
+                    .build()
+            );
+        }
+        catch (Exception ex) {
+            LOG.error("Something happened while retrieving object at `" + uuid + "`, caused by: ", ex);
+            return null;
+        }
+    }
+
+
+    /**
+     * Convert a node path to a uuid for use in the documents API.
+     *
+     * @param request   is the incoming request
      * @param path      is the path we're interested in converting.
      * @return a response object with relevant status messages
      */
     @GET
     @Path("/path-to-uuid/")
-    public Response uuidToPath(@Context HttpServletRequest request, @QueryParam(value = KEY_PATH) String path) {
+    public Response pathToUuid(@Context HttpServletRequest request, @QueryParam(value = KEY_PATH) String path) {
     
         RestContext ctx = newRestContext(this, request);
         ContextVariablesBean ctxVars = newContextVariablesInstance(request);
