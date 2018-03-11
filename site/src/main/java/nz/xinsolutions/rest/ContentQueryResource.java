@@ -155,7 +155,12 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
 
                 put(KEY_UUID, uuid);
                 put(KEY_TYPE, bean.getNode().getPrimaryNodeType().getName());
-                put(KEY_PATH, bean.getPath());
+
+                if (bean instanceof HippoDocument) {
+                    put(KEY_PATH, ((HippoDocument) bean).getCanonicalHandlePath());
+                } else {
+                    put(KEY_PATH, bean.getPath());
+                }
             }};
 
             return (

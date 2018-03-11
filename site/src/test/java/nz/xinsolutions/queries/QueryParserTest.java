@@ -83,7 +83,7 @@ public class QueryParserTest {
         "                        )\n" +
         "                    )\n" +
         "                )\n" +
-        "                (sortby [xinmods:publishedDate] desc)\n" +
+        "                (sortby [xinmods:publishedDate])\n" +
         "            )";
     
     QueryParser parser = new QueryParser();
