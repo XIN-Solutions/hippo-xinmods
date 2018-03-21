@@ -202,6 +202,12 @@
   </servlet>
 
   <servlet>
+    <servlet-name>AssetModifierServlet</servlet-name>
+    <servlet-class>nz.xinsolutions.servlet.AssetModifierServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <servlet>
     <servlet-name>HstResourceServlet</servlet-name>
     <servlet-class>org.onehippo.cms7.utilities.servlet.ResourceServlet</servlet-class>
     <init-param>
@@ -233,6 +239,11 @@
   <servlet-mapping>
     <servlet-name>BinariesServlet</servlet-name>
     <url-pattern>/binaries/*</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>AssetModifierServlet</servlet-name>
+    <url-pattern>/assetmod/*</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>
