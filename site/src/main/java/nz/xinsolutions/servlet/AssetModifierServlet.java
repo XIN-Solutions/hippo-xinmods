@@ -1,6 +1,7 @@
 package nz.xinsolutions.servlet;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,7 @@ public class AssetModifierServlet extends HttpServlet {
 
 	public static final int SCALE_PARAM_X = 0;
 	public static final int SCALE_PARAM_Y = 1;
+
 	public static final String PATH_BINARIES = "binaries";
 	public static final String PATH_ASSETMOD = "assetmod";
 
@@ -78,6 +80,11 @@ public class AssetModifierServlet extends HttpServlet {
 
 		BufferedImage buffImg = ImageIO.read(binaryUrl);
 
+		if (buffImg == null) {
+			pageNotFound(resp);
+			return;
+		}
+
 		// go over all the instructions we found
 		for (Instruction instr : instruction) {
 
@@ -103,11 +110,23 @@ public class AssetModifierServlet extends HttpServlet {
 		ImageIO.write(buffImg, ext, resp.getOutputStream());
 	}
 
+
+	protected void pageNotFound(HttpServletResponse resp) {
+		resp.setStatus(404);
+		resp.setHeader("Content-Length", "0");
+	}
+
 	// ------------------------------------------------------------------------------------------------
 	//		Image operations
 	// ------------------------------------------------------------------------------------------------
 
-
+	/**
+	 * Apply a colour filter
+	 *
+	 * @param img		is the image to operate on
+	 * @param instr		the instructions to execute
+	 * @return a new buffered image
+	 */
 	protected BufferedImage filter(BufferedImage img, Instruction instr) {
 		if (instr.isEmpty(0)) {
 			LOG.error("Expecting a filter name");
@@ -134,6 +153,13 @@ public class AssetModifierServlet extends HttpServlet {
 
 	}
 
+	/**
+	 * Scale to a certain size.
+	 *
+	 * @param img		is the buffered image to operate on
+	 * @param instr		the instructions
+	 * @return the buffered image
+	 */
 	protected BufferedImage scale(BufferedImage img, Instruction instr) {
 		if (instr.isEmpty(SCALE_PARAM_X) && instr.isEmpty(SCALE_PARAM_Y)) {
 			LOG.error("Cannot scale nothing");
@@ -156,6 +182,11 @@ public class AssetModifierServlet extends HttpServlet {
 			return img;
 		}
 
+		if (size == null) {
+			LOG.error("Parameter was not a number.");
+			return img;
+		}
+
 		return Scalr.resize(img, Scalr.Method.QUALITY, mode, size);
 	}
 
@@ -175,9 +206,16 @@ public class AssetModifierServlet extends HttpServlet {
 			return img;
 		}
 
-		int
+		Integer
 			cropW = instr.getIntParam(CROP_PARAM_WIDTH),
-			cropH = instr.getIntParam(CROP_PARAM_HEIGHT),
+			cropH = instr.getIntParam(CROP_PARAM_HEIGHT);
+
+		if (cropW == null || cropH == null) {
+			LOG.error("Either width or height isn't a proper number.");
+			return img;
+		}
+
+		int
 			imgW = img.getWidth(),
 			imgH = img.getHeight(),
 			centerX = imgW / 2,
@@ -185,6 +223,7 @@ public class AssetModifierServlet extends HttpServlet {
 			offsetX = centerX - cropW / 2,
 			offsetY = centerY - cropH / 2
 		;
+
 
 		return
 			Scalr.crop(img,
@@ -343,7 +382,7 @@ public class AssetModifierServlet extends HttpServlet {
 		public Integer getIntParam(int idx) {
 			return (
 				params.length > idx
-					? Integer.parseInt(params[idx])
+					? (NumberUtils.isDigits(params[idx]) ? Integer.parseInt(params[idx]) : null)
 					: null
 			);
 		}
