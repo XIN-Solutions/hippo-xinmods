@@ -152,7 +152,6 @@ public class PackageImportService {
             LOG.info("Importing: {} into {}", zipFile.getName(), parentPath);
             
             ConfigurationService configService = HippoServiceRegistry.getService(ConfigurationService.class);
-            
             // TODO: add node exists check
             configService.importZippedContent(zipFile, session.getNode(parentPath));
             

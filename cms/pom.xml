@@ -99,18 +99,24 @@
       <artifactId>aws-java-sdk-bundle</artifactId>
       <version>${aws.version}</version>
     </dependency>
-<!--
     <dependency>
-      <groupId>org.apache.wicket</groupId>
-      <artifactId>wicket</artifactId>
-      <version>6.26.0</version>
+      <groupId>org.onehippo.cms</groupId>
+      <artifactId>hippo-configuration-management-api</artifactId>
+      <scope>provided</scope>
     </dependency>
 
-    <dependency>
-        <groupId>org.apache.wicket</groupId>
-        <artifactId>wicket-core</artifactId>
-        <version>6.26.0</version>
-    </dependency>-->
+    <!--
+        <dependency>
+          <groupId>org.apache.wicket</groupId>
+          <artifactId>wicket</artifactId>
+          <version>6.26.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
+            <version>6.26.0</version>
+        </dependency>-->
 
   </dependencies>
   <build>

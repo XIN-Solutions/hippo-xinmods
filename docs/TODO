@@ -1,0 +1,33 @@
+Todo: Doing
+
+[ ] Make sure it still runs.
+    [ ] update to latest 12.3.0
+
+
+Todo: Soon
+
+[ ] Update to the latest hippo release
+
+[ ] Build an eb extensions folder builder (meta-cli)
+    [ ] v1 - It should deploy CMS and Site to a Tomcat container
+    [ ] v2 - It should have a directory in which packages can be put
+    [ ] v3 - It should be aware of updates (which packages already exist?)
+
+[ ] A crontab in eb extensions should have a backup mechanism that takes content at night and puts it in S3
+
+
+Todo: In the future
+
+[ ] Create Node package to query the backend etc.
+[ ] Create simple content management
+[ ] Create simple subscription mechanism
+[ ] Create simple login mechanism
+[ ] Create a shop
+    - Products
+    - Carts
+    - Stripe integration
+
+[ ] Think about theme-ing
+[ ] Make a "My Lovely Box" implementation using this
+
+

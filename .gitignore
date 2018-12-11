@@ -1,6 +1,6 @@
 target/
 *.iml
 .idea/
-storage/
+storage*
 storage_original/
 storage-empty/
