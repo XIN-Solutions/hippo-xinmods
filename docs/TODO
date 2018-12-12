@@ -1,12 +1,11 @@
 Todo: Doing
 
-[ ] Make sure it still runs.
-    [ ] update to latest 12.3.0
+[ ] Simple welcome screen
+[ ] Allow override for hippo background image
 
 
 Todo: Soon
 
-[ ] Update to the latest hippo release
 
 [ ] Build an eb extensions folder builder (meta-cli)
     [ ] v1 - It should deploy CMS and Site to a Tomcat container
@@ -30,4 +29,12 @@ Todo: In the future
 [ ] Think about theme-ing
 [ ] Make a "My Lovely Box" implementation using this
 
+
+
+
+Todo: Done
+
+[x] Make sure it still runs.
+[x] update to latest 12.3.0
+[x] Update to the latest hippo release
 
