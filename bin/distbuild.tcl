@@ -406,6 +406,107 @@ tomcat.util.buf.StringCache.byte.enabled=true
 
 close $catalina
 
+
+#  ____                         __  ____  __ _     
+# / ___|  ___ _ ____   _____ _ _\ \/ /  \/  | |    
+# \___ \ / _ \ '__\ \ / / _ \ '__\  /| |\/| | |    
+#  ___) |  __/ |   \ V /  __/ |  /  \| |  | | |___ 
+# |____/ \___|_|    \_/ \___|_| /_/\_\_|  |_|_____|
+#
+
+set serverXml [open "$distBasePath/conf/server.xml" w]                                                 
+
+puts $serverXml {<?xml version="1.0" encoding="UTF-8"?>
+<Server port="8005" shutdown="SHUTDOWN">
+  <Listener className="org.apache.catalina.startup.VersionLoggerListener" />
+  <Listener className="org.apache.catalina.core.AprLifecycleListener" SSLEngine="on" />
+  <Listener className="org.apache.catalina.core.JreMemoryLeakPreventionListener" />
+  <Listener className="org.apache.catalina.mbeans.GlobalResourcesLifecycleListener" />
+  <Listener className="org.apache.catalina.core.ThreadLocalLeakPreventionListener" />
+
+  <GlobalNamingResources>
+
+    <Resource name="UserDatabase" auth="Container"
+              type="org.apache.catalina.UserDatabase"
+              description="User database that can be updated and saved"
+              factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+              pathname="conf/tomcat-users.xml" />
+  </GlobalNamingResources>
+
+  <Service name="Catalina">
+
+    <Connector port="8080" protocol="HTTP/1.1"
+			   address="127.0.0.1"
+               connectionTimeout="20000"
+               redirectPort="8443" />
+
+    <!-- Connector port="8009" protocol="AJP/1.3" redirectPort="8443" / -->
+
+
+    <Engine name="Catalina" defaultHost="localhost">
+
+      <Realm className="org.apache.catalina.realm.LockOutRealm">
+        <Realm className="org.apache.catalina.realm.UserDatabaseRealm"
+               resourceName="UserDatabase"/>
+      </Realm>
+
+      <Host name="localhost"  appBase="webapps"
+            unpackWARs="true" autoDeploy="true">
+
+        <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
+               prefix="localhost_access_log" suffix=".txt"
+               pattern="%h %l %u %t &quot;%r&quot; %s %b" />
+
+      </Host>
+    </Engine>
+  </Service>
+</Server>
+
+
+}
+
+close $serverXml
+
+#  ____       _   _____            
+# / ___|  ___| |_| ____|_ ____   __
+# \___ \ / _ \ __|  _| | '_ \ \ / /
+#  ___) |  __/ |_| |___| | | \ V / 
+# |____/ \___|\__|_____|_| |_|\_/  
+#                                 
+
+set setEnvFile [open "$distBasePath/bin/setenv.sh" w]
+
+puts $setEnvFile {
+REP_OPTS="-Drepo.upgrade=false -Drepo.config=file:${CATALINA_BASE}/conf/repository.xml -Drepo.path=./storage -Dproject.basedir=/tmp"
+L4J_OPTS="-Dlog4j.configurationFile=file:${CATALINA_BASE}/conf/log4j2.xml"
+JVM_OPTS="-server -Xmx512m -Xms128m"
+#REMOTE_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000"
+JAAS_OPTS="-Djava.security.auth.login.config=${CATALINA_BASE}/conf/jaas.conf"
+
+CATALINA_OPTS="${JVM_OPTS} ${REP_OPTS} ${L4J_OPTS} ${REMOTE_OPTS} ${JAAS_OPTS}"
+}
+
+close $setEnvFile
+
+
+#      _   _        _    ____  
+#     | | / \      / \  / ___| 
+#  _  | |/ _ \    / _ \ \___ \ 
+# | |_| / ___ \  / ___ \ ___) |
+#  \___/_/   \_\/_/   \_\____/ 
+#
+
+set jaasConf [open "$distBasePath/conf/jaas.conf" w]
+
+puts $jaasConf {ApiLogin {
+   org.hippoecm.hst.security.impl.DefaultLoginModule required
+   debug="true"
+   storePrivCreds="true";
+};
+}
+
+
+
 #     _             _     _           
 #    / \   _ __ ___| |__ (_)_   _____ 
 #   / _ \ | '__/ __| '_ \| \ \ / / _ \
