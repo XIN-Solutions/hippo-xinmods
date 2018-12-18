@@ -4,3 +4,4 @@ target/
 storage*
 storage_original/
 storage-empty/
+creds

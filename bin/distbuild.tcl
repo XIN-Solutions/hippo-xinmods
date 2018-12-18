@@ -1,6 +1,5 @@
 #!/usr/bin/env tclsh
 
-
 package require http
 
 #
@@ -52,6 +51,11 @@ puts ">> Just need some information to put into the configuration files"
 #
 
 set distributionName [ask "Distribution name: " generic]
+
+set ebApplicationName [ask "EB Application Name: "]
+set ebEnvironmentName [ask "EB Environment Name: "]
+set ebRegion [ask "EB Region: " ap-southeast-2]
+
 set mysqlHost [ask "MySQL Host: " host]
 set mysqlPort [ask "MySQL Port (3306): " 3306]
 set mysqlDb [ask "MySQL Database name: " dbname]
@@ -64,6 +68,7 @@ set distBasePath "/tmp/hippodistbuild/app-distribution"
 puts ">> PREP: Clean workspace"
 exec rm /tmp/hippodistbuild -Rf
 exec mkdir $distBasePath -p
+
 
 
 
@@ -120,9 +125,10 @@ exec bash -c "rm $distBasePath/*distribution.tar.gz"
 # MYSQL Connector Download:
 # http://central.maven.org/maven2/mysql/mysql-connector-java/5.1.47/mysql-connector-java-5.1.47.jar
 
-puts ">> LIBS: Adding MySQL Connector"
-
 set mysqlJar "http://central.maven.org/maven2/mysql/mysql-connector-java/8.0.13/mysql-connector-java-8.0.13.jar"
+
+puts ">> COMBINE: Adding MySQL Connector `$mysqlJar`"
+
 exec bash -c "cd $distBasePath/common/lib && wget -q $mysqlJar; true"
 
 
@@ -133,6 +139,7 @@ exec bash -c "cd $distBasePath/common/lib && wget -q $mysqlJar; true"
 #  \____\___/|_| \_| |_| |_____/_/\_\ |_|  
 #                                         
 
+puts " >> CONFIG: Setting up `context.xml`"
 
 set context [open "$distBasePath/conf/context.xml" w]
 
@@ -169,6 +176,7 @@ close $context
 #           |_|                              |___/ 
 #
 
+puts " >> CONFIG: Setting up `repository.xml`"
 
 set repository [open "$distBasePath/conf/repository.xml" w]
 
@@ -294,6 +302,7 @@ close $repository
 #                                                       |_|                              
 #
 
+puts " >> CONFIG: Setting up `catalina.properties`"
 
 set catalina [open "$distBasePath/conf/catalina.properties" w]
 
@@ -414,6 +423,8 @@ close $catalina
 # |____/ \___|_|    \_/ \___|_| /_/\_\_|  |_|_____|
 #
 
+puts " >> CONFIG: Setting up `server.xml`"
+
 set serverXml [open "$distBasePath/conf/server.xml" w]                                                 
 
 puts $serverXml {<?xml version="1.0" encoding="UTF-8"?>
@@ -474,6 +485,8 @@ close $serverXml
 # |____/ \___|\__|_____|_| |_|\_/  
 #                                 
 
+puts " >> CONFIG: Setting up `setenv.sh`"
+
 set setEnvFile [open "$distBasePath/bin/setenv.sh" w]
 
 puts $setEnvFile {
@@ -481,30 +494,53 @@ REP_OPTS="-Drepo.upgrade=false -Drepo.config=file:${CATALINA_BASE}/conf/reposito
 L4J_OPTS="-Dlog4j.configurationFile=file:${CATALINA_BASE}/conf/log4j2.xml"
 JVM_OPTS="-server -Xmx512m -Xms128m"
 #REMOTE_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000"
-JAAS_OPTS="-Djava.security.auth.login.config=${CATALINA_BASE}/conf/jaas.conf"
 
-CATALINA_OPTS="${JVM_OPTS} ${REP_OPTS} ${L4J_OPTS} ${REMOTE_OPTS} ${JAAS_OPTS}"
+CATALINA_OPTS="${JVM_OPTS} ${REP_OPTS} ${L4J_OPTS} ${REMOTE_OPTS}"
 }
 
 close $setEnvFile
 
 
-#      _   _        _    ____  
-#     | | / \      / \  / ___| 
-#  _  | |/ _ \    / _ \ \___ \ 
-# | |_| / ___ \  / ___ \ ___) |
-#  \___/_/   \_\/_/   \_\____/ 
+#  _____ ____     ____             __ _       
+# | ____| __ )   / ___|___  _ __  / _(_) __ _ 
+# |  _| |  _ \  | |   / _ \| '_ \| |_| |/ _` |
+# | |___| |_) | | |__| (_) | | | |  _| | (_| |
+# |_____|____/   \____\___/|_| |_|_| |_|\__, |
+#                                       |___/ 
 #
 
-set jaasConf [open "$distBasePath/conf/jaas.conf" w]
 
-puts $jaasConf {ApiLogin {
-   org.hippoecm.hst.security.impl.DefaultLoginModule required
-   debug="true"
-   storePrivCreds="true";
-};
-}
+puts ">> EB: Extract base configuration"
 
+exec bash -c "cp ./bin/ebconfig.tar.gz $distBasePath"
+exec bash -c "cd $distBasePath && tar xvzf ebconfig.tar.gz && rm ebconfig.tar.gz"
+
+puts ">> EB: Writing config.yml"
+
+set configYml [open "$distBasePath/.elasticbeanstalk/config.yml" w]
+puts $configYml "
+branch-defaults:
+  master:
+    environment: $ebEnvironmentName
+environment-defaults:
+  $ebEnvironmentName:
+    branch: null
+    repository: null
+global:
+  application_name: $ebApplicationName
+  default_ec2_keyname: null
+  default_platform: arn:aws:elasticbeanstalk:ap-southeast-2::platform/Java 8 running
+    on 64bit Amazon Linux/2.7.2
+  default_region: $ebRegion
+  include_git_submodules: true
+  instance_profile: null
+  platform_name: null
+  platform_version: null
+  sc: git
+  workspace_type: Application
+"
+
+close $configYml
 
 
 #     _             _     _           
@@ -515,6 +551,6 @@ puts $jaasConf {ApiLogin {
 #
 
 puts ">> ARCHIVE: Archiving distribution"
-exec bash -c "cd /tmp/hippodistbuild/ && tar czf $distributionName.tar.gz app-distribution/"
+exec bash -c "cd /tmp/hippodistbuild/app-distribution/ && zip ../$distributionName.zip * -r"
 
 
