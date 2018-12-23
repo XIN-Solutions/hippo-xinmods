@@ -575,15 +575,14 @@ if { $deploy == "y" } then {
 
 	set awsRegion [ask "Application region: (default: ap-southeast-2)" ap-southeast-2]
 
-	# puts "$ aws s3 cp $zipfile s3://$s3Bucket/$s3Key"
-	# puts "$ aws elasticbeanstalk create-application-version --region $awsRegion --auto-create-application --application-name $ebApplicationName --version-label $appVersion --source-bundle S3Bucket=\"$s3Bucket\",S3Key=\"$s3Key\""
-	# puts "$ aws elasticbeanstalk update-environment --environment-name $ebEnvironmentName --version-label $appVersion --region $awsRegion" 
-
-	puts ">> DEPLOY: Uploading .."
+	puts ">> DEPLOY: Uploading to 's3://$s3Bucket/$s3Key'"
 	exec bash -c "aws s3 cp $zipfile s3://$s3Bucket/$s3Key"
-	puts ">> DEPLOY: Creating a Version."
+	puts ">> DEPLOY: Creating a Version: $appVersion"
 	exec bash -c "aws elasticbeanstalk create-application-version --auto-create-application --application-name $ebApplicationName --version-label $appVersion --source-bundle S3Bucket=\"$s3Bucket\",S3Key=\"$s3Key\" --region $awsRegion"
-	puts ">> DEPLOY: Updating environment with version '$appVersion'"
+	puts ">> DEPLOY: Updating environment to new version"
 	exec bash -c "aws elasticbeanstalk update-environment --environment-name $ebEnvironmentName --version-label $appVersion --region $awsRegion"
 	puts ">> DEPLOY: Completed!"
+
 }
+
+puts "Distribution ZIP found here: /tmp/hippodistbuild/app-distribution/$distributionName"
