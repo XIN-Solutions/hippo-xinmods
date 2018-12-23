@@ -62,6 +62,8 @@ set mysqlDb [ask "MySQL Database name: " dbname]
 set mysqlUser [ask "MySQL Username: " username]
 set mysqlPassword [ask "MySQL Password: " password]
 set cmsHost [ask "CMS Host: " http://cmslocal]
+set adminPass [ask "Admin password: " admin]
+
 
 set distBasePath "/tmp/hippodistbuild/app-distribution"
 
@@ -104,10 +106,10 @@ exec mvn verify
 puts ">> BUILD: Building Distribution"
 exec mvn -Pdist clean package
 
-puts ">> COMBINE: Moving distribution to temporary workspace folder"
+puts ">> BUILD: Moving distribution to temporary workspace folder"
 exec bash -c "cp [pwd]/target/*-distribution.tar.gz $distBasePath"
 
-puts ">> COMBINE: Extracting Distribution and removing original"
+puts ">> BUILD: Extracting Distribution and removing original"
 exec bash -c "cd $distBasePath && tar xvzf *tar.gz"
 exec bash -c "rm $distBasePath/*distribution.tar.gz"
 
@@ -127,7 +129,7 @@ exec bash -c "rm $distBasePath/*distribution.tar.gz"
 
 set mysqlJar "http://central.maven.org/maven2/mysql/mysql-connector-java/8.0.13/mysql-connector-java-8.0.13.jar"
 
-puts ">> COMBINE: Adding MySQL Connector `$mysqlJar`"
+puts ">> BUILD: Adding MySQL Connector `$mysqlJar`"
 
 exec bash -c "cd $distBasePath/common/lib && wget -q $mysqlJar; true"
 
@@ -139,7 +141,7 @@ exec bash -c "cd $distBasePath/common/lib && wget -q $mysqlJar; true"
 #  \____\___/|_| \_| |_| |_____/_/\_\ |_|  
 #                                         
 
-puts " >> CONFIG: Setting up `context.xml`"
+puts ">> CONFIG: Setting up `context.xml`"
 
 set context [open "$distBasePath/conf/context.xml" w]
 
@@ -176,7 +178,7 @@ close $context
 #           |_|                              |___/ 
 #
 
-puts " >> CONFIG: Setting up `repository.xml`"
+puts ">> CONFIG: Setting up `repository.xml`"
 
 set repository [open "$distBasePath/conf/repository.xml" w]
 
@@ -302,7 +304,7 @@ close $repository
 #                                                       |_|                              
 #
 
-puts " >> CONFIG: Setting up `catalina.properties`"
+puts ">> CONFIG: Setting up `catalina.properties`"
 
 set catalina [open "$distBasePath/conf/catalina.properties" w]
 
@@ -423,7 +425,7 @@ close $catalina
 # |____/ \___|_|    \_/ \___|_| /_/\_\_|  |_|_____|
 #
 
-puts " >> CONFIG: Setting up `server.xml`"
+puts ">> CONFIG: Setting up `server.xml`"
 
 set serverXml [open "$distBasePath/conf/server.xml" w]                                                 
 
@@ -446,9 +448,14 @@ puts $serverXml {<?xml version="1.0" encoding="UTF-8"?>
 
   <Service name="Catalina">
 
+	<!-- bind to localhost and set the upload max size to 512mb -->
     <Connector port="8080" protocol="HTTP/1.1"
 			   address="127.0.0.1"
                connectionTimeout="20000"
+               maxThreads="300" 
+               enableLookups="false"
+               compression="on"
+               maxPostSize="536870912"
                redirectPort="8443" />
 
     <!-- Connector port="8009" protocol="AJP/1.3" redirectPort="8443" / -->
@@ -485,18 +492,18 @@ close $serverXml
 # |____/ \___|\__|_____|_| |_|\_/  
 #                                 
 
-puts " >> CONFIG: Setting up `setenv.sh`"
+puts ">> CONFIG: Setting up `setenv.sh`"
 
 set setEnvFile [open "$distBasePath/bin/setenv.sh" w]
 
-puts $setEnvFile {
-REP_OPTS="-Drepo.upgrade=false -Drepo.config=file:${CATALINA_BASE}/conf/repository.xml -Drepo.path=./storage -Dproject.basedir=/tmp"
-L4J_OPTS="-Dlog4j.configurationFile=file:${CATALINA_BASE}/conf/log4j2.xml"
-JVM_OPTS="-server -Xmx512m -Xms128m"
-#REMOTE_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000"
+puts $setEnvFile "
+REP_OPTS=\"-Drepo.upgrade=false -Drepo.config=file:\${CATALINA_BASE}/conf/repository.xml -Drepo.path=/var/lib/hippostorage -Dproject.basedir=/tmp -Dadmin.password=$adminPass\"
+L4J_OPTS=\"-Dlog4j.configurationFile=file:\${CATALINA_BASE}/conf/log4j2.xml\"
+JVM_OPTS=\"-server -Xmx386m -Xms128m\"
+#REMOTE_OPTS=\"-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000\"
 
-CATALINA_OPTS="${JVM_OPTS} ${REP_OPTS} ${L4J_OPTS} ${REMOTE_OPTS}"
-}
+CATALINA_OPTS=\"\${JVM_OPTS} \${REP_OPTS} \${L4J_OPTS} \${REMOTE_OPTS}\"
+"
 
 close $setEnvFile
 
@@ -512,13 +519,14 @@ close $setEnvFile
 
 puts ">> EB: Extract base configuration"
 
-exec bash -c "cp ./bin/ebconfig.tar.gz $distBasePath"
-exec bash -c "cd $distBasePath && tar xvzf ebconfig.tar.gz && rm ebconfig.tar.gz"
+exec bash -c "cp ./bin/ebconfig $distBasePath -rT"
 
 puts ">> EB: Writing config.yml"
 
 set configYml [open "$distBasePath/.elasticbeanstalk/config.yml" w]
 puts $configYml "
+deploy:
+  artifact: /tmp/hippodistbuild/app-distribution/$distributionName.zip
 branch-defaults:
   master:
     environment: $ebEnvironmentName
@@ -551,6 +559,31 @@ close $configYml
 #
 
 puts ">> ARCHIVE: Archiving distribution"
-exec bash -c "cd /tmp/hippodistbuild/app-distribution/ && zip ../$distributionName.zip * -r"
+exec bash -c "cd /tmp/hippodistbuild/app-distribution/ && zip ../$distributionName.zip . -r"
 
 
+set deploy [ask "Deploy? (y/n)" y]
+
+if { $deploy == "y" } then {
+
+	set appVersion "v[clock format [clock seconds] -format "%Y-%m-%d"]_[clock seconds]"
+	set appVersion [ask "EB App Version: (default: $appVersion)" $appVersion]
+	set s3Bucket [ask "S3 Deploy Bucket? (xinmods)" xinmods]
+	set s3Key "apps/artifacts/$distributionName-$appVersion.zip"
+	set s3Key [ask "S3 Key? ($s3Key)" $s3Key]
+	set zipfile "/tmp/hippodistbuild/$distributionName.zip"
+
+	set awsRegion [ask "Application region: (default: ap-southeast-2)" ap-southeast-2]
+
+	# puts "$ aws s3 cp $zipfile s3://$s3Bucket/$s3Key"
+	# puts "$ aws elasticbeanstalk create-application-version --region $awsRegion --auto-create-application --application-name $ebApplicationName --version-label $appVersion --source-bundle S3Bucket=\"$s3Bucket\",S3Key=\"$s3Key\""
+	# puts "$ aws elasticbeanstalk update-environment --environment-name $ebEnvironmentName --version-label $appVersion --region $awsRegion" 
+
+	puts ">> DEPLOY: Uploading .."
+	exec bash -c "aws s3 cp $zipfile s3://$s3Bucket/$s3Key"
+	puts ">> DEPLOY: Creating a Version."
+	exec bash -c "aws elasticbeanstalk create-application-version --auto-create-application --application-name $ebApplicationName --version-label $appVersion --source-bundle S3Bucket=\"$s3Bucket\",S3Key=\"$s3Key\" --region $awsRegion"
+	puts ">> DEPLOY: Updating environment with version '$appVersion'"
+	exec bash -c "aws elasticbeanstalk update-environment --environment-name $ebEnvironmentName --version-label $appVersion --region $awsRegion"
+	puts ">> DEPLOY: Completed!"
+}
