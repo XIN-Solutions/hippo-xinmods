@@ -4,21 +4,13 @@ Todo: Doing
 
     mysql -h xin-hippo-test.cy0kopfumsri.ap-southeast-2.rds.amazonaws.com -P 3306 -u xinhippo -p
 
-[ ] Build an eb extensions folder builder (meta-cli)
-
-    [ ] v1 - It should deploy CMS and Site to a Tomcat container
-    [ ] v2 - It should have a directory in which packages can be put
-    [ ] v3 - It should be aware of updates (which packages already exist?)
-
+[x] Build an eb extensions folder builder (meta-cli)
 
 Todo: Soon
-
-
+[ ] Document `assetMaxAge` context parameter
+[ ] Document usage of distribution builder
 [ ] Simple welcome screen
 [ ] Allow override for hippo background image
-
-
-[ ] A crontab in eb extensions should have a backup mechanism that takes content at night and puts it in S3
 
 
 Todo: In the future
@@ -34,8 +26,6 @@ Todo: In the future
 
 [ ] Think about theme-ing
 [ ] Make a "My Lovely Box" implementation using this
-
-
 
 
 Todo: Done

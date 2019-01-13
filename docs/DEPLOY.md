@@ -222,6 +222,7 @@ Install apache:
     $ sudo a2enmod proxy_http
     $ sudo a2enmod headers
     $ sudo a2enmod substitute
+    $ sudo a2enmod rewrite
 
 Create new Virtualhost file. It contains three definitions:
 
@@ -279,6 +280,11 @@ Create `/etc/apache2/sites-available/hippo.conf`:
         </Location>
     
         <Location /binaries/>
+            Order deny,allow
+            Allow from all
+        </Location>
+        
+        <Location /assetmod/>
             Order deny,allow
             Allow from all
         </Location>
