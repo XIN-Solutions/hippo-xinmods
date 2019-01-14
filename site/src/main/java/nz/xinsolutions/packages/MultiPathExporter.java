@@ -59,20 +59,6 @@ public class MultiPathExporter {
                 "moving to: " + partialFile.getCanonicalPath()
             );
             
-
-            //
-            // move the folders into hcm-content
-            //
-            try (FileSystem zipFs = getZipFilesystem(zipFile)) {
-                List<Path> folders = getFolderNames(zipFs);
-                createRootFolder(zipFs, HCM_CONTENT);
-                moveFolders(zipFs, folders, HCM_CONTENT);
-            }
-            catch (IOException ioEx) {
-                LOG.error("Something went wrong manipulating the zip fs, caused by: ", ioEx);
-                throw new PackageException("Could not properly export content, aborting.");
-            }
-
             zipFile.renameTo(partialFile);
         }
         
