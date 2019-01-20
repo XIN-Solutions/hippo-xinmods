@@ -10,6 +10,7 @@ import org.hippoecm.hst.content.beans.query.HstQueryResult;
 import org.hippoecm.hst.content.beans.standard.HippoBean;
 import org.hippoecm.hst.content.beans.standard.HippoBeanIterator;
 import org.hippoecm.hst.content.beans.standard.HippoDocument;
+import org.hippoecm.hst.content.beans.standard.HippoFolder;
 import org.onehippo.cms7.essentials.components.rest.BaseRestResource;
 import org.onehippo.cms7.essentials.components.rest.ctx.RestContext;
 import org.slf4j.Logger;
@@ -19,10 +20,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -49,9 +47,12 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
     public static final String KEY_SUCCESS = "success";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_TYPE = "type";
-    public static final String KEY_CHILDREN = "children";
+    public static final String KEY_FOLDERS = "folders";
     public static final String KEY_UUIDS = "uuids";
     public static final String KEY_TOTAL_SIZE = "totalSize";
+    public static final String KEY_NAME = "name";
+    public static final String KEY_LABEL = "label";
+    public static final String KEY_DOCUMENTS = "documents";
 
     /**
      * This action ingests a query. The query structure is outlined in {@link docs/QUERIES.md}. It outputs a response
@@ -119,6 +120,83 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
             ;
         }
         
+    }
+
+    @GET
+    @Path("/documents-list/")
+    public Response foldersAtPath(@Context HttpServletRequest request, @QueryParam(value = KEY_PATH) String path) {
+
+        RestContext ctx = newRestContext(this, request);
+        ContextVariablesBean ctxVars = newContextVariablesInstance(request);
+
+        try {
+            if (StringUtils.isEmpty(path)) {
+                LOG.info("The path is empty");
+                return null;
+            }
+
+            HippoBean bean = (HippoBean) ctx.getRequestContext().getObjectBeanManager().getObject(path);
+
+            if (bean == null) {
+                LOG.error("Cannot find bean at folder of `{}`", path);
+                return notFoundResponse();
+            }
+
+            if (!(bean instanceof HippoFolder)) {
+                LOG.error("Not a proper folder path");
+                return notFoundResponse();
+            }
+
+            HippoFolder folder = (HippoFolder) bean;
+
+            List<Map> childFolders = (
+                    folder.getFolders()
+                        .stream()
+                        .map(childFolder -> new LinkedHashMap<String, String>() {{
+                            put(KEY_UUID, childFolder.getCanonicalUUID());
+                            put(KEY_PATH, childFolder.getPath());
+                            put(KEY_NAME, childFolder.getName());
+                            put(KEY_LABEL, childFolder.getDisplayName());
+                        }})
+                        .collect(Collectors.toList())
+                    );
+
+
+            List<Map> childDocuments =
+                    folder.getDocuments()
+                        .stream()
+                        .map(childDoc -> new LinkedHashMap<String, String>() {{
+                            put(KEY_UUID, childDoc.getCanonicalHandleUUID());
+                            put(KEY_PATH, childDoc.getPath());
+                            put(KEY_NAME, childDoc.getName());
+                        }})
+                        .collect(Collectors.toList())
+                    ;
+
+            Map<String, Object> result = new LinkedHashMap<String, Object>() {{
+
+                put(KEY_SUCCESS, true);
+                put(KEY_MESSAGE, "Found.");
+
+                put(KEY_UUID, bean.getCanonicalUUID());
+                put(KEY_PATH, path);
+                put(KEY_FOLDERS, childFolders);
+                put(KEY_DOCUMENTS, childDocuments);
+
+            }};
+
+            return (
+                Response
+                    .status(200)
+                    .entity(result)
+                    .build()
+            );
+        }
+        catch (Exception ex) {
+            LOG.error("Something happened while retrieving paths at `" + path + "`, caused by: ", ex);
+            return null;
+        }
+
     }
 
 
