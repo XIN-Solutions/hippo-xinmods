@@ -61,19 +61,19 @@ public class RuleMatching {
             if (expected.isSubRules()) {
                 List<String> subValidRules = expected.getIds();
             
-                LOG.info("Subtype: ${subType}, tries for rules: ${subValidRules}");
+                LOG.debug("Subtype: ${subType}, tries for rules: ${subValidRules}");
             
                 // try to match on the tokens that havent been consumed yet, one of the rules specified in the list
                 RuleState subMatch = this.match(current.subList(currentIdx, current.size()), subValidRules, state);
             
                 // no submatch but required? return false
                 if (subMatch == null && expected.isMandatory()) {
-                    LOG.info("Did not find a match for subrules: {}", subValidRules);
+                    LOG.error("Did not find a match for subrules: {}", subValidRules);
                     return new RuleState() {{ matched = false; }};
                 }
                 else if (subMatch != null && subMatch.matched) {
                     currentIdx += subMatch.consumedTokens;
-                    LOG.info("Yes, Submatched!, remaining tokens: {}", rule.getRuleElements().size() - ruleTokenIdx);
+                    LOG.debug("Yes, Submatched!, remaining tokens: {}", rule.getRuleElements().size() - ruleTokenIdx);
                 }
             }
             else {
@@ -81,17 +81,17 @@ public class RuleMatching {
                 String expectedToken = expected.getId();
             
                 TokenElement token = current.get(currentIdx);
-                LOG.info("Mandatory: {}, token: {}, lookingat: {}", expected.isMandatory(), expected.getId(), token);
+                LOG.debug("Mandatory: {}, token: {}, lookingat: {}", expected.isMandatory(), expected.getId(), token);
             
                 // found the token we need?
                 if (expectedToken.equals(token.getName())) {
                     ++currentIdx;
-                    LOG.info("Matched {}, on `{}`", expectedToken, token.getValue());
+                    LOG.debug("Matched {}, on `{}`", expectedToken, token.getValue());
                 }
                 
                 // if not, fail if the token was mandatory
                 else if (expected.isMandatory()) {
-                    LOG.info("Expected: {} found `{}`", expectedToken, token.getName());
+                    LOG.debug("Expected: {} found `{}`", expectedToken, token.getName());
                     RuleState returnState = new RuleState();
                     returnState.matched = false;
                     returnState.consumedTokens = currentIdx;
@@ -117,7 +117,7 @@ public class RuleMatching {
         
         }
     
-        LOG.info("currentidx: {} / {}", currentIdx, current.size());
+        LOG.debug("currentidx: {} / {}", currentIdx, current.size());
 
         RuleState returnState = new RuleState();
         returnState.matched = (ruleTokenIdx == rule.getRuleElements().size());
@@ -141,16 +141,16 @@ public class RuleMatching {
     RuleState match(List<TokenElement> tokens, List<String> allowedRules, RuleState parentState) {
         
         for (String ruleName : allowedRules) {
-            LOG.info("Testing for: {} \n .. with tokens: {}", ruleName, rules.getRules().get(ruleName));
+            LOG.debug("Testing for: {} \n .. with tokens: {}", ruleName, rules.getRules().get(ruleName));
             RuleState ruleState = tokensMatchRule(rules.getRules().get(ruleName), tokens, parentState);
             
-            LOG.info("Returned: {}", ruleState.matched);
+            LOG.debug("Returned: {}", ruleState.matched);
             
             if (!ruleState.matched) {
                 continue;
             }
 
-            LOG.info("matches: {} => {}", ruleName, tokens.subList(0, ruleState.consumedTokens));
+            LOG.debug("matches: {} => {}", ruleName, tokens.subList(0, ruleState.consumedTokens));
 
             ruleState.ruleName = ruleName;
             if (parentState != null) {
@@ -164,7 +164,7 @@ public class RuleMatching {
     
     
     public static RuleState parseString(ParseRuleSet ruleSet, TokenSet tokenSet, String text, String... startingRules) {
-    
+
         Tokeniser tokeniser = new Tokeniser(tokenSet);
         List<TokenElement> elements = tokeniser.tokenise(text);
         

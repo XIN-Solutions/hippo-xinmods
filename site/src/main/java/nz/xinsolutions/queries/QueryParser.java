@@ -11,6 +11,8 @@ import nz.xinsolutions.queries.engine.parse.RuleState;
 import nz.xinsolutions.queries.engine.tokenise.TokenSet;
 import org.hippoecm.hst.content.beans.query.HstQuery;
 import org.hippoecm.hst.content.beans.query.HstQueryManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.core.MultivaluedMap;
 
@@ -27,7 +29,12 @@ import static nz.xinsolutions.queries.engine.tokenise.TokenFactory.text;
  *
  */
 public class QueryParser {
-    
+
+    /**
+     * Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(QueryParser.class);
+
     private TokenSet tokenSet;
     private ParseRuleSet ruleSet;
     
@@ -43,7 +50,9 @@ public class QueryParser {
 
     
     public HstQuery createFromString(HstQueryManager qMgr, String query, MultivaluedMap<String, String> queryParams) throws QueryParserException {
-        
+
+        LOG.info("Received Query to Parse: " + query);
+
         // parse the incoming text
         RuleState queryRuleState =
             RuleMatching.parseString(

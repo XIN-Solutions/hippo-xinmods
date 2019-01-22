@@ -77,6 +77,8 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
                 throw new IllegalArgumentException("`query` parameter is empty");
             }
 
+            LOG.info("Received Query Request: " + query);
+
             HstQueryManager qMgr = restCtx.getRequestContext().getQueryManager();
             HstQuery hstQuery = getQueryParserInstance().createFromString(qMgr, query, queryParams);
             

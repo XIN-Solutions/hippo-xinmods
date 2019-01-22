@@ -121,7 +121,7 @@
     </Logger>
 
     <!-- project logging -->
-    <Logger name="nz.xinsolutions" level="debug"/>
+    <Logger name="nz.xinsolutions" level="info"/>
 
     <Root level="warn">
       <AppenderRef ref="site"/>
