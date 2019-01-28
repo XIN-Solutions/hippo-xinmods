@@ -182,6 +182,8 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
 
                 put(KEY_UUID, bean.getCanonicalUUID());
                 put(KEY_PATH, path);
+                put(KEY_NAME, bean.getName());
+                put(KEY_LABEL, bean.getDisplayName());
                 put(KEY_FOLDERS, childFolders);
                 put(KEY_DOCUMENTS, childDocuments);
 
