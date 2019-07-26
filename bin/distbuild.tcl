@@ -20,6 +20,27 @@ proc ask {question {defaultValue {}}} {
 	return $answer 
 }
 
+
+
+#
+# This function will try to retrieve a configuration value from the
+# configuration file that was loaded
+#
+proc askIfNull {configLocation question {defaultValue {}} } {
+
+  lassign $configLocation bundle property
+
+  global $bundle
+
+  foreach {key value} [expr \$$bundle] {
+    if { $key == $property } then {
+      return $value
+    }
+  } 
+
+  return [ask "($bundle.$property) -- $question" $defaultValue]
+}
+
 #
 #	Get a list of tomcats
 #
@@ -43,6 +64,34 @@ proc get-tomcat-versions {} {
 
 puts ">> Just need some information to put into the configuration files"
 
+
+#
+# Get the configuration file from the command line parameters
+#
+proc get-config-file {} {
+  global argv
+  return [lindex $argv 0]
+}
+
+#
+# Returns whether or not a file was present.
+#
+proc has-config-file {} {
+  return [expr { [get-config-file] != "" }]
+}
+
+
+if [has-config-file] then {
+  source [get-config-file]
+  puts ">> Using configuration: [get-config-file]"
+} else {
+  set Build {}
+  set MySQL {}
+  set CMS {}
+  puts ">> Just need some information to put into the configuration files"
+}
+
+
 #   ___                  _   _                 
 #  / _ \ _   _  ___  ___| |_(_) ___  _ __  ___ 
 # | | | | | | |/ _ \/ __| __| |/ _ \| '_ \/ __|
@@ -50,19 +99,19 @@ puts ">> Just need some information to put into the configuration files"
 #  \__\_\\__,_|\___||___/\__|_|\___/|_| |_|___/
 #
 
-set distributionName [ask "Distribution name: " generic]
+set distributionName [askIfNull {Build distributionName} "Distribution name: " generic]
 
-set ebApplicationName [ask "EB Application Name: "]
-set ebEnvironmentName [ask "EB Environment Name: "]
-set ebRegion [ask "EB Region: " ap-southeast-2]
+set ebApplicationName [askIfNull {Build ebApplicationName} "EB Application Name: "]
+set ebEnvironmentName [askIfNull {Build ebEnvironmentName} "EB Environment Name: "]
+set ebRegion [askIfNull {Build ebRegion} "EB Region: " ap-southeast-2]
 
-set mysqlHost [ask "MySQL Host: " host]
-set mysqlPort [ask "MySQL Port (3306): " 3306]
-set mysqlDb [ask "MySQL Database name: " dbname]
-set mysqlUser [ask "MySQL Username: " username]
-set mysqlPassword [ask "MySQL Password: " password]
-set cmsHost [ask "CMS Host: " http://cmslocal]
-set adminPass [ask "Admin password: " admin]
+set mysqlHost [askIfNull {MySQL host} "MySQL Host: " host]
+set mysqlPort [askIfNull {MySQL port} "MySQL Port (3306): " 3306]
+set mysqlDb [askIfNull {MySQL database} "MySQL Database name: " dbname]
+set mysqlUser [askIfNull {MySQL username} "MySQL Username: " username]
+set mysqlPassword [askIfNull {MySQL password} "MySQL Password: " password]
+set cmsHost [askIfNull {CMS host} "CMS Host: " http://cmslocal]
+set adminPass [askIfNull {CMS adminPass} "Admin password: " admin]
 
 
 set distBasePath "/tmp/hippodistbuild/app-distribution"
@@ -561,10 +610,9 @@ close $configYml
 puts ">> ARCHIVE: Archiving distribution"
 exec bash -c "cd /tmp/hippodistbuild/app-distribution/ && zip ../$distributionName.zip . -r"
 
+set deploy [askIfNull {Deployment deploy} "Deploy? (y/n)" y]
 
-set deploy [ask "Deploy? (y/n)" y]
-
-if { $deploy == "y" } then {
+if { $deploy == "yes" || $deploy == "y" } then {
 
 	set appVersion "v[clock format [clock seconds] -format "%Y-%m-%d"]_[clock seconds]"
 	set appVersion [ask "EB App Version: (default: $appVersion)" $appVersion]
