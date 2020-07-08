@@ -1,6 +1,5 @@
 # Query Endpoint
 
-
 Part of the CaaS aspect of the XinMod additions are the ability to query the content by using the custom interpreter
 built for the HST query variants used in Hippo. A typical query could look something like this:
 

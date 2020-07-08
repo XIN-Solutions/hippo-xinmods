@@ -79,7 +79,7 @@ Create xinmods database
 
 Grant all access to xinmods database to hippodb
 
-	$ grant all privileges on xinmods.* to 'hippodb'@'localhost' identified by 'T1LPf8bnE2xU'
+	$ grant all privileges on xinmods.* to 'hippodb'@'localhost' identified by 'password_here'
 
 
 Add resource definition in `tomcat/conf/context.xml`
