@@ -31,6 +31,9 @@ To setup tomcat:
         JVM_OPTS="-server -Xmx512m -Xms128m"
         CATALINA_OPTS="${JVM_OPTS} ${REP_OPTS} ${L4J_OPTS}"
 
+* in the setenv.sh you could also specify an additional flag called `-DAWS_HIPPOBUS_ARN` of which its value would be
+the SNS topic Hippo CMS events are sent to.
+
 * setup conf/tomcat-users.xml 
 
         <?xml version="1.0" encoding="UTF-8"?>

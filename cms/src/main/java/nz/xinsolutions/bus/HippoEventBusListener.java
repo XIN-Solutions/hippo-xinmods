@@ -4,6 +4,8 @@ import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.amazonaws.util.json.Jackson;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 import org.onehippo.cms7.event.HippoEvent;
 import org.onehippo.cms7.services.eventbus.Subscribe;
 import org.slf4j.Logger;
@@ -20,20 +22,19 @@ import java.util.Map;
  *
  */
 public class HippoEventBusListener {
-    
-    public static final String AWS_SNS_TOPIC = "arn:aws:sns:ap-southeast-2:741354369915:hippo-dev-topic";
-    
+
+    public static final String AWS_HIPPOBUS_ARN = "AWS_HIPPOBUS_ARN";
+
+    /**
+     * Logger
+     */
+    private static final Logger LOG = LoggerFactory.getLogger(HippoEventBusListener.class);
+
     /**
      * SNS service
      */
     private AmazonSNS sns;
-    
-    /**
-     * Logger
-     */
-    private Logger LOG = LoggerFactory.getLogger(HippoEventBusListener.class);
-    
-    
+
     /**
      * Initialise data-members
      */
@@ -55,7 +56,7 @@ public class HippoEventBusListener {
     @Subscribe
     public void handleEvent(HippoEvent event) {
 
-        LOG.info(
+        LOG.debug(
             "PUBLISH EVENT: " +
             ", cat " + event.category() +
             ", action: " + event.action() +
@@ -71,17 +72,29 @@ public class HippoEventBusListener {
     
         String jsonMessage = Jackson.toJsonString(map);
 
-        LOG.info("Sending JSON to topic: " + jsonMessage);
+
+        String topicArn = getAwsSnsTopic();
+        if (StringUtils.isBlank(topicArn)) {
+            LOG.debug("No SNS Arn set, not going to tell anyone what happened.");
+            return;
+        }
 
         try {
-
-            this.sns.publish(AWS_SNS_TOPIC, jsonMessage);
+            LOG.info("Sending JSON to topic: " + jsonMessage);
+            this.sns.publish(topicArn, jsonMessage);
         }
         catch (Exception ex) {
-            LOG.error("Could not send message to SNS `{}`.", AWS_SNS_TOPIC);
+            LOG.error("Could not send message to SNS `{}`.", topicArn);
         }
     }
-    
-    
+
+    /**
+     * @return the AWS SNS topic to send to, can be null or emtpy
+     */
+    @NotNull
+    protected String getAwsSnsTopic() {
+        return System.getProperty(AWS_HIPPOBUS_ARN, System.getenv(AWS_HIPPOBUS_ARN));
+    }
+
 
 }
