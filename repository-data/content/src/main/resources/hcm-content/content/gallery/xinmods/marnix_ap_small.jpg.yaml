@@ -1,0 +1,63 @@
+/content/gallery/xinmods/marnix_ap_small.jpg:
+  jcr:primaryType: hippo:handle
+  jcr:mixinTypes: ['mix:referenceable']
+  jcr:uuid: 7768b9c5-a608-4822-af69-700232fef9ad
+  /marnix_ap_small.jpg:
+    jcr:primaryType: xinmods:genericimageset
+    hippo:availability: [live, preview]
+    hippogallery:filename: marnix_ap_small.jpg
+    /hippogallery:thumbnail:
+      jcr:primaryType: hippogallery:image
+      hippo:filename: marnix_ap_small.jpg
+      hippogallery:height: 38
+      hippogallery:width: 60
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/marnix_ap_small.jpg/marnix_ap_small.jpg/thumbnail/thumbnail.jpg
+      jcr:lastModified: 2017-07-29T16:02:33.376+12:00
+      jcr:mimeType: image/jpeg
+    /xinmods:tablet:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 162
+      hippogallery:width: 253
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/marnix_ap_small.jpg/marnix_ap_small.jpg/tablet/tablet.jpg
+      jcr:lastModified: 2017-07-29T16:02:33.376+12:00
+      jcr:mimeType: image/jpeg
+    /hippogallery:original:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 162
+      hippogallery:width: 253
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/marnix_ap_small.jpg/marnix_ap_small.jpg/original/original.jpg
+      jcr:lastModified: 2017-07-29T16:02:33.376+12:00
+      jcr:mimeType: image/jpeg
+    /xinmods:desktop:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 162
+      hippogallery:width: 253
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/marnix_ap_small.jpg/marnix_ap_small.jpg/desktop/desktop.jpg
+      jcr:lastModified: 2017-07-29T16:02:33.376+12:00
+      jcr:mimeType: image/jpeg
+    /xinmods:mobile:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 162
+      hippogallery:width: 253
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/marnix_ap_small.jpg/marnix_ap_small.jpg/mobile/mobile.jpg
+      jcr:lastModified: 2017-07-29T16:02:33.376+12:00
+      jcr:mimeType: image/jpeg
+    /xinmods:widescreen:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 162
+      hippogallery:width: 253
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/marnix_ap_small.jpg/marnix_ap_small.jpg/widescreen/widescreen.jpg
+      jcr:lastModified: 2017-07-29T16:02:33.376+12:00
+      jcr:mimeType: image/jpeg

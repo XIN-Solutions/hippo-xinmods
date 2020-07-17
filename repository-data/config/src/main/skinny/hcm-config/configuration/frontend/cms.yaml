@@ -1,0 +1,34 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService/xinmods:mobile:
+      jcr:primaryType: frontend:pluginconfig
+      height: 0
+      upscaling: false
+      width: 360
+      compression: 0.5
+      optimize: speed.and.quality
+    /hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService/xinmods:tablet:
+      jcr:primaryType: frontend:pluginconfig
+      height: 0
+      upscaling: false
+      width: 768
+      compression: 0.7
+      optimize: speed.and.quality
+    /hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService/xinmods:desktop:
+      jcr:primaryType: frontend:pluginconfig
+      height: 0
+      upscaling: false
+      width: 960
+      compression: 0.8
+      optimize: quality
+    /hippo:configuration/hippo:frontend/cms/cms-services/galleryProcessorService/xinmods:widescreen:
+      jcr:primaryType: frontend:pluginconfig
+      height: 0
+      upscaling: false
+      width: 1100
+      compression: 0.8
+      optimize: quality
+    /hippo:configuration/hippo:frontend/cms/cms-services/imageValidationService:
+      max.file.size: 10M
+      max.width: 4128
+      max.height: 3096

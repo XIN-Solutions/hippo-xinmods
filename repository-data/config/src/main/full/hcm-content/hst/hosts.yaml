@@ -1,0 +1,7 @@
+/hst:hst/hst:hosts/dev-localhost/localhost/hst:root/api:
+  jcr:primaryType: hst:mount
+  jcr:uuid: b42721a2-bfb2-4cc3-be07-8c277f4619f3
+  hst:alias: api
+  hst:ismapped: false
+  hst:namedpipeline: RestApiPipeline
+  hst:types: [rest]

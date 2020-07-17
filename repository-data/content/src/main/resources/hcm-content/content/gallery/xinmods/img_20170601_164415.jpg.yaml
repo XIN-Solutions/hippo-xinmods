@@ -1,0 +1,64 @@
+/content/gallery/xinmods/img_20170601_164415.jpg:
+  jcr:primaryType: hippo:handle
+  jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+  jcr:uuid: dcd3e1d0-41e2-47a7-8a92-87aa2933b461
+  hippo:name: IMG_20170601_164415.jpg
+  /img_20170601_164415.jpg:
+    jcr:primaryType: xinmods:genericimageset
+    hippo:availability: [live, preview]
+    hippogallery:filename: IMG_20170601_164415.jpg
+    /hippogallery:thumbnail:
+      jcr:primaryType: hippogallery:image
+      hippo:filename: IMG_20170601_164415.jpg
+      hippogallery:height: 33
+      hippogallery:width: 60
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/img_20170601_164415.jpg/img_20170601_164415.jpg/thumbnail/thumbnail.jpg
+      jcr:lastModified: 2017-07-23T17:41:17.828+12:00
+      jcr:mimeType: image/jpeg
+    /xinmods:tablet:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 0
+      hippogallery:width: 0
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/img_20170601_164415.jpg/img_20170601_164415.jpg/tablet/tablet.jpg
+      jcr:lastModified: 2017-07-23T17:41:17.828+12:00
+      jcr:mimeType: image/jpeg
+    /hippogallery:original:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 720
+      hippogallery:width: 1280
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/img_20170601_164415.jpg/img_20170601_164415.jpg/original/original.jpg
+      jcr:lastModified: 2017-07-23T17:41:17.828+12:00
+      jcr:mimeType: image/jpeg
+    /xinmods:desktop:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 0
+      hippogallery:width: 0
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/img_20170601_164415.jpg/img_20170601_164415.jpg/desktop/desktop.jpg
+      jcr:lastModified: 2017-07-23T17:41:17.828+12:00
+      jcr:mimeType: image/jpeg
+    /xinmods:mobile:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 0
+      hippogallery:width: 0
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/img_20170601_164415.jpg/img_20170601_164415.jpg/mobile/mobile.jpg
+      jcr:lastModified: 2017-07-23T17:41:17.828+12:00
+      jcr:mimeType: image/jpeg
+    /xinmods:widescreen:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 0
+      hippogallery:width: 0
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/img_20170601_164415.jpg/img_20170601_164415.jpg/widescreen/widescreen.jpg
+      jcr:lastModified: 2017-07-23T17:41:17.828+12:00
+      jcr:mimeType: image/jpeg

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context crossContext="true" reloadable="true">
+
+  <Realm className="org.apache.catalina.realm.JAASRealm"
+         appName="ApiLogin"
+         userClassNames="org.hippoecm.hst.security.TransientUser"
+         roleClassNames="org.hippoecm.hst.security.TransientRole"
+         useContextClassLoader="true"
+  />
+
+  <Valve className="org.apache.catalina.authenticator.BasicAuthenticator" />
+
+</Context>

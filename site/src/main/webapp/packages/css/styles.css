@@ -1,0 +1,103 @@
+body {
+    overflow-y: scroll;
+}
+
+[data-loading="{{1}}"] {
+    display: none;
+}
+
+.clearfix {
+    position: relative;
+    overflow: hidden;
+}
+
+.right {
+    float: right;
+}
+
+.right--space {
+    margin-right: 5px;
+}
+
+.spaced {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.btn-flat--top {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+
+}
+
+.ButtonBar {
+    margin-bottom: 2em;
+}
+
+.ButtonBar.ButtonBar--bottom {
+    border-top: 1px solid #eee;
+    margin-top: 1em;
+    padding-top: 1em;
+}
+
+.NoPackages {
+    margin-top: 2em;
+    font-size: 1.3em;
+    font-style: italic;
+}
+
+.Title {
+    margin-bottom: 0.5em;
+}
+
+.Title__icon {
+    color: #46B181;
+    padding-right: 0.5em;
+}
+
+.Package {}
+.Package__title {
+    position: relative;
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+}
+
+.Package__body {
+
+}
+
+.Package__options {
+    background-color: #f4f4f4;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #eee;
+
+}
+
+.alert-warning {
+    background-color: #FFE2C9;
+    color: #333;
+    border-color: #FFC595;
+}
+
+
+.Modal_Top {
+    height: 50px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,f1f1f1+50,e1e1e1+51,f6f6f6+89;White+Gloss+%231 */
+    background: rgb(255,255,255); /* Old browsers */
+    background: -moz-linear-gradient(top, rgba(255,255,255,1) 0%, rgba(241,241,241,1) 50%, rgba(225,225,225,1) 51%, rgba(246,246,246,1) 89%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 89%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%,rgba(241,241,241,1) 50%,rgba(225,225,225,1) 51%,rgba(246,246,246,1) 89%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f6f6f6',GradientType=0 ); /* IE6-9 */
+
+}
+
+.Modal_Content {
+    background-color: rgba(246,246,246,1);
+    padding-top: 70px;
+}

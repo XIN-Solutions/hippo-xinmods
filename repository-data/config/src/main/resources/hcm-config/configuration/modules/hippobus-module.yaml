@@ -1,0 +1,5 @@
+definitions:
+  config:
+    /hippo:configuration/hippo:modules/eventbus:
+      jcr:primaryType: hipposys:module
+      hipposys:className: nz.xinsolutions.bus.HippoEventBusModule

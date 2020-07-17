@@ -1,0 +1,518 @@
+/content/gallery/xinmods/retro:
+  jcr:primaryType: hippogallery:stdImageGallery
+  jcr:mixinTypes: ['hippo:named', 'mix:versionable']
+  jcr:uuid: 80b3b024-e5eb-4108-8d4c-4384baacac2d
+  hippo:name: Retro
+  hippostd:foldertype: [new-xinmods-genericimageset-folder]
+  hippostd:gallerytype: ['xinmods:genericimageset']
+  /20170606_111525.jpg:
+    jcr:primaryType: hippo:handle
+    jcr:mixinTypes: ['mix:referenceable']
+    jcr:uuid: 504eeb4a-89da-4f31-9a8c-ebbb4adf783b
+    /20170606_111525.jpg:
+      jcr:primaryType: xinmods:genericimageset
+      hippo:availability: [live, preview]
+      hippogallery:filename: 20170606_111525.jpg
+      /hippogallery:thumbnail:
+        jcr:primaryType: hippogallery:image
+        hippo:filename: 20170606_111525.jpg
+        hippogallery:height: 45
+        hippogallery:width: 60
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/20170606_111525.jpg/20170606_111525.jpg/thumbnail/thumbnail.jpg
+        jcr:lastModified: 2017-07-23T18:24:33.336+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:tablet:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 576
+        hippogallery:width: 768
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/20170606_111525.jpg/20170606_111525.jpg/tablet/tablet.jpg
+        jcr:lastModified: 2017-07-23T18:24:33.336+12:00
+        jcr:mimeType: image/jpeg
+      /hippogallery:original:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 3024
+        hippogallery:width: 4032
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/20170606_111525.jpg/20170606_111525.jpg/original/original.jpg
+        jcr:lastModified: 2017-07-23T18:24:33.336+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:desktop:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 720
+        hippogallery:width: 960
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/20170606_111525.jpg/20170606_111525.jpg/desktop/desktop.jpg
+        jcr:lastModified: 2017-07-23T18:24:33.336+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:mobile:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 270
+        hippogallery:width: 360
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/20170606_111525.jpg/20170606_111525.jpg/mobile/mobile.jpg
+        jcr:lastModified: 2017-07-23T18:24:33.336+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:widescreen:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 824
+        hippogallery:width: 1100
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/20170606_111525.jpg/20170606_111525.jpg/widescreen/widescreen.jpg
+        jcr:lastModified: 2017-07-23T18:24:33.336+12:00
+        jcr:mimeType: image/jpeg
+  /amiga---disassembled.jpg:
+    jcr:primaryType: hippo:handle
+    jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+    jcr:uuid: c9bf92ea-4657-4380-908f-19400b5435b3
+    hippo:name: Amiga - Disassembled.jpg
+    /amiga---disassembled.jpg:
+      jcr:primaryType: xinmods:genericimageset
+      hippo:availability: [live, preview]
+      hippogallery:filename: Amiga - Disassembled.jpg
+      /hippogallery:thumbnail:
+        jcr:primaryType: hippogallery:image
+        hippo:filename: Amiga - Disassembled.jpg
+        hippogallery:height: 45
+        hippogallery:width: 60
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---disassembled.jpg/amiga---disassembled.jpg/thumbnail/thumbnail.jpg
+        jcr:lastModified: 2017-07-23T18:24:37.330+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:tablet:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 576
+        hippogallery:width: 768
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---disassembled.jpg/amiga---disassembled.jpg/tablet/tablet.jpg
+        jcr:lastModified: 2017-07-23T18:24:37.330+12:00
+        jcr:mimeType: image/jpeg
+      /hippogallery:original:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 3024
+        hippogallery:width: 4032
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---disassembled.jpg/amiga---disassembled.jpg/original/original.jpg
+        jcr:lastModified: 2017-07-23T18:24:37.330+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:desktop:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 720
+        hippogallery:width: 960
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---disassembled.jpg/amiga---disassembled.jpg/desktop/desktop.jpg
+        jcr:lastModified: 2017-07-23T18:24:37.330+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:mobile:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 270
+        hippogallery:width: 360
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---disassembled.jpg/amiga---disassembled.jpg/mobile/mobile.jpg
+        jcr:lastModified: 2017-07-23T18:24:37.330+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:widescreen:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 824
+        hippogallery:width: 1100
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---disassembled.jpg/amiga---disassembled.jpg/widescreen/widescreen.jpg
+        jcr:lastModified: 2017-07-23T18:24:37.330+12:00
+        jcr:mimeType: image/jpeg
+  /amiga---dusty-floppy-connector.jpg:
+    jcr:primaryType: hippo:handle
+    jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+    jcr:uuid: d32c7a45-c610-4b58-bd7f-4e22176734aa
+    hippo:name: Amiga - Dusty Floppy connector.jpg
+    /amiga---dusty-floppy-connector.jpg:
+      jcr:primaryType: xinmods:genericimageset
+      hippo:availability: [live, preview]
+      hippogallery:filename: Amiga - Dusty Floppy connector.jpg
+      /hippogallery:thumbnail:
+        jcr:primaryType: hippogallery:image
+        hippo:filename: Amiga - Dusty Floppy connector.jpg
+        hippogallery:height: 45
+        hippogallery:width: 60
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---dusty-floppy-connector.jpg/amiga---dusty-floppy-connector.jpg/thumbnail/thumbnail.jpg
+        jcr:lastModified: 2017-07-23T18:24:41.567+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:tablet:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 576
+        hippogallery:width: 768
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---dusty-floppy-connector.jpg/amiga---dusty-floppy-connector.jpg/tablet/tablet.jpg
+        jcr:lastModified: 2017-07-23T18:24:41.567+12:00
+        jcr:mimeType: image/jpeg
+      /hippogallery:original:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 3024
+        hippogallery:width: 4032
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---dusty-floppy-connector.jpg/amiga---dusty-floppy-connector.jpg/original/original.jpg
+        jcr:lastModified: 2017-07-23T18:24:41.567+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:desktop:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 720
+        hippogallery:width: 960
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---dusty-floppy-connector.jpg/amiga---dusty-floppy-connector.jpg/desktop/desktop.jpg
+        jcr:lastModified: 2017-07-23T18:24:41.567+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:mobile:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 270
+        hippogallery:width: 360
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---dusty-floppy-connector.jpg/amiga---dusty-floppy-connector.jpg/mobile/mobile.jpg
+        jcr:lastModified: 2017-07-23T18:24:41.567+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:widescreen:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 824
+        hippogallery:width: 1100
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---dusty-floppy-connector.jpg/amiga---dusty-floppy-connector.jpg/widescreen/widescreen.jpg
+        jcr:lastModified: 2017-07-23T18:24:41.567+12:00
+        jcr:mimeType: image/jpeg
+  /amiga---expansion-board.jpg:
+    jcr:primaryType: hippo:handle
+    jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+    jcr:uuid: 20b5ba23-40fb-43d6-b8e2-0bdd6964353c
+    hippo:name: Amiga - Expansion Board.jpg
+    /amiga---expansion-board.jpg:
+      jcr:primaryType: xinmods:genericimageset
+      hippo:availability: [live, preview]
+      hippogallery:filename: Amiga - Expansion Board.jpg
+      /hippogallery:thumbnail:
+        jcr:primaryType: hippogallery:image
+        hippo:filename: Amiga - Expansion Board.jpg
+        hippogallery:height: 45
+        hippogallery:width: 60
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---expansion-board.jpg/amiga---expansion-board.jpg/thumbnail/thumbnail.jpg
+        jcr:lastModified: 2017-07-23T18:24:45.870+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:tablet:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 576
+        hippogallery:width: 768
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---expansion-board.jpg/amiga---expansion-board.jpg/tablet/tablet.jpg
+        jcr:lastModified: 2017-07-23T18:24:45.870+12:00
+        jcr:mimeType: image/jpeg
+      /hippogallery:original:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 3024
+        hippogallery:width: 4032
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---expansion-board.jpg/amiga---expansion-board.jpg/original/original.jpg
+        jcr:lastModified: 2017-07-23T18:24:45.870+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:desktop:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 720
+        hippogallery:width: 960
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---expansion-board.jpg/amiga---expansion-board.jpg/desktop/desktop.jpg
+        jcr:lastModified: 2017-07-23T18:24:45.870+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:mobile:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 270
+        hippogallery:width: 360
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---expansion-board.jpg/amiga---expansion-board.jpg/mobile/mobile.jpg
+        jcr:lastModified: 2017-07-23T18:24:45.870+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:widescreen:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 824
+        hippogallery:width: 1100
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---expansion-board.jpg/amiga---expansion-board.jpg/widescreen/widescreen.jpg
+        jcr:lastModified: 2017-07-23T18:24:45.870+12:00
+        jcr:mimeType: image/jpeg
+  /amiga---expansion-board-2.jpg:
+    jcr:primaryType: hippo:handle
+    jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+    jcr:uuid: 65e1665f-1f13-4a2d-b042-ccb79e2fe983
+    hippo:name: Amiga - Expansion Board 2.jpg
+    /amiga---expansion-board-2.jpg:
+      jcr:primaryType: xinmods:genericimageset
+      hippo:availability: [live, preview]
+      hippogallery:filename: Amiga - Expansion Board 2.jpg
+      /hippogallery:thumbnail:
+        jcr:primaryType: hippogallery:image
+        hippo:filename: Amiga - Expansion Board 2.jpg
+        hippogallery:height: 45
+        hippogallery:width: 60
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---expansion-board-2.jpg/amiga---expansion-board-2.jpg/thumbnail/thumbnail.jpg
+        jcr:lastModified: 2017-07-23T18:24:50.012+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:tablet:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 576
+        hippogallery:width: 768
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---expansion-board-2.jpg/amiga---expansion-board-2.jpg/tablet/tablet.jpg
+        jcr:lastModified: 2017-07-23T18:24:50.012+12:00
+        jcr:mimeType: image/jpeg
+      /hippogallery:original:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 3024
+        hippogallery:width: 4032
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---expansion-board-2.jpg/amiga---expansion-board-2.jpg/original/original.jpg
+        jcr:lastModified: 2017-07-23T18:24:50.012+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:desktop:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 720
+        hippogallery:width: 960
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---expansion-board-2.jpg/amiga---expansion-board-2.jpg/desktop/desktop.jpg
+        jcr:lastModified: 2017-07-23T18:24:50.012+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:mobile:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 270
+        hippogallery:width: 360
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---expansion-board-2.jpg/amiga---expansion-board-2.jpg/mobile/mobile.jpg
+        jcr:lastModified: 2017-07-23T18:24:50.012+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:widescreen:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 824
+        hippogallery:width: 1100
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---expansion-board-2.jpg/amiga---expansion-board-2.jpg/widescreen/widescreen.jpg
+        jcr:lastModified: 2017-07-23T18:24:50.012+12:00
+        jcr:mimeType: image/jpeg
+  /amiga---going-in.jpg:
+    jcr:primaryType: hippo:handle
+    jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+    jcr:uuid: 95256aae-5742-44b2-afd4-6ad7c8d2220a
+    hippo:name: Amiga - Going in.jpg
+    /amiga---going-in.jpg:
+      jcr:primaryType: xinmods:genericimageset
+      hippo:availability: [live, preview]
+      hippogallery:filename: Amiga - Going in.jpg
+      /hippogallery:thumbnail:
+        jcr:primaryType: hippogallery:image
+        hippo:filename: Amiga - Going in.jpg
+        hippogallery:height: 45
+        hippogallery:width: 60
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---going-in.jpg/amiga---going-in.jpg/thumbnail/thumbnail.jpg
+        jcr:lastModified: 2017-07-23T18:24:56.584+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:tablet:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 576
+        hippogallery:width: 768
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---going-in.jpg/amiga---going-in.jpg/tablet/tablet.jpg
+        jcr:lastModified: 2017-07-23T18:24:56.584+12:00
+        jcr:mimeType: image/jpeg
+      /hippogallery:original:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 3024
+        hippogallery:width: 4032
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---going-in.jpg/amiga---going-in.jpg/original/original.jpg
+        jcr:lastModified: 2017-07-23T18:24:56.584+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:desktop:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 720
+        hippogallery:width: 960
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---going-in.jpg/amiga---going-in.jpg/desktop/desktop.jpg
+        jcr:lastModified: 2017-07-23T18:24:56.584+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:mobile:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 270
+        hippogallery:width: 360
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---going-in.jpg/amiga---going-in.jpg/mobile/mobile.jpg
+        jcr:lastModified: 2017-07-23T18:24:56.584+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:widescreen:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 824
+        hippogallery:width: 1100
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---going-in.jpg/amiga---going-in.jpg/widescreen/widescreen.jpg
+        jcr:lastModified: 2017-07-23T18:24:56.584+12:00
+        jcr:mimeType: image/jpeg
+  /amiga---rusty-chassis.jpg:
+    jcr:primaryType: hippo:handle
+    jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+    jcr:uuid: 89c62c4b-80ef-473f-8cae-f7dca248eed4
+    hippo:name: Amiga - Rusty Chassis.jpg
+    /amiga---rusty-chassis.jpg:
+      jcr:primaryType: xinmods:genericimageset
+      hippo:availability: [live, preview]
+      hippogallery:filename: Amiga - Rusty Chassis.jpg
+      /hippogallery:thumbnail:
+        jcr:primaryType: hippogallery:image
+        hippo:filename: Amiga - Rusty Chassis.jpg
+        hippogallery:height: 45
+        hippogallery:width: 60
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---rusty-chassis.jpg/amiga---rusty-chassis.jpg/thumbnail/thumbnail.jpg
+        jcr:lastModified: 2017-07-23T18:25:01.562+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:tablet:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 576
+        hippogallery:width: 768
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---rusty-chassis.jpg/amiga---rusty-chassis.jpg/tablet/tablet.jpg
+        jcr:lastModified: 2017-07-23T18:25:01.562+12:00
+        jcr:mimeType: image/jpeg
+      /hippogallery:original:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 3024
+        hippogallery:width: 4032
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---rusty-chassis.jpg/amiga---rusty-chassis.jpg/original/original.jpg
+        jcr:lastModified: 2017-07-23T18:25:01.562+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:desktop:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 720
+        hippogallery:width: 960
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---rusty-chassis.jpg/amiga---rusty-chassis.jpg/desktop/desktop.jpg
+        jcr:lastModified: 2017-07-23T18:25:01.562+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:mobile:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 270
+        hippogallery:width: 360
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---rusty-chassis.jpg/amiga---rusty-chassis.jpg/mobile/mobile.jpg
+        jcr:lastModified: 2017-07-23T18:25:01.562+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:widescreen:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 824
+        hippogallery:width: 1100
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---rusty-chassis.jpg/amiga---rusty-chassis.jpg/widescreen/widescreen.jpg
+        jcr:lastModified: 2017-07-23T18:25:01.562+12:00
+        jcr:mimeType: image/jpeg
+  /amiga---so-dusty.jpg:
+    jcr:primaryType: hippo:handle
+    jcr:mixinTypes: ['hippo:named', 'mix:referenceable']
+    jcr:uuid: 0018c834-2ae1-49e2-acf1-fa25fc729adb
+    hippo:name: Amiga - So Dusty.jpg
+    /amiga---so-dusty.jpg:
+      jcr:primaryType: xinmods:genericimageset
+      hippo:availability: [live, preview]
+      hippogallery:filename: Amiga - So Dusty.jpg
+      /hippogallery:thumbnail:
+        jcr:primaryType: hippogallery:image
+        hippo:filename: Amiga - So Dusty.jpg
+        hippogallery:height: 45
+        hippogallery:width: 60
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---so-dusty.jpg/amiga---so-dusty.jpg/thumbnail/thumbnail.jpg
+        jcr:lastModified: 2017-07-23T18:25:05.511+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:tablet:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 576
+        hippogallery:width: 768
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---so-dusty.jpg/amiga---so-dusty.jpg/tablet/tablet.jpg
+        jcr:lastModified: 2017-07-23T18:25:05.511+12:00
+        jcr:mimeType: image/jpeg
+      /hippogallery:original:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 3024
+        hippogallery:width: 4032
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---so-dusty.jpg/amiga---so-dusty.jpg/original/original.jpg
+        jcr:lastModified: 2017-07-23T18:25:05.511+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:desktop:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 720
+        hippogallery:width: 960
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---so-dusty.jpg/amiga---so-dusty.jpg/desktop/desktop.jpg
+        jcr:lastModified: 2017-07-23T18:25:05.511+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:mobile:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 270
+        hippogallery:width: 360
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---so-dusty.jpg/amiga---so-dusty.jpg/mobile/mobile.jpg
+        jcr:lastModified: 2017-07-23T18:25:05.511+12:00
+        jcr:mimeType: image/jpeg
+      /xinmods:widescreen:
+        jcr:primaryType: hippogallery:image
+        hippogallery:height: 824
+        hippogallery:width: 1100
+        jcr:data:
+          type: binary
+          resource: /content/gallery/xinmods/retro/amiga---so-dusty.jpg/amiga---so-dusty.jpg/widescreen/widescreen.jpg
+        jcr:lastModified: 2017-07-23T18:25:05.511+12:00
+        jcr:mimeType: image/jpeg

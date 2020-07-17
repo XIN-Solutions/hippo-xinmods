@@ -1,0 +1,7 @@
+group: 
+  name: xinmods
+  after: hippo-cms
+project: xinmods
+module: 
+  name: xinmods-repository-data-webfiles
+  after: xinmods-repository-data-config

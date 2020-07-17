@@ -1,0 +1,5 @@
+definitions:
+  config:
+    /hst:hst/hst:configurations/hst:default/hst:templates/essentials-menu:
+      jcr:primaryType: hst:template
+      hst:renderpath: jsp/hstdefault/essentials-menu.jsp

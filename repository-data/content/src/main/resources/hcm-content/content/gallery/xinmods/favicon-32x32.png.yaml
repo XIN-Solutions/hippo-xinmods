@@ -1,0 +1,63 @@
+/content/gallery/xinmods/favicon-32x32.png:
+  jcr:primaryType: hippo:handle
+  jcr:mixinTypes: ['mix:referenceable']
+  jcr:uuid: 1b34e208-b58d-47a4-b428-8f3776769af7
+  /favicon-32x32.png:
+    jcr:primaryType: xinmods:genericimageset
+    hippo:availability: [live, preview]
+    hippogallery:filename: favicon-32x32.png
+    /hippogallery:thumbnail:
+      jcr:primaryType: hippogallery:image
+      hippo:filename: favicon-32x32.png
+      hippogallery:height: 32
+      hippogallery:width: 32
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/favicon-32x32.png/favicon-32x32.png/thumbnail/thumbnail.png
+      jcr:lastModified: 2017-07-30T18:39:22.223+12:00
+      jcr:mimeType: image/png
+    /xinmods:tablet:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 32
+      hippogallery:width: 32
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/favicon-32x32.png/favicon-32x32.png/tablet/tablet.png
+      jcr:lastModified: 2017-07-30T18:39:22.223+12:00
+      jcr:mimeType: image/png
+    /hippogallery:original:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 32
+      hippogallery:width: 32
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/favicon-32x32.png/favicon-32x32.png/original/original.png
+      jcr:lastModified: 2017-07-30T18:39:22.223+12:00
+      jcr:mimeType: image/png
+    /xinmods:desktop:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 32
+      hippogallery:width: 32
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/favicon-32x32.png/favicon-32x32.png/desktop/desktop.png
+      jcr:lastModified: 2017-07-30T18:39:22.223+12:00
+      jcr:mimeType: image/png
+    /xinmods:mobile:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 32
+      hippogallery:width: 32
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/favicon-32x32.png/favicon-32x32.png/mobile/mobile.png
+      jcr:lastModified: 2017-07-30T18:39:22.223+12:00
+      jcr:mimeType: image/png
+    /xinmods:widescreen:
+      jcr:primaryType: hippogallery:image
+      hippogallery:height: 32
+      hippogallery:width: 32
+      jcr:data:
+        type: binary
+        resource: /content/gallery/xinmods/favicon-32x32.png/favicon-32x32.png/widescreen/widescreen.png
+      jcr:lastModified: 2017-07-30T18:39:22.223+12:00
+      jcr:mimeType: image/png
