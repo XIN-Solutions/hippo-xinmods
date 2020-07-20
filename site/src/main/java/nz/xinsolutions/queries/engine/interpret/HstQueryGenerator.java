@@ -140,34 +140,42 @@ public class HstQueryGenerator {
                             filter.addNotContains(propertyName, sanitised.toString());
                             
                         case ">":
+                        case "gt":
                             filter.addGreaterThan(propertyName, sanitised);
                             break;
                             
                         case ">=":
+                        case "gte":
                             filter.addGreaterOrEqualThan(propertyName, sanitised);
                             break;
                             
                         case "<":
+                        case "lt":
                             filter.addLessThan(propertyName, sanitised);
                             break;
                             
                         case "<=":
+                        case "lte":
                             filter.addLessOrEqualThan(propertyName, sanitised);
                             break;
                         
                         case "=":
+                        case "eq":
                             filter.addEqualTo(propertyName, sanitised);
                             break;
                             
                         case "!=":
+                        case "neq":
                             filter.addNotEqualTo(propertyName, sanitised);
                             break;
                             
                         case "i=":
+                        case "ieq":
                             filter.addEqualToCaseInsensitive(propertyName, sanitised.toString());
                             break;
                             
                         case "i!=":
+                        case "ineq":
                             filter.addNotEqualToCaseInsensitive(propertyName, sanitised.toString());
                             break;
                     }

@@ -245,7 +245,7 @@ public class QueryParser {
              text("op_where", "where"),
             regex("op_unary", "null|notnull|where"),
             regex("op_compound", "and|or"),
-            regex("op_binary", "!contains|contains|<|>|<=|>=|=|!=|i=|i!="),
+            regex("op_binary", "!contains|contains|lt|<|gt|>|lte|<=|gte|>=|eq|=|neq|!=|ieq|i=|ineq|i!="),
             
              text("prop_start", "["),
              text("prop_end", "]"),
