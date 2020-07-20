@@ -255,7 +255,7 @@ public class AssetModifierServlet extends HttpServlet {
 				.filter(StringUtils::isNotBlank)
 				.map(Instruction::new)
 				.collect(Collectors.toList())
-				.toArray(new Instruction[CROP_PARAM_WIDTH])
+				.toArray(new Instruction[0])
 			;
 	}
 
