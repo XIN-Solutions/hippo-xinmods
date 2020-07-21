@@ -1,6 +1,0 @@
-definitions:
-  config:
-    /hst:hst/hst:configurations/xinmods/hst:catalog:
-      jcr:primaryType: hst:catalog
-      /xinmods-catalog:
-        jcr:primaryType: hst:containeritempackage

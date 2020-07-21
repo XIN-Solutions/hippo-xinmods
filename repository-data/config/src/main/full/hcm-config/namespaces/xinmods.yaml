@@ -1,6 +1,0 @@
-definitions:
-  config:
-    /hippo:namespaces/xinmods:
-      jcr:primaryType: hipposysedit:namespace
-      jcr:mixinTypes: ['mix:referenceable']
-      jcr:uuid: 9157c9ce-305d-490d-be56-87bfe80cb434

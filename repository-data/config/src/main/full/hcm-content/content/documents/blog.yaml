@@ -1,6 +1,0 @@
-/content/documents/blog:
-  jcr:primaryType: hippostd:folder
-  jcr:mixinTypes: ['hippo:named', 'mix:versionable']
-  jcr:uuid: 81b562f1-a6a6-4a8f-b0da-59fa5bc0fb28
-  hippo:name: Blog
-  hippostd:foldertype: [new-document, new-folder]
