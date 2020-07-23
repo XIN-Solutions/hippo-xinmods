@@ -45,7 +45,7 @@ public class AutoCloseableSession implements AutoCloseable, Session {
     @Override
     public void close() throws Exception {
 
-        LOG.info("Closing autocloseable session");
+        LOG.debug("Closing autocloseable session");
         if (this.session != null && this.session.isLive()) {
             this.session.logout();
         }
