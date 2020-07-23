@@ -63,20 +63,22 @@
 
     <!--***START temporary override of versions*** -->
     <!-- ***END temporary override of versions*** -->
-    <hippo.essentials-components.version>14.1.0</hippo.essentials-components.version>
+
     <essentials.version>14.1.0</essentials.version>
 
     <jsp-api.version>2.2</jsp-api.version>
-    <taglibs.version>1.2.1</taglibs.version>
+    <taglibs.version>1.2.5</taglibs.version>
     <xalan.version>2.7.2</xalan.version>
     <junit.version>4.12</junit.version>
     <easymock.version>3.4</easymock.version>
 
+    <development-module-deploy-dir>shared/lib</development-module-deploy-dir>
     <content-module-deploy-dir>shared/lib</content-module-deploy-dir>
 
     <hippo.cms.locales>nl,de,fr,es,zh</hippo.cms.locales>
 
     <zip-library.version>1.12</zip-library.version>
+    <buildNumber>${maven.build.timestamp}</buildNumber>
   </properties>
 
   <repositories>
@@ -90,29 +92,6 @@
 
   <dependencyManagement>
     <dependencies>
-<!--
-      <dependency>
-        <groupId>org.onehippo.cms7</groupId>
-        <artifactId>hippo-essentials-plugin-sdk-api</artifactId>
-      </dependency>
--->
-
-      <!-- Hippo Configuration Management -->
-      <dependency>
-        <groupId>org.onehippo.cms</groupId>
-        <artifactId>hippo-configuration-management-api</artifactId>
-        <version>${hippo.configuration-management.version}</version>
-        <scope>provided</scope>
-      </dependency>
-
-
-      <dependency>
-        <groupId>org.onehippo.cms</groupId>
-        <artifactId>hippo-configuration-management-model</artifactId>
-        <version>${hippo.configuration-management.version}</version>
-        <scope>provided</scope>
-      </dependency>
-
 
       <dependency>
         <groupId>javax.servlet.jsp</groupId>
@@ -137,22 +116,6 @@
       </dependency>
 
       <dependency>
-        <groupId>xalan</groupId>
-        <artifactId>xalan</artifactId>
-        <version>${xalan.version}</version>
-        <scope>runtime</scope>
-      </dependency>
-      <dependency>
-        <groupId>xalan</groupId>
-        <artifactId>serializer</artifactId>
-        <version>${xalan.version}</version>
-        <scope>runtime</scope>
-      </dependency>
-
-      <!-- other predefined compile scope versioned dependencies -->
-
-      <!-- https://mvnrepository.com/artifact/org.zeroturnaround/zt-zip -->
-      <dependency>
         <groupId>org.zeroturnaround</groupId>
         <artifactId>zt-zip</artifactId>
         <version>${zip-library.version}</version>
@@ -172,6 +135,18 @@
       </dependency>
 
       <dependency>
+        <groupId>xalan</groupId>
+        <artifactId>xalan</artifactId>
+        <version>${xalan.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>xalan</groupId>
+        <artifactId>serializer</artifactId>
+        <version>${xalan.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
         <groupId>org.easymock</groupId>
         <artifactId>easymock</artifactId>
         <version>${easymock.version}</version>
@@ -180,90 +155,6 @@
 
     </dependencies>
   </dependencyManagement>
-
-  <dependencies>
-
-    <dependency>
-      <groupId>org.onehippo.cms</groupId>
-      <artifactId>hippo-configuration-management-api</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.onehippo.cms7</groupId>
-      <artifactId>hippo-cms7-commons</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.onehippo.cms7</groupId>
-      <artifactId>hippo-services</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.onehippo.cms7</groupId>
-      <artifactId>hippo-repository-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.onehippo.cms7</groupId>
-      <artifactId>hippo-repository-builtin</artifactId>
-    </dependency>
-
-    <!-- required shared dependencies
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.5</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId>
-      <version>1.18</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>22.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-beans</artifactId>
-      <version>${spring.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-      <version>${spring.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-      <version>${spring.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-aop</artifactId>
-      <version>${spring.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-expression</artifactId>
-      <version>${spring.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.6</version>
-      <scope>provided</scope>
-    </dependency>
- -->
-
-  </dependencies>
 
 
   <build>
@@ -345,7 +236,8 @@
         </property>
       </activation>
       <modules>
-        <!--<module>repository-data</module>-->
+        <module>cms-dependencies</module>
+        <module>repository-data</module>
         <module>cms</module>
         <module>site</module>
         <module>essentials</module>
@@ -417,6 +309,7 @@
                   <project.basedir>${project.basedir}</project.basedir>
                   <send.usage.statistics.to.hippo>false</send.usage.statistics.to.hippo>
                 </systemProperties>
+<!--
 
                 <dependencies>
                   <dependency>
@@ -450,6 +343,7 @@
                     <classpath>shared</classpath>
                   </dependency>
                 </dependencies>
+-->
 
               </container>
             </configuration>
@@ -463,7 +357,7 @@
            $ mvn -P cargo.run,without-content -->
       <id>without-content</id>
       <properties>
-        <content-module-deploy-dir>temp</content-module-deploy-dir>
+        <development-module-deploy-dir>temp</development-module-deploy-dir>
       </properties>
     </profile>
 
@@ -490,31 +384,6 @@
           <artifactId>log4j-core</artifactId>
           <scope>provided</scope>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-        <dependency>
-          <groupId>mysql</groupId>
-          <artifactId>mysql-connector-java</artifactId>
-          <version>8.0.13</version>
-        </dependency>
-
-        <dependency>
-          <groupId>org.onehippo.cms</groupId>
-          <artifactId>hippo-configuration-management-api</artifactId>
-          <version>${hippo.configuration-management.version}</version>
-        </dependency>
-
-
-
-        <!--
-                <dependency>
-                  <groupId>mysql</groupId>
-                  <artifactId>mysql-connector-java</artifactId>
-                  <version>6.0.6</version>
-                  <scope>provided</scope>
-                </dependency>
-        -->
-
       </dependencies>
       <build>
         <defaultGoal>validate</defaultGoal>
@@ -564,11 +433,13 @@
           <scope>provided</scope>
         </dependency>
 
+<!--
         <dependency>
           <groupId>org.onehippo.cms</groupId>
           <artifactId>hippo-configuration-management-api</artifactId>
           <version>${hippo.configuration-management.version}</version>
         </dependency>
+-->
 
       </dependencies>
       <build>

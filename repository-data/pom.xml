@@ -15,15 +15,7 @@
 
   <modules>
     <module>config</module>
-    <!--
-      <module>content</module>
-      <module>webfiles</module>
-    -->
   </modules>
-
-  <properties>
-    <hippo.ckeditor.version>4.12.1-h2</hippo.ckeditor.version>
-  </properties>
 
   <build>
     <plugins>

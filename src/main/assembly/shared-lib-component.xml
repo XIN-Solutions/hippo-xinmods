@@ -11,10 +11,10 @@
         <include>org.onehippo.cms7:hippo-repository-api</include>
         <include>org.onehippo.cms7:hippo-repository-builtin</include>
 
-        <include>org.onehippo.cms:hippo-configuration-management-api</include>
 
         <!--
-                <include>org.onehippo.cms:hippo-configuration-management-model</include>
+          <include>org.onehippo.cms:hippo-configuration-management-api</include>
+          <include>org.onehippo.cms:hippo-configuration-management-model</include>
 
           <include>com.google.guava:guava</include>
           <include>org.apache.commons:commons-lang3</include>
