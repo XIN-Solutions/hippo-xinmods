@@ -1,6 +1,6 @@
 definitions:
   config:
-    /hst:hst/hst:configurations/hst:default/hst:catalog/essentials-catalog:
+    /hst:platform/hst:configurations/hst:default/hst:catalog/essentials-catalog:
       jcr:primaryType: hst:containeritempackage
       /menu:
         jcr:primaryType: hst:containeritemcomponent

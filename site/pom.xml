@@ -31,21 +31,27 @@
       <groupId>xalan</groupId>
       <artifactId>serializer</artifactId>
     </dependency>
+<!--
     <dependency>
       <groupId>org.onehippo.cms7.hst.dependencies</groupId>
       <artifactId>hst-server-dependencies</artifactId>
       <type>pom</type>
     </dependency>
+-->
+<!--
     <dependency>
       <groupId>org.onehippo.cms7.hst.dependencies</groupId>
       <artifactId>hst-spring-dependencies</artifactId>
       <type>pom</type>
     </dependency>
+-->
+<!--
     <dependency>
       <groupId>org.onehippo.cms7.hst.dependencies</groupId>
       <artifactId>hst-client-dependencies</artifactId>
       <type>pom</type>
     </dependency>
+-->
     <dependency>
       <groupId>org.onehippo.cms</groupId>
       <artifactId>hippo-configuration-management-api</artifactId>
@@ -71,10 +77,12 @@
       <groupId>org.freemarker</groupId>
       <artifactId>freemarker</artifactId>
     </dependency>
+<!--
     <dependency>
       <groupId>org.onehippo.cms7.hst.client-modules</groupId>
       <artifactId>hst-cms-rest</artifactId>
     </dependency>
+-->
     <dependency>
       <groupId>org.onehippo.cms7.hst.client-modules</groupId>
       <artifactId>hst-page-composer</artifactId>
@@ -87,10 +95,10 @@
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-plugin-selections-hst-client</artifactId>
     </dependency>
-    <dependency>
+<!--    <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-essentials-plugin-sdk-api</artifactId>
-    </dependency>
+    </dependency>-->
     <dependency>
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-essentials-components-hst</artifactId>
@@ -142,6 +150,13 @@
         <artifactId>imgscalr-lib</artifactId>
         <version>4.2</version>
       </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.11</version>
+      <scope>test</scope>
+    </dependency>
 
 
   </dependencies>

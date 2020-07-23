@@ -1,6 +1,6 @@
 definitions:
   config:
-    /hst:hst/hst:configurations/xinmods/hst:pages/homepage:
+    /hst:platform/hst:configurations/xinmods/hst:pages/homepage:
       jcr:primaryType: hst:component
       hst:referencecomponent: hst:abstractpages/base
       /main:

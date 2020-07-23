@@ -9,7 +9,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertFalse;
 
 /**
- * Author: Marnix Kok <mkok@btes.co.nz>
+ * Author: Marnix Kok <marnix@xinsolutions.co.nz>
  * Date: 30/01/18.
  */
 public class PartialCndExporterTest {

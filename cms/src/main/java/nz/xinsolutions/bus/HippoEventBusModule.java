@@ -1,7 +1,7 @@
 package nz.xinsolutions.bus;
 
+import org.jetbrains.annotations.NotNull;
 import org.onehippo.cms7.services.HippoServiceRegistry;
-import org.onehippo.cms7.services.eventbus.HippoEventBus;
 import org.onehippo.repository.modules.DaemonModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,15 +36,20 @@ public class HippoEventBusModule implements DaemonModule {
      */
     @Override
     public void initialize(Session session) throws RepositoryException {
-        this.eventBusListener = new HippoEventBusListener();
-        HippoServiceRegistry.registerService(this.eventBusListener, HippoEventBus.class);
+        this.eventBusListener = newListenerInstance();
+        HippoServiceRegistry.register(this.eventBusListener, HippoEventBusListener.class);
     }
-    
+
+    @NotNull
+    protected HippoEventBusListenerImpl newListenerInstance() {
+        return new HippoEventBusListenerImpl();
+    }
+
     /**
      * Unregister the service
      */
     @Override
     public void shutdown() {
-        HippoServiceRegistry.unregisterService(this.eventBusListener, HippoEventBus.class);
+        HippoServiceRegistry.unregister(this.eventBusListener, HippoEventBusListener.class);
     }
 }

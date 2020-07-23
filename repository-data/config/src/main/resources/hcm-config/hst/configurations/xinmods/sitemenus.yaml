@@ -1,4 +1,4 @@
 definitions:
   config:
-    /hst:hst/hst:configurations/xinmods/hst:sitemenus:
+    /hst:platform/hst:configurations/xinmods/hst:sitemenus:
       jcr:primaryType: hst:sitemenus

@@ -21,6 +21,10 @@
     -->
   </modules>
 
+  <properties>
+    <hippo.ckeditor.version>4.12.1-h2</hippo.ckeditor.version>
+  </properties>
+
   <build>
     <plugins>
       <!-- ARCHE-487: disable jrebel.xml generation for repository-data modules -->

@@ -1,6 +1,6 @@
 definitions:
   config:
-    /hst:hst/hst:configurations/xinmods/hst:sitemap:
+    /hst:platform/hst:configurations/xinmods/hst:sitemap:
       jcr:primaryType: hst:sitemap
       /root:
         jcr:primaryType: hst:sitemapitem

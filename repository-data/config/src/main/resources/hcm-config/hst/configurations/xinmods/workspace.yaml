@@ -1,4 +1,4 @@
 definitions:
   config:
-    /hst:hst/hst:configurations/xinmods/hst:workspace:
+    /hst:platform/hst:configurations/xinmods/hst:workspace:
       jcr:primaryType: hst:workspace

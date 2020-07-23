@@ -1,6 +1,6 @@
 definitions:
   config:
-    /hst:hst/hst:configurations/xinmods/hst:pages/pagenotfound:
+    /hst:platform/hst:configurations/xinmods/hst:pages/pagenotfound:
       jcr:primaryType: hst:component
       hst:referencecomponent: hst:abstractpages/base
       /main:

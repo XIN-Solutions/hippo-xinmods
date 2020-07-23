@@ -1,7 +1,7 @@
 package nz.xinsolutions.beans;
 
 /**
- * Author: Marnix Kok <mkok@btes.co.nz>
+ * Author: Marnix Kok <marnix@xinsolutions.co.nz>
  * Date: 31/01/18.
  *
  *      Clone package payload
