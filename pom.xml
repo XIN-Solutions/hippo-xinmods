@@ -192,23 +192,6 @@
     </pluginManagement>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>create</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <doCheck>false</doCheck>
-          <doUpdate>false</doUpdate>
-          <revisionOnScmFailure>-1</revisionOnScmFailure>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
@@ -239,8 +222,8 @@
         <module>cms-dependencies</module>
         <module>repository-data</module>
         <module>cms</module>
-        <module>site</module>
         <module>essentials</module>
+        <!--<module>site</module>-->
       </modules>
     </profile>
 
@@ -285,17 +268,17 @@
                   <properties>
                     <context>/cms</context>
                   </properties>
-                  <location>${project.basedir}/cms/target/cms.war</location>
+                  <location>${project.basedir}/cms/target/cms</location>
                 </deployable>
-                <deployable>
-                  <location>${project.basedir}/site/target/site.war</location>
+               <!-- <deployable>
+                  <location>${project.basedir}/site/target/site</location>
                   <type>war</type>
                   <properties>
                     <context>/site</context>
                   </properties>
-                </deployable>
+                </deployable>-->
                 <deployable>
-                  <location>${project.basedir}/essentials/target/essentials.war</location>
+                  <location>${project.basedir}/essentials/target/essentials</location>
                   <type>war</type>
                   <properties>
                     <context>/essentials</context>
@@ -358,6 +341,7 @@
       <id>without-content</id>
       <properties>
         <development-module-deploy-dir>temp</development-module-deploy-dir>
+        <docker.brxm.copy.dev.libs.cmd>#</docker.brxm.copy.dev.libs.cmd>
       </properties>
     </profile>
 
