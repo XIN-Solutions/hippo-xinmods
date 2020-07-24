@@ -5,14 +5,14 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-release</artifactId>
-    <version>12.6.9</version>
+    <version>14.1.0</version>
   </parent>
 
   <name>XINmods</name>
   <description>XINmods</description>
   <groupId>nz.xinsolutions</groupId>
   <artifactId>xinmods</artifactId>
-  <version>1.8-SNAPSHOT</version>
+  <version>1.9-SNAPSHOT</version>
   <packaging>pom</packaging>
 
 
@@ -63,20 +63,22 @@
 
     <!--***START temporary override of versions*** -->
     <!-- ***END temporary override of versions*** -->
-    <hippo.essentials-components.version>4.6.3</hippo.essentials-components.version>
 
-    <essentials.version>4.6.3</essentials.version>
+    <essentials.version>14.1.0</essentials.version>
+
     <jsp-api.version>2.2</jsp-api.version>
-    <taglibs.version>1.2.1</taglibs.version>
+    <taglibs.version>1.2.5</taglibs.version>
     <xalan.version>2.7.2</xalan.version>
     <junit.version>4.12</junit.version>
     <easymock.version>3.4</easymock.version>
 
+    <development-module-deploy-dir>shared/lib</development-module-deploy-dir>
     <content-module-deploy-dir>shared/lib</content-module-deploy-dir>
 
     <hippo.cms.locales>nl,de,fr,es,zh</hippo.cms.locales>
 
     <zip-library.version>1.12</zip-library.version>
+    <buildNumber>${maven.build.timestamp}</buildNumber>
   </properties>
 
   <repositories>
@@ -87,98 +89,6 @@
     </repository>
   </repositories>
 
-
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.onehippo.cms7</groupId>
-        <artifactId>hippo-essentials-plugin-sdk-api</artifactId>
-        <version>${essentials.version}</version>
-      </dependency>
-
-      <!-- Hippo Configuration Management -->
-      <dependency>
-        <groupId>org.onehippo.cms</groupId>
-        <artifactId>hippo-configuration-management-api</artifactId>
-        <version>${hippo.configuration-management.version}</version>
-        <scope>provided</scope>
-      </dependency>
-
-
-      <dependency>
-        <groupId>org.onehippo.cms</groupId>
-        <artifactId>hippo-configuration-management-model</artifactId>
-        <version>${hippo.configuration-management.version}</version>
-        <scope>provided</scope>
-      </dependency>
-
-
-      <dependency>
-        <groupId>javax.servlet.jsp</groupId>
-        <artifactId>jsp-api</artifactId>
-        <version>${jsp-api.version}</version>
-        <scope>provided</scope>
-      </dependency>
-
-      <!-- other predefined runtime scope versioned dependencies -->
-      <dependency>
-        <groupId>org.apache.taglibs</groupId>
-        <artifactId>taglibs-standard-spec</artifactId>
-        <version>${taglibs.version}</version>
-        <scope>runtime</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.apache.taglibs</groupId>
-        <artifactId>taglibs-standard-impl</artifactId>
-        <version>${taglibs.version}</version>
-        <scope>runtime</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>xalan</groupId>
-        <artifactId>xalan</artifactId>
-        <version>${xalan.version}</version>
-        <scope>runtime</scope>
-      </dependency>
-      <dependency>
-        <groupId>xalan</groupId>
-        <artifactId>serializer</artifactId>
-        <version>${xalan.version}</version>
-        <scope>runtime</scope>
-      </dependency>
-
-      <!-- other predefined compile scope versioned dependencies -->
-
-      <!-- https://mvnrepository.com/artifact/org.zeroturnaround/zt-zip -->
-      <dependency>
-        <groupId>org.zeroturnaround</groupId>
-        <artifactId>zt-zip</artifactId>
-        <version>${zip-library.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.freemarker</groupId>
-        <artifactId>freemarker</artifactId>
-        <version>${freemarker.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.easymock</groupId>
-        <artifactId>easymock</artifactId>
-        <version>${easymock.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-    </dependencies>
-  </dependencyManagement>
 
   <dependencies>
 
@@ -204,65 +114,73 @@
       <artifactId>hippo-repository-builtin</artifactId>
     </dependency>
 
-    <!-- required shared dependencies
-    <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.5</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId>
-      <version>1.18</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>22.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-beans</artifactId>
-      <version>${spring.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-      <version>${spring.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-      <version>${spring.version}</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-aop</artifactId>
-      <version>${spring.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-expression</artifactId>
-      <version>${spring.version}</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>commons-io</groupId>
-      <artifactId>commons-io</artifactId>
-      <version>2.6</version>
-      <scope>provided</scope>
-    </dependency>
- -->
-
   </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>javax.servlet.jsp</groupId>
+        <artifactId>jsp-api</artifactId>
+        <version>${jsp-api.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <!-- other predefined runtime scope versioned dependencies -->
+      <dependency>
+        <groupId>org.apache.taglibs</groupId>
+        <artifactId>taglibs-standard-spec</artifactId>
+        <version>${taglibs.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.taglibs</groupId>
+        <artifactId>taglibs-standard-impl</artifactId>
+        <version>${taglibs.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.zeroturnaround</groupId>
+        <artifactId>zt-zip</artifactId>
+        <version>${zip-library.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.freemarker</groupId>
+        <artifactId>freemarker</artifactId>
+        <version>${freemarker.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>xalan</groupId>
+        <artifactId>xalan</artifactId>
+        <version>${xalan.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>xalan</groupId>
+        <artifactId>serializer</artifactId>
+        <version>${xalan.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.easymock</groupId>
+        <artifactId>easymock</artifactId>
+        <version>${easymock.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
 
 
   <build>
@@ -300,23 +218,6 @@
     </pluginManagement>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>create</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <doCheck>false</doCheck>
-          <doUpdate>false</doUpdate>
-          <revisionOnScmFailure>-1</revisionOnScmFailure>
-        </configuration>
-      </plugin>
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
@@ -344,10 +245,11 @@
         </property>
       </activation>
       <modules>
+        <module>cms-dependencies</module>
         <module>repository-data</module>
         <module>cms</module>
-        <module>site</module>
         <module>essentials</module>
+        <module>site</module>
       </modules>
     </profile>
 
@@ -392,17 +294,17 @@
                   <properties>
                     <context>/cms</context>
                   </properties>
-                  <location>${project.basedir}/cms/target/cms.war</location>
+                  <location>${project.basedir}/cms/target/cms</location>
                 </deployable>
                 <deployable>
-                  <location>${project.basedir}/site/target/site.war</location>
+                  <location>${project.basedir}/site/webapp/target/site</location>
                   <type>war</type>
                   <properties>
                     <context>/site</context>
                   </properties>
                 </deployable>
                 <deployable>
-                  <location>${project.basedir}/essentials/target/essentials.war</location>
+                  <location>${project.basedir}/essentials/target/essentials</location>
                   <type>war</type>
                   <properties>
                     <context>/essentials</context>
@@ -418,6 +320,7 @@
                 </systemProperties>
 
                 <dependencies>
+<!--
                   <dependency>
                     <groupId>org.onehippo.cms7</groupId>
                     <artifactId>hippo-cms7-commons</artifactId>
@@ -443,6 +346,7 @@
                     <artifactId>hippo-services-autoreload</artifactId>
                     <classpath>shared</classpath>
                   </dependency>
+-->
                   <dependency>
                     <groupId>org.onehippo.cms</groupId>
                     <artifactId>hippo-configuration-management-api</artifactId>
@@ -462,7 +366,8 @@
            $ mvn -P cargo.run,without-content -->
       <id>without-content</id>
       <properties>
-        <content-module-deploy-dir>temp</content-module-deploy-dir>
+        <development-module-deploy-dir>temp</development-module-deploy-dir>
+        <docker.brxm.copy.dev.libs.cmd>#</docker.brxm.copy.dev.libs.cmd>
       </properties>
     </profile>
 
@@ -489,31 +394,6 @@
           <artifactId>log4j-core</artifactId>
           <scope>provided</scope>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
-        <dependency>
-          <groupId>mysql</groupId>
-          <artifactId>mysql-connector-java</artifactId>
-          <version>8.0.13</version>
-        </dependency>
-
-        <dependency>
-          <groupId>org.onehippo.cms</groupId>
-          <artifactId>hippo-configuration-management-api</artifactId>
-          <version>${hippo.configuration-management.version}</version>
-        </dependency>
-
-
-
-        <!--
-                <dependency>
-                  <groupId>mysql</groupId>
-                  <artifactId>mysql-connector-java</artifactId>
-                  <version>6.0.6</version>
-                  <scope>provided</scope>
-                </dependency>
-        -->
-
       </dependencies>
       <build>
         <defaultGoal>validate</defaultGoal>
@@ -565,7 +445,7 @@
 
         <dependency>
           <groupId>org.onehippo.cms</groupId>
-          <artifactId>hippo-configuration-management-api</artifactId>
+          <artifactId>hippo-configuration-management</artifactId>
           <version>${hippo.configuration-management.version}</version>
         </dependency>
 

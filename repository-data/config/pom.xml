@@ -5,20 +5,16 @@
   <parent>
     <groupId>nz.xinsolutions</groupId>
     <artifactId>xinmods-repository-data</artifactId>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.9-SNAPSHOT</version>
   </parent>
 
-  <name>XINmods Repository Data Configuration</name>
+  <name>XINmods - Repository Data - Configuration</name>
   <description>XINmods Repository Data Configuration</description>
   <artifactId>xinmods-repository-data-config</artifactId>
 
   <build>
     <defaultGoal>install</defaultGoal>
     <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
@@ -35,5 +31,4 @@
       </plugin>
     </plugins>
   </build>
-
 </project>

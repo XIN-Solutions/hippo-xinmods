@@ -101,6 +101,11 @@
     <url-pattern>/console/*</url-pattern>
   </filter-mapping>
 
+
+  <listener>
+    <listener-class>org.hippoecm.hst.platform.container.HstCmsContextLoaderListener</listener-class>
+  </listener>
+
   <listener>
     <listener-class>org.hippoecm.frontend.plugins.login.ConcurrentLoginListener</listener-class>
   </listener>

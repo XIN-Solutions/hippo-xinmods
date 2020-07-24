@@ -5,20 +5,17 @@
   <parent>
     <groupId>nz.xinsolutions</groupId>
     <artifactId>xinmods</artifactId>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.9-SNAPSHOT</version>
   </parent>
 
-  <name>XINmods Repository Data</name>
-  <description>XINmods Repository Data</description>
+  <name>XINmods - Repository Data</name>
+  <description>XINmods - Repository Data</description>
   <artifactId>xinmods-repository-data</artifactId>
   <packaging>pom</packaging>
 
   <modules>
     <module>config</module>
-    <!--
-      <module>content</module>
-      <module>webfiles</module>
-    -->
+    <module>site</module>
   </modules>
 
   <build>

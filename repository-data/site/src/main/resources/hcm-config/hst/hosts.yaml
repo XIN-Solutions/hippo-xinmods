@@ -1,0 +1,16 @@
+definitions:
+  config:
+    /hst:hst/hst:hosts:
+      hst:defaultcontextpath: /site
+      /dev-localhost:
+        .meta:residual-child-node-category: content
+        jcr:primaryType: hst:virtualhostgroup
+        hst:defaultport: 8080
+        /localhost:
+          .meta:residual-child-node-category: content
+          jcr:primaryType: hst:virtualhost
+          /hst:root:
+            .meta:residual-child-node-category: content
+            jcr:primaryType: hst:mount
+            hst:homepage: root
+            hst:mountpoint: /hst:myproject/hst:sites/xinmods

@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <project>
-    <applicationSubModule>application</applicationSubModule>
-    <beansFolder>site/src/main/java</beansFolder>
-    <cmsModule>cms</cmsModule>
-    <confirmParams>false</confirmParams>
-    <developmentSubModule>development</developmentSubModule>
-    <enterprise>false</enterprise>
-    <extraTemplates>true</extraTemplates>
     <projectNamespace>xinmods</projectNamespace>
-    <repositoryDataModule>repository-data</repositoryDataModule>
+    <confirmParams>false</confirmParams>
+    <selectedProjectPackage>nz.xinsolutions</selectedProjectPackage>
     <selectedBeansPackage>nz.xinsolutions.beans</selectedBeansPackage>
     <selectedComponentsPackage>nz.xinsolutions.components</selectedComponentsPackage>
-    <selectedProjectPackage>nz.xinsolutions</selectedProjectPackage>
     <selectedRestPackage>nz.xinsolutions.rest</selectedRestPackage>
-    <setupDone>true</setupDone>
-    <siteModule>site</siteModule>
-    <templateLanguage>jsp</templateLanguage>
+    <hstRoot>/hst:myproject</hstRoot>
+    <webfileBundleName>site</webfileBundleName>
+    <setupDone>false</setupDone>
     <useSamples>true</useSamples>
-    <webfilesSubModule>webfiles</webfilesSubModule>
+    <extraTemplates>true</extraTemplates>
+    <templateLanguage>jsp</templateLanguage>
 </project>

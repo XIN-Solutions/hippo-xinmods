@@ -1,0 +1,7 @@
+definitions:
+  config:
+    /hst:hst/hst:sites:
+      .meta:residual-child-node-category: content
+      /xinmods:
+        jcr:primaryType: hst:site
+        hst:content: /content
