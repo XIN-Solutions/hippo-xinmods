@@ -25,14 +25,12 @@
             <artifactId>aws-java-sdk-bundle</artifactId>
             <version>${aws.version}</version>
         </dependency>
-<!--
 
         <dependency>
             <groupId>nz.xinsolutions</groupId>
             <artifactId>xinmods-repository-data-config</artifactId>
             <version>${project.version}</version>
         </dependency>
--->
 
         <dependency>
             <groupId>org.onehippo.cms7</groupId>

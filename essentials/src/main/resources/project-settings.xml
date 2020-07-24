@@ -6,7 +6,7 @@
     <selectedBeansPackage>nz.xinsolutions.beans</selectedBeansPackage>
     <selectedComponentsPackage>nz.xinsolutions.components</selectedComponentsPackage>
     <selectedRestPackage>nz.xinsolutions.rest</selectedRestPackage>
-    <hstRoot>/hst:xinmods</hstRoot>
+    <hstRoot>/hst:myproject</hstRoot>
     <webfileBundleName>site</webfileBundleName>
     <setupDone>false</setupDone>
     <useSamples>true</useSamples>
