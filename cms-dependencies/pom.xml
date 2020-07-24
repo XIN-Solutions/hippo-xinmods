@@ -36,6 +36,16 @@
             <groupId>org.onehippo.cms7</groupId>
             <artifactId>hippo-package-cms-dependencies</artifactId>
             <type>pom</type>
+<!--
+            <exclusions>
+
+                <exclusion>
+                    <groupId>org.onehippo.cms7</groupId>
+                    <artifactId>hippo-addon-channel-manager-frontend</artifactId>
+                </exclusion>
+
+            </exclusions>
+-->
         </dependency>
 
         <dependency>
