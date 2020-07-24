@@ -58,5 +58,17 @@
             <artifactId>hippo-plugin-selections-addon-repository</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.onehippo.cms7</groupId>
+            <artifactId>hippo-plugin-content-blocks</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.onehippo.cms7</groupId>
+            <artifactId>hippo-plugin-content-tagging</artifactId>
+        </dependency>
+
+
+
     </dependencies>
 </project>

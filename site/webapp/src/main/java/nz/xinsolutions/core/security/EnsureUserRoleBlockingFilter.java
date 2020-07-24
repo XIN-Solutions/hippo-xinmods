@@ -93,12 +93,13 @@ public class EnsureUserRoleBlockingFilter implements Filter {
         // login to repo and check memberships
         try (AutoCloseableSession adminSession = closeableSession(loginAdministrative())) {
 
-            LOG.debug("Remote user: {}", httpRequest.getRemoteUser());
+            String remoteUser = httpRequest.getRemoteUser();
+            LOG.debug("Remote user: {}", remoteUser);
 
-            List<String> userGroups = queryUserGroups(httpRequest.getRemoteUser(), adminSession);
+            List<String> userGroups = queryUserGroups(remoteUser, adminSession);
             LOG.debug("Has groups: {}", userGroups);
 
-            if (!foundValidGroupMembership(userGroups)) {
+            if (!isAdministrator(remoteUser) && !foundValidGroupMembership(userGroups)) {
                 httpResponse.sendError(SC_FORBIDDEN, "No allowed group memberships found.");
                 return;
             }
@@ -113,6 +114,13 @@ public class EnsureUserRoleBlockingFilter implements Filter {
         // continue chain
         chain.doFilter(request, response);
 
+    }
+
+    /**
+     * @return true if it's an administrator
+     */
+    protected boolean isAdministrator(String remoteUser) {
+        return "admin".equals(remoteUser);
     }
 
     /**
