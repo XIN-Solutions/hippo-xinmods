@@ -1,5 +1,4 @@
 /hst:hst/hst:hosts/dev-localhost/localhost/hst:root/api:
-  jcr:primaryType: hst:mount
   hst:alias: api
   hst:ismapped: false
   hst:namedpipeline: RestApiPipeline
