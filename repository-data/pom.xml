@@ -8,13 +8,14 @@
     <version>1.9-SNAPSHOT</version>
   </parent>
 
-  <name>XINmods Repository Data</name>
-  <description>XINmods Repository Data</description>
+  <name>XINmods - Repository Data</name>
+  <description>XINmods - Repository Data</description>
   <artifactId>xinmods-repository-data</artifactId>
   <packaging>pom</packaging>
 
   <modules>
     <module>config</module>
+    <module>site</module>
   </modules>
 
   <build>

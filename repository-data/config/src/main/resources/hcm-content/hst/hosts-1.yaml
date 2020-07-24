@@ -1,7 +1,0 @@
-/hst:platform/hst:hosts/dev-localhost/localhost/hst:root/custom-api:
-  jcr:primaryType: hst:mount
-  hst:alias: custom-api
-  hst:ismapped: false
-  hst:namedpipeline: JaxrsRestPlainPipeline
-  hst:types: [rest]
-  hst:subjectbasedsession: true

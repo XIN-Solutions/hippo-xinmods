@@ -11,7 +11,7 @@
 
     <artifactId>xinmods-cms</artifactId>
     <packaging>war</packaging>
-    <name>XINmods CMS</name>
+    <name>XINmods - CMS</name>
     <description>XINmods CMS</description>
 
     <properties>

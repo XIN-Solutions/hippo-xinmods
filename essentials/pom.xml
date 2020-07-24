@@ -8,7 +8,7 @@
   </parent>
   <artifactId>xinmods-essentials</artifactId>
   <packaging>war</packaging>
-  <name>XINmods Essentials</name>
+  <name>XINmods - Essentials</name>
   <description>XINmods Essentials</description>
   <dependencies>
     <dependency>

@@ -1,6 +1,6 @@
-group: 
+group:
   name: xinmods
   after: hippo-cms
 project: xinmods
 module:
-  name: xinmods-repository-data-config
+  name: xinmods-repository-data-site

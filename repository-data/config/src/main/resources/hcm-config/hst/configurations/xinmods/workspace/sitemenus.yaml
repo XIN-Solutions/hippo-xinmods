@@ -1,9 +1,0 @@
-definitions:
-  config:
-    /hst:platform/hst:configurations/xinmods/hst:workspace/hst:sitemenus:
-      jcr:primaryType: hst:sitemenus
-      /main:
-        jcr:primaryType: hst:sitemenu
-        /home:
-          jcr:primaryType: hst:sitemenuitem
-          hst:referencesitemapitem: root

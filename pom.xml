@@ -223,7 +223,7 @@
         <module>repository-data</module>
         <module>cms</module>
         <module>essentials</module>
-        <!--<module>site</module>-->
+        <module>site</module>
       </modules>
     </profile>
 
@@ -270,13 +270,13 @@
                   </properties>
                   <location>${project.basedir}/cms/target/cms</location>
                 </deployable>
-               <!-- <deployable>
-                  <location>${project.basedir}/site/target/site</location>
+                <deployable>
+                  <location>${project.basedir}/site/webapp/target/site</location>
                   <type>war</type>
                   <properties>
                     <context>/site</context>
                   </properties>
-                </deployable>-->
+                </deployable>
                 <deployable>
                   <location>${project.basedir}/essentials/target/essentials</location>
                   <type>war</type>

@@ -1,4 +1,0 @@
-definitions:
-  config:
-    /hst:platform/hst:configurations/xinmods/hst:prototypepages:
-      jcr:primaryType: hst:pages

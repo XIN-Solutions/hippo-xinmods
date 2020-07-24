@@ -8,9 +8,9 @@
     <version>1.9-SNAPSHOT</version>
   </parent>
 
-  <name>XINmods - Repository Data - Configuration</name>
-  <description>XINmods Repository Data Configuration</description>
-  <artifactId>xinmods-repository-data-config</artifactId>
+  <name>XINmods - Repository Data - Site</name>
+  <description>XINmods Repository Data Site</description>
+  <artifactId>xinmods-repository-data-site</artifactId>
 
   <build>
     <defaultGoal>install</defaultGoal>
