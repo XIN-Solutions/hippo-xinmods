@@ -297,25 +297,21 @@
       <url-pattern>/api/*</url-pattern>
     </web-resource-collection>
 
-    <web-resource-collection>
-      <web-resource-name>Login</web-resource-name>
-      <url-pattern>/login/resource</url-pattern>
-    </web-resource-collection>
     <auth-constraint>
-      <role-name>everybody</role-name>
+      <role-name>*</role-name>
     </auth-constraint>
 
   </security-constraint>
 
   <login-config>
     <auth-method>BASIC</auth-method>
-    <realm-name>ApiLogin</realm-name>
+    <realm-name>HSTSITE</realm-name>
   </login-config>
 
 
   <security-role>
     <description>Default role of Bloomreach Repository</description>
-    <role-name>everybody</role-name>
+    <role-name>*</role-name>
   </security-role>
 
   <error-page>

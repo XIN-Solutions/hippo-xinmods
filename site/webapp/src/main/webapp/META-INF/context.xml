@@ -2,7 +2,7 @@
 <Context crossContext="true" reloadable="true">
 
   <Realm className="org.apache.catalina.realm.JAASRealm"
-         appName="ApiLogin"
+         appName="HSTSITE"
          userClassNames="org.hippoecm.hst.security.TransientUser"
          roleClassNames="org.hippoecm.hst.security.TransientRole"
          useContextClassLoader="true"

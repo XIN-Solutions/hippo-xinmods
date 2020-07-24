@@ -90,6 +90,32 @@
   </repositories>
 
 
+  <dependencies>
+
+    <dependency>
+      <groupId>org.onehippo.cms</groupId>
+      <artifactId>hippo-configuration-management-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-cms7-commons</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-services</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-repository-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.onehippo.cms7</groupId>
+      <artifactId>hippo-repository-builtin</artifactId>
+    </dependency>
+
+  </dependencies>
+
   <dependencyManagement>
     <dependencies>
 
@@ -292,9 +318,9 @@
                   <project.basedir>${project.basedir}</project.basedir>
                   <send.usage.statistics.to.hippo>false</send.usage.statistics.to.hippo>
                 </systemProperties>
-<!--
 
                 <dependencies>
+<!--
                   <dependency>
                     <groupId>org.onehippo.cms7</groupId>
                     <artifactId>hippo-cms7-commons</artifactId>
@@ -320,13 +346,13 @@
                     <artifactId>hippo-services-autoreload</artifactId>
                     <classpath>shared</classpath>
                   </dependency>
+-->
                   <dependency>
                     <groupId>org.onehippo.cms</groupId>
                     <artifactId>hippo-configuration-management-api</artifactId>
                     <classpath>shared</classpath>
                   </dependency>
                 </dependencies>
--->
 
               </container>
             </configuration>
@@ -417,13 +443,11 @@
           <scope>provided</scope>
         </dependency>
 
-<!--
         <dependency>
           <groupId>org.onehippo.cms</groupId>
-          <artifactId>hippo-configuration-management-api</artifactId>
+          <artifactId>hippo-configuration-management</artifactId>
           <version>${hippo.configuration-management.version}</version>
         </dependency>
--->
 
       </dependencies>
       <build>
