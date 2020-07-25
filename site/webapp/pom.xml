@@ -52,27 +52,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!--
-            <dependency>
-              <groupId>org.onehippo.cms7.hst.dependencies</groupId>
-              <artifactId>hst-server-dependencies</artifactId>
-              <type>pom</type>
-            </dependency>
-        -->
-        <!--
-                <dependency>
-                  <groupId>org.onehippo.cms7.hst.dependencies</groupId>
-                  <artifactId>hst-spring-dependencies</artifactId>
-                  <type>pom</type>
-                </dependency>
-            -->
-        <!--
-            <dependency>
-              <groupId>org.onehippo.cms7.hst.dependencies</groupId>
-              <artifactId>hst-client-dependencies</artifactId>
-              <type>pom</type>
-            </dependency>
-        -->
         <dependency>
             <groupId>org.onehippo.cms</groupId>
             <artifactId>hippo-configuration-management-api</artifactId>
@@ -98,83 +77,17 @@
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
         </dependency>
-        <!-- <dependency>
-           <groupId>org.onehippo.cms7.hst.client-modules</groupId>
-           <artifactId>hst-cms-rest</artifactId>
-         </dependency>-->
-<!--
-        <dependency>
-            <groupId>org.onehippo.cms7.hst.client-modules</groupId>
-            <artifactId>hst-page-composer</artifactId>
-        </dependency>
--->
-<!--
-        <dependency>
-            <groupId>org.onehippo.cms7.hst.components</groupId>
-            <artifactId>hst-security</artifactId>
-        </dependency>
--->
-<!--
-        <dependency>
-            <groupId>org.onehippo.cms7</groupId>
-            <artifactId>hippo-plugin-selections-hst-client</artifactId>
-        </dependency>
--->
-        <!--
-            <dependency>
-              <groupId>org.onehippo.cms7</groupId>
-              <artifactId>hippo-essentials-plugin-sdk-api</artifactId>
-            </dependency>
-        -->
-<!--        <dependency>
-            <groupId>org.onehippo.cms7</groupId>
-            <artifactId>hippo-essentials-components-hst</artifactId>
-        </dependency>-->
+
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <scope>test</scope>
         </dependency>
 
-<!--        <dependency>
-            <groupId>org.onehippo.cms7.hst</groupId>
-            <artifactId>hst-mock</artifactId>
-            <scope>test</scope>
-        </dependency>-->
-
-<!--
-        <dependency>
-            <groupId>org.onehippo.cms7</groupId>
-            <artifactId>hippo-plugin-taxonomy-api</artifactId>
-            <scope>compile</scope>
-        </dependency>
--->
-
-<!--
-        <dependency>
-            <groupId>org.onehippo.cms7</groupId>
-            <artifactId>hippo-plugin-taxonomy-hst-api</artifactId>
-            <scope>compile</scope>
-        </dependency>
--->
-
-<!--
-        <dependency>
-            <groupId>org.onehippo.cms7</groupId>
-            <artifactId>hippo-plugin-taxonomy-hstclient</artifactId>
-            <scope>compile</scope>
-        </dependency>
--->
-
         <dependency>
             <groupId>org.zeroturnaround</groupId>
             <artifactId>zt-zip</artifactId>
         </dependency>
-
-<!--        <dependency>
-            <groupId>org.onehippo.cms7</groupId>
-            <artifactId>hippo-repository-engine</artifactId>
-        </dependency>-->
 
         <dependency>
             <groupId>com.github.fge</groupId>

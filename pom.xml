@@ -320,33 +320,7 @@
                 </systemProperties>
 
                 <dependencies>
-<!--
-                  <dependency>
-                    <groupId>org.onehippo.cms7</groupId>
-                    <artifactId>hippo-cms7-commons</artifactId>
-                    <classpath>shared</classpath>
-                  </dependency>
-                  <dependency>
-                    <groupId>org.onehippo.cms7</groupId>
-                    <artifactId>hippo-services</artifactId>
-                    <classpath>shared</classpath>
-                  </dependency>
-                  <dependency>
-                    <groupId>org.onehippo.cms7</groupId>
-                    <artifactId>hippo-repository-api</artifactId>
-                    <classpath>shared</classpath>
-                  </dependency>
-                  <dependency>
-                    <groupId>org.onehippo.cms7</groupId>
-                    <artifactId>hippo-repository-builtin</artifactId>
-                    <classpath>shared</classpath>
-                  </dependency>
-                  <dependency>
-                    <groupId>org.onehippo.cms7</groupId>
-                    <artifactId>hippo-services-autoreload</artifactId>
-                    <classpath>shared</classpath>
-                  </dependency>
--->
+
                   <dependency>
                     <groupId>org.onehippo.cms</groupId>
                     <artifactId>hippo-configuration-management-api</artifactId>
