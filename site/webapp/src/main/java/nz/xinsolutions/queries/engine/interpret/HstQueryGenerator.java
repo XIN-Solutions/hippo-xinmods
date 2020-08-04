@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static nz.xinsolutions.queries.engine.interpret.CompoundBehaviour.*;
+
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
  * Date: 22/08/17
@@ -29,12 +31,12 @@ import java.util.stream.Collectors;
  *
  */
 public class HstQueryGenerator {
-    
+
     /**
      * Logger
      */
     private static final Logger LOG = LoggerFactory.getLogger(HstQueryGenerator.class);
-    
+
     /**
      * Create an hst query for the settings object that was pushed in
      *
@@ -44,15 +46,15 @@ public class HstQueryGenerator {
      * @return is the hst query instance
      */
     public static HstQuery createQueryFromSettings(HstQueryManager qMgr, QuerySettings settings, MultivaluedMap<String, String> queryParams) {
-    
+
         try {
             HstQuery query = qMgr.createQuery((Node) null, settings.isUseSubtypes(), settings.getBeanName());
-            
+
             // set limit
             if (settings.getLimit() != null) {
                 query.setLimit(settings.getLimit());
             }
-            
+
             // set offset
             if (settings.getOffset() != null) {
                 query.setOffset(settings.getOffset());
@@ -75,53 +77,65 @@ public class HstQueryGenerator {
             // have some where clause?
             if (settings.getWhereState() != null) {
                 Filter filter = query.createFilter();
-                fromWhereState(settings.getWhereState(), query, queryParams, filter);
                 query.setFilter(filter);
+                fromWhereState(settings.getWhereState(), query, queryParams, filter, Toplevel);
             }
-            
+
             LOG.info("Prepared JCR query: " + query.getQueryAsString(true));
-            
+
             return query;
         }
         catch (Exception ex) {
             LOG.error("Could not create hstQuery, caused by: ", ex);
             throw new IllegalStateException(ex);
         }
-        
+
     }
-    
+
     /**
-     * Create a query filter from the rule state
+     * Create a query filter from the rule state.
+     * 
+     * Rather confusing nesting behaviours can be found here:
+     * - https://documentation.bloomreach.com/14/library/concepts/search/nesting-hstquery-filters.html
      *
      * @param queryParams
      * @param filter
      */
-    protected static void fromWhereState(RuleState whereState, HstQuery query, MultivaluedMap<String, String> queryParams, Filter filter) throws FilterException {
+    protected static void fromWhereState(RuleState whereState, HstQuery query, MultivaluedMap<String, String> queryParams, Filter filter, CompoundBehaviour cBehaviour) throws FilterException {
 
         for (RuleState subState : whereState.subStates) {
-            
+
             switch (subState.ruleName) {
-                
+
                 case "expr_compound": {
                     TokenElement compound = subState.findToken("op_compound");
                     switch (compound.getValue()) {
-                        
+
                         case "and":
                             Filter andFilter = query.createFilter();
-                            fromWhereState(subState, query, queryParams, andFilter);
-                            filter.addAndFilter(andFilter);
+                            fromWhereState(subState, query, queryParams, andFilter, And);
+                            if (cBehaviour == Or) {
+                                filter.addOrFilter(andFilter);
+                            } else {
+                                filter.addAndFilter(andFilter);
+                            }
                             break;
-                            
+
                         case "or":
                             Filter orFilter = query.createFilter();
-                            fromWhereState(subState, query, queryParams, orFilter);
-                            filter.addOrFilter(orFilter);
+                            fromWhereState(subState, query, queryParams, orFilter, Or);
+
+                            if (cBehaviour == Or) {
+                                filter.addOrFilter(orFilter);
+                            } else {
+                                filter.addAndFilter(orFilter);
+                            }
                             break;
-    
+
                     }
                     break;
                 }
-                
+
                 case "expr_binary_cmp": {
                     TokenElement binary = subState.findToken("op_binary");
                     TokenElement property = subState.findToken("varname");
@@ -129,82 +143,102 @@ public class HstQueryGenerator {
 
                     Object sanitised = sanitise(value, queryParams);
                     String propertyName = property.getValue();
-                    
+
+                    Filter activeFilter = query.createFilter();
+
                     switch (binary.getValue()) {
-                        
+
                         case "contains":
-                            filter.addContains(propertyName, sanitised.toString());
+                            activeFilter.addContains(propertyName, sanitised.toString());
                             break;
-                            
+
                         case "!contains":
-                            filter.addNotContains(propertyName, sanitised.toString());
-                            
+                            activeFilter.addNotContains(propertyName, sanitised.toString());
+                            break;
+
                         case ">":
                         case "gt":
-                            filter.addGreaterThan(propertyName, sanitised);
+                            activeFilter.addGreaterThan(propertyName, sanitised);
                             break;
-                            
+
                         case ">=":
                         case "gte":
-                            filter.addGreaterOrEqualThan(propertyName, sanitised);
+                            activeFilter.addGreaterOrEqualThan(propertyName, sanitised);
                             break;
-                            
+
                         case "<":
                         case "lt":
-                            filter.addLessThan(propertyName, sanitised);
+                            activeFilter.addLessThan(propertyName, sanitised);
                             break;
-                            
+
                         case "<=":
                         case "lte":
-                            filter.addLessOrEqualThan(propertyName, sanitised);
+                            activeFilter.addLessOrEqualThan(propertyName, sanitised);
                             break;
-                        
+
                         case "=":
                         case "eq":
-                            filter.addEqualTo(propertyName, sanitised);
+                            activeFilter.addEqualTo(propertyName, sanitised);
                             break;
-                            
+
                         case "!=":
                         case "neq":
-                            filter.addNotEqualTo(propertyName, sanitised);
+                            activeFilter.addNotEqualTo(propertyName, sanitised);
                             break;
-                            
+
                         case "i=":
                         case "ieq":
-                            filter.addEqualToCaseInsensitive(propertyName, sanitised.toString());
+                            activeFilter.addEqualToCaseInsensitive(propertyName, sanitised.toString());
                             break;
-                            
+
                         case "i!=":
                         case "ineq":
-                            filter.addNotEqualToCaseInsensitive(propertyName, sanitised.toString());
+                            activeFilter.addNotEqualToCaseInsensitive(propertyName, sanitised.toString());
                             break;
+                    }
+
+                    LOG.info("Behaviour: {}", cBehaviour);
+                    if (cBehaviour == Or) {
+                        filter.addOrFilter(activeFilter);
+                    } else {
+                        filter.addAndFilter(activeFilter);
                     }
                     break;
                 }
-                
+
                 case "expr_unary_cmp":
 
                     TokenElement unary = subState.findToken("op_unary");
                     TokenElement property = subState.findToken("varname");
                     String propertyValue = property.getValue();
-                    
+
+                    Filter activeFilter = query.createFilter();
+
                     switch (unary.getValue()) {
-                        
+
                         case "null": {
-                            filter.addIsNull(propertyValue);
+                            activeFilter.addIsNull(propertyValue);
                             break;
                         }
-                        
+
                         case "notnull": {
-                            filter.addNotNull(propertyValue);
+                            activeFilter.addNotNull(propertyValue);
                             break;
                         }
                     }
-                    
+
+                    LOG.info("Behaviour: {}", cBehaviour);
+                    if (cBehaviour == Or) {
+                        filter.addOrFilter(activeFilter);
+                    } else {
+                        filter.addAndFilter(activeFilter);
+                    }
                     break;
-                
+
             }
         }
+
+        LOG.debug(".. {}", filter.getJcrExpression());
         
     }
     
