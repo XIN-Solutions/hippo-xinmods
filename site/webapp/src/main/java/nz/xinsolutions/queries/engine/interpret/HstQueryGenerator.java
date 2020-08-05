@@ -16,7 +16,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.ws.rs.core.MultivaluedMap;
+import java.time.ZonedDateTime;
 import java.util.Collections;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -92,11 +94,22 @@ public class HstQueryGenerator {
 
     }
 
+    protected static Object typeWrapped(Object val, String type) {
+        if (type == null) {
+            return val;
+        }
+
+        if (type.equalsIgnoreCase("date")) {
+            ZonedDateTime dateTime = ZonedDateTime.parse(val.toString());
+            return GregorianCalendar.from(dateTime);
+        }
+
+        return val;
+    }
+
     /**
      * Create a query filter from the rule state.
-     * 
-     * Rather confusing nesting behaviours can be found here:
-     * - https://documentation.bloomreach.com/14/library/concepts/search/nesting-hstquery-filters.html
+     * Rather confusing nesting behaviours can be found here: https://documentation.bloomreach.com/14/library/concepts/search/nesting-hstquery-filters.html
      *
      * @param queryParams
      * @param filter
@@ -114,7 +127,6 @@ public class HstQueryGenerator {
                         case "and":
                             Filter andFilter = query.createFilter();
                             fromWhereState(subState, query, queryParams, andFilter, And);
-
                             if (cBehaviour == Or) {
                                 filter.addOrFilter(andFilter);
                             } else {
@@ -144,6 +156,12 @@ public class HstQueryGenerator {
 
                     Object sanitised = sanitise(value, queryParams);
                     String propertyName = property.getValue();
+                    String type = null;
+                    if (propertyName.contains("@")) {
+                        String[] splitVar = propertyName.split("@");
+                        type = splitVar[1];
+                        propertyName = splitVar[0];
+                    }
 
                     Filter activeFilter = query.createFilter();
 
@@ -159,32 +177,32 @@ public class HstQueryGenerator {
 
                         case ">":
                         case "gt":
-                            activeFilter.addGreaterThan(propertyName, sanitised);
+                            activeFilter.addGreaterThan(propertyName, typeWrapped(sanitised, type));
                             break;
 
                         case ">=":
                         case "gte":
-                            activeFilter.addGreaterOrEqualThan(propertyName, sanitised);
+                            activeFilter.addGreaterOrEqualThan(propertyName, typeWrapped(sanitised, type));
                             break;
 
                         case "<":
                         case "lt":
-                            activeFilter.addLessThan(propertyName, sanitised);
+                            activeFilter.addLessThan(propertyName, typeWrapped(sanitised, type));
                             break;
 
                         case "<=":
                         case "lte":
-                            activeFilter.addLessOrEqualThan(propertyName, sanitised);
+                            activeFilter.addLessOrEqualThan(propertyName, typeWrapped(sanitised, type));
                             break;
 
                         case "=":
                         case "eq":
-                            activeFilter.addEqualTo(propertyName, sanitised);
+                            activeFilter.addEqualTo(propertyName, typeWrapped(sanitised, type));
                             break;
 
                         case "!=":
                         case "neq":
-                            activeFilter.addNotEqualTo(propertyName, sanitised);
+                            activeFilter.addNotEqualTo(propertyName, typeWrapped(sanitised, type));
                             break;
 
                         case "i=":
@@ -198,7 +216,7 @@ public class HstQueryGenerator {
                             break;
                     }
 
-                    LOG.debug("Behaviour: {}", cBehaviour);
+                    LOG.info("Behaviour: {}", cBehaviour);
                     if (cBehaviour == Or) {
                         filter.addOrFilter(activeFilter);
                     } else {
@@ -228,7 +246,7 @@ public class HstQueryGenerator {
                         }
                     }
 
-                    LOG.debug("Behaviour: {}", cBehaviour);
+                    LOG.info("Behaviour: {}", cBehaviour);
                     if (cBehaviour == Or) {
                         filter.addOrFilter(activeFilter);
                     } else {
@@ -239,7 +257,7 @@ public class HstQueryGenerator {
             }
         }
 
-        LOG.debug(".. {}", filter.getJcrExpression());
+        LOG.info(".. {}", filter.getJcrExpression());
         
     }
     
