@@ -114,6 +114,7 @@ public class HstQueryGenerator {
                         case "and":
                             Filter andFilter = query.createFilter();
                             fromWhereState(subState, query, queryParams, andFilter, And);
+
                             if (cBehaviour == Or) {
                                 filter.addOrFilter(andFilter);
                             } else {
@@ -197,7 +198,7 @@ public class HstQueryGenerator {
                             break;
                     }
 
-                    LOG.info("Behaviour: {}", cBehaviour);
+                    LOG.debug("Behaviour: {}", cBehaviour);
                     if (cBehaviour == Or) {
                         filter.addOrFilter(activeFilter);
                     } else {
@@ -227,7 +228,7 @@ public class HstQueryGenerator {
                         }
                     }
 
-                    LOG.info("Behaviour: {}", cBehaviour);
+                    LOG.debug("Behaviour: {}", cBehaviour);
                     if (cBehaviour == Or) {
                         filter.addOrFilter(activeFilter);
                     } else {
