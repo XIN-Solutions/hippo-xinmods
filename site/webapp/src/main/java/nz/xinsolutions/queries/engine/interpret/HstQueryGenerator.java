@@ -216,7 +216,7 @@ public class HstQueryGenerator {
                             break;
                     }
 
-                    LOG.info("Behaviour: {}", cBehaviour);
+                    LOG.debug("Behaviour: {}", cBehaviour);
                     if (cBehaviour == Or) {
                         filter.addOrFilter(activeFilter);
                     } else {
@@ -246,7 +246,7 @@ public class HstQueryGenerator {
                         }
                     }
 
-                    LOG.info("Behaviour: {}", cBehaviour);
+                    LOG.debug("Behaviour: {}", cBehaviour);
                     if (cBehaviour == Or) {
                         filter.addOrFilter(activeFilter);
                     } else {
@@ -257,7 +257,7 @@ public class HstQueryGenerator {
             }
         }
 
-        LOG.info(".. {}", filter.getJcrExpression());
+        LOG.debug(".. {}", filter.getJcrExpression());
         
     }
     

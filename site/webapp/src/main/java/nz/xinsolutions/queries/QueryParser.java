@@ -250,7 +250,7 @@ public class QueryParser {
              text("prop_start", "["),
              text("prop_end", "]"),
             
-            regex("varname", "[A-Za-z]+:[A-Za-z0-9:/]+"),
+            regex("varname", "[A-Za-z]+:[A-Za-z0-9:/@]+"),
             regex("value", "'(?:[^'\\\\]|\\\\.)*'|[0-9]+|true|false|\\$[A-Za-z][A-Za-z0-9]*")
         
         );
