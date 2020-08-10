@@ -2,8 +2,5 @@ target/
 *.iml
 .idea/
 storage*
-storage_original/
-storage-empty/
 creds
-/oc-storage-dev/
-/oc-start-local.sh
+*-start-local.sh
