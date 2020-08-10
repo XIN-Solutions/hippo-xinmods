@@ -1,0 +1,11 @@
+.hippo-perspective-dashboard .hippo-perspective-dashboard-panel.left h2 span:nth-child(2)::before {
+    content: "Bloomreach Experience Manager — v";
+}
+
+.hippo-perspective-dashboard .hippo-perspective-dashboard-panel.left h2 span:first-child {
+    display: none;
+}
+
+.login-panel-header-logo {
+    background-image: url("./logo-brxm.svg");
+}
