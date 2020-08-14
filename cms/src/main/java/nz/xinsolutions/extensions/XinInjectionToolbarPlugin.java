@@ -44,7 +44,9 @@ public class XinInjectionToolbarPlugin extends AbstractDocumentWorkflowPlugin {
 
         try {
             Node handle = ((WorkflowDescriptorModel) getDefaultModel()).getNode();
-            String docType = ((Node)handle.getNodes().next()).getPrimaryNodeType().getName();
+            Node nextNode = (Node) handle.getNodes().next();
+            action = action.replace("{uuid}", handle.getIdentifier());
+            String docType = nextNode.getPrimaryNodeType().getName();
     
             LOG.info("Toolbar for doc: " + handle.getPath());
     
