@@ -3,7 +3,18 @@ package nz.xinsolutions.bus;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import com.amazonaws.thirdparty.apache.http.HttpEntity;
+import com.amazonaws.thirdparty.apache.http.StatusLine;
+import com.amazonaws.thirdparty.apache.http.client.HttpClient;
+import com.amazonaws.thirdparty.apache.http.client.methods.CloseableHttpResponse;
+import com.amazonaws.thirdparty.apache.http.client.methods.HttpPost;
+import com.amazonaws.thirdparty.apache.http.entity.ContentType;
+import com.amazonaws.thirdparty.apache.http.entity.StringEntity;
+import com.amazonaws.thirdparty.apache.http.impl.client.CloseableHttpClient;
+import com.amazonaws.thirdparty.apache.http.impl.client.HttpClientBuilder;
+import com.amazonaws.thirdparty.apache.http.impl.client.HttpClients;
 import com.amazonaws.util.json.Jackson;
+import nz.xinsolutions.config.XinmodsConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.onehippo.cms7.event.HippoEvent;
@@ -13,6 +24,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
@@ -39,13 +51,20 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener {
     private AmazonSNS sns;
 
     /**
+     * Configuration
+     */
+    private XinmodsConfig config;
+
+    /**
      * Initialise data-members
      */
-    public HippoEventBusListenerImpl() {
+    public HippoEventBusListenerImpl(XinmodsConfig config) {
+        this.config = config;
+
         this.sns =
             AmazonSNSClientBuilder
                 .standard()
-                .withRegion(Regions.AP_SOUTHEAST_2)     // dat sydney
+                .withRegion(Regions.AP_SOUTHEAST_2)
                 .build()
         ;
         
@@ -75,8 +94,58 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener {
     
         String jsonMessage = Jackson.toJsonString(map);
 
+        if (!config.isValid()) {
+            LOG.info("The xinmods configuration was not valid so no messages will be sent.");
+            return;
+        }
 
-        String topicArn = getAwsSnsTopic();
+        for (String topicArn: config.getSNSArns()) {
+            attemptSendToSNS(topicArn, jsonMessage);
+        }
+
+        for (String webhook : config.getWebhookUrls()) {
+            attemptSendToWebhook(webhook, jsonMessage);
+        }
+
+    }
+
+    /**
+     * Try to send the hippo message to a webhook. The webhook will be expected to accept
+     * application/json in the payload of a POST request.
+     *
+     * @param url   the url to post to.
+     * @param payload the payload to embed in the body.
+     */
+    protected void attemptSendToWebhook(String url, String payload) {
+
+        LOG.info("About to send to webhook: {}", url);
+
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            HttpPost request = new HttpPost(url);
+            HttpEntity body = new StringEntity(payload, ContentType.APPLICATION_JSON);
+            request.setEntity(body);
+
+            try (CloseableHttpResponse response = httpClient.execute(request)) {
+                StatusLine statusLine = response.getStatusLine();
+                LOG.info(
+                    "Webhook response status code: {} => {}",
+                    statusLine.getStatusCode(),
+                    statusLine.getReasonPhrase()
+                );
+            }
+        }
+        catch (Exception ex) {
+            LOG.error("Exception sending webhook: ", ex);
+        }
+    }
+
+    /**
+     * Try to send the hippo bus message to an SNS. This will only happen if one was configured
+     * on the command line.
+     *
+     * @param jsonMessage
+     */
+    protected void attemptSendToSNS(String topicArn, String jsonMessage) {
         if (StringUtils.isBlank(topicArn)) {
             LOG.debug("No SNS Arn set, not going to tell anyone what happened.");
             return;

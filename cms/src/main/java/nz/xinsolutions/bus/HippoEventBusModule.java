@@ -1,5 +1,6 @@
 package nz.xinsolutions.bus;
 
+import nz.xinsolutions.config.XinmodsConfig;
 import org.jetbrains.annotations.NotNull;
 import org.onehippo.cms7.services.HippoServiceRegistry;
 import org.onehippo.cms7.services.eventbus.HippoEventListenerRegistry;
@@ -28,7 +29,12 @@ public class HippoEventBusModule implements DaemonModule {
      * Listener instance
      */
     private HippoEventBusListener eventBusListener;
-    
+
+    /**
+     * Xinmods configuration
+     */
+    private XinmodsConfig config;
+
     /**
      * Add the event bus listener to the hippo service registry
      *
@@ -37,13 +43,19 @@ public class HippoEventBusModule implements DaemonModule {
      */
     @Override
     public void initialize(Session session) throws RepositoryException {
+        this.config = newConfigInstance(session);
         this.eventBusListener = newListenerInstance();
         HippoEventListenerRegistry.get().register(this.eventBusListener);
     }
 
     @NotNull
+    protected XinmodsConfig newConfigInstance(Session session) {
+        return new XinmodsConfig(session);
+    }
+
+    @NotNull
     protected HippoEventBusListenerImpl newListenerInstance() {
-        return new HippoEventBusListenerImpl();
+        return new HippoEventBusListenerImpl(this.config);
     }
 
     /**
