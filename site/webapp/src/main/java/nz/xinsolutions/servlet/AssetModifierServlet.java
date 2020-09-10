@@ -6,13 +6,19 @@ import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageWriteParam;
+import javax.imageio.ImageWriter;
+import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
+import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
@@ -85,6 +91,8 @@ public class AssetModifierServlet extends HttpServlet {
 			return;
 		}
 
+		Float quality = null;
+
 		// go over all the instructions we found
 		for (Instruction instr : instruction) {
 
@@ -97,6 +105,12 @@ public class AssetModifierServlet extends HttpServlet {
 			else if (instr.getName().equals("filter")) {
 				buffImg = filter(buffImg, instr);
 			}
+			else if (instr.getName().equals("quality")) {
+				String qualityStr = instr.getParam(0);
+				if (qualityStr != null) {
+					quality = Float.parseFloat(qualityStr);
+				}
+			}
 			else {
 				LOG.info("Do not know about: {}", instr.getName());
 			}
@@ -106,8 +120,30 @@ public class AssetModifierServlet extends HttpServlet {
 		// set the response headers
 		setImageResponseHeaders(resp, ext);
 
-		// write the resulting image to the response
-		ImageIO.write(buffImg, ext, resp.getOutputStream());
+		if (shouldRenderWithQualitySettings(ext, quality)) {
+			// create quality parameters
+			JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
+			jpegParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
+			jpegParams.setCompressionQuality(Math.min(1, Math.max(0, quality)));
+
+			// image writer instance, set output stream
+			ImageWriter imgWriter = ImageIO.getImageWritersByFormatName("jpg").next();
+			ImageOutputStream imgOutputStream = ImageIO.createImageOutputStream(resp.getOutputStream());
+			imgWriter.setOutput(imgOutputStream);
+
+			// do the magic
+			IIOImage iioImage = new IIOImage(buffImg, null, null);
+			imgWriter.write(null, iioImage, jpegParams);
+
+		}
+		else {
+			// write the resulting image to the response
+			ImageIO.write(buffImg, ext, resp.getOutputStream());
+		}
+	}
+
+	private boolean shouldRenderWithQualitySettings(String ext, Float quality) {
+		return (ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg")) && quality != null;
 	}
 
 
