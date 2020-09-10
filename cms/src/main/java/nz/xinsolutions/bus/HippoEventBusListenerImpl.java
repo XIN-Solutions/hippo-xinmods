@@ -135,7 +135,7 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener {
             }
         }
         catch (Exception ex) {
-            LOG.error("Exception sending webhook: ", ex);
+            LOG.error("Exception sending webhook: ", ex.getMessage());
         }
     }
 

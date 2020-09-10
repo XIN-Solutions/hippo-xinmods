@@ -9,3 +9,9 @@
 
 [xinmods:basedocument] > hippo:document, hippostd:publishableSummary, hippostdpubwf:document
   orderable
+
+[xinmods:page] > hippostd:relaxed, hippotranslation:translated, xinmods:basedocument
+  orderable
+
+[xinmods:rigidfolder]
+  mixin

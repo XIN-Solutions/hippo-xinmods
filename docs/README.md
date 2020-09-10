@@ -55,6 +55,21 @@ curl -X GET -H "Content-Type: application/json" "http://localhost:8080/site/cust
 ```
 
 
+# SNS/Webhooks 
+
+Configure a module configuration here:
+
+    /hippo:configuration/hippo:modules/xinmods/hippo:moduleconfig
+    
+With allowed values:
+
+    snsTopics : string[] -- a list of SNS topics to write hippo bus events to
+    webhooks : string[] -- a list of webhooks to POST the JSON payload of the hippo bus event to.
+    
+# Rigid Folders
+
+Out of the box the `xinmods` namespace has a `xinmods:rigidfolder` mixin. If the common package has been installed
+and a folder has been tagged with this mixin, authors will not be able to do any workflow actions on this folder. 
 
 # Extension points
 
