@@ -4,4 +4,5 @@
   hst:ismapped: false
   hst:namedpipeline: JaxrsRestPlainPipeline
   hst:types: [rest]
+  hst:responseheaders: ['Access-Control-Allow-Origin: *']
   hst:subjectbasedsession: true

@@ -71,6 +71,11 @@
   </filter>
 
   <filter>
+    <filter-name>OptionsMethodAnswerFilter</filter-name>
+    <filter-class>nz.xinsolutions.core.security.OptionsMethodAnswerFilter</filter-class>
+  </filter>
+
+  <filter>
     <filter-name>AuthenticationSubjectPersistFilter</filter-name>
     <filter-class>nz.xinsolutions.core.security.AuthenticationSubjectPersistFilter</filter-class>
   </filter>
@@ -107,6 +112,12 @@
     <filter-name>PingFilter</filter-name>
     <filter-class>org.hippoecm.hst.container.PingFilter</filter-class>
   </filter>
+
+  <filter-mapping>
+    <filter-name>OptionsMethodAnswerFilter</filter-name>
+    <url-pattern>/custom-api/*</url-pattern>
+    <url-pattern>/api/*</url-pattern>
+  </filter-mapping>
 
   <filter-mapping>
     <filter-name>AuthenticationSubjectPersistFilter</filter-name>
@@ -276,6 +287,20 @@
     <servlet-name>HstResourceServlet</servlet-name>
     <url-pattern>/resources/*</url-pattern>
   </servlet-mapping>
+
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>CORS Options Handling</web-resource-name>
+      <url-pattern>/custom-api/*</url-pattern>
+      <http-method>OPTIONS</http-method>
+    </web-resource-collection>
+
+    <web-resource-collection>
+      <web-resource-name>CORS Options Handling</web-resource-name>
+      <url-pattern>/api/*</url-pattern>
+      <http-method>OPTIONS</http-method>
+    </web-resource-collection>
+  </security-constraint>
 
   <security-constraint>
 

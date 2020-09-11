@@ -9,3 +9,8 @@
 .login-panel-header-logo {
     background-image: url("./logo-brxm.svg");
 }
+
+.column-wrapper.imageset-override-styles img {
+    max-width: 100%;
+    height: auto;
+}
