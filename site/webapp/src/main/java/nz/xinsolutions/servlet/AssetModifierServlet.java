@@ -42,6 +42,8 @@ public class AssetModifierServlet extends HttpServlet {
 
 	public static final int CROP_PARAM_WIDTH = 0;
 	public static final int CROP_PARAM_HEIGHT = 1;
+	public static final int CROP_PARAM_X_FOCUS = 2;
+	public static final int CROP_PARAM_Y_FOCUS = 3;
 
 	public static final int SCALE_PARAM_X = 0;
 	public static final int SCALE_PARAM_Y = 1;
@@ -246,6 +248,19 @@ public class AssetModifierServlet extends HttpServlet {
 			cropW = instr.getIntParam(CROP_PARAM_WIDTH),
 			cropH = instr.getIntParam(CROP_PARAM_HEIGHT);
 
+		Float
+			xFocus = instr.getFloatParam(CROP_PARAM_X_FOCUS),
+			yFocus = instr.getFloatParam(CROP_PARAM_Y_FOCUS)
+		;
+
+		if (xFocus == null) {
+			xFocus = 0f;
+		}
+
+		if (yFocus == null) {
+			yFocus = 0f;
+		}
+
 		if (cropW == null || cropH == null) {
 			LOG.error("Either width or height isn't a proper number.");
 			return img;
@@ -254,12 +269,35 @@ public class AssetModifierServlet extends HttpServlet {
 		int
 			imgW = img.getWidth(),
 			imgH = img.getHeight(),
-			centerX = imgW / 2,
-			centerY = imgH / 2,
-			offsetX = centerX - cropW / 2,
-			offsetY = centerY - cropH / 2
-		;
+			centerX = imgW / 2 + (int)(imgW * xFocus),
+			centerY = imgH / 2 + (int)(imgH * yFocus);
 
+		int halfCropW = cropW / 2;
+		int halfCropH = cropH / 2;
+
+		// if crop would go past end up image, decrease centerX
+		if (centerX + halfCropW > imgW) {
+			centerX -= (centerX + halfCropW) - imgW;
+		}
+		// if crop would go past height, decrease centerY
+		if (centerY + halfCropH > imgH) {
+			centerY -= (centerY + halfCropH) - imgH;
+		}
+
+		// if center - half crop is less than 0, adjust centerX to the right
+		if (centerX - halfCropW < 0) {
+			centerX = -(centerX - halfCropW);
+		}
+		// if center y - crop is less than 0, adjust centerY to the right
+		if (centerY - halfCropH < 0) {
+			centerY = -(centerY - halfCropH);
+		}
+
+		// starting point
+		int
+			offsetX = centerX - halfCropW,
+			offsetY = centerY - halfCropH
+		;
 
 		return
 			Scalr.crop(img,
@@ -408,6 +446,18 @@ public class AssetModifierServlet extends HttpServlet {
 			return (
 				params.length > idx
 					? params[idx]
+					: null
+			);
+		}
+
+
+		/**
+		 * @return a number parameter
+		 */
+		public Float getFloatParam(int idx) {
+			return (
+				params.length > idx
+					? (NumberUtils.isNumber(params[idx]) ? Float.parseFloat(params[idx]) : null)
 					: null
 			);
 		}
