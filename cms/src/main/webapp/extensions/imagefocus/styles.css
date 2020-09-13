@@ -30,7 +30,7 @@ body {
 }
 
 .hide {
-	display: none;
+	display: none !important;
 }
 
 .fullscreen {
@@ -58,6 +58,12 @@ body {
 }
 
 
+.image-container {
+	position: relative;
+	display: block;
+	background: transparent 0 0 no-repeat;
+}
+
 .target {
 	position: absolute;
 
@@ -72,8 +78,18 @@ body {
 
 }
 
+.image-target {
+	position: absolute;
+	width: 8px;
+	height: 8px;
+	border: 3px solid white;
+	background-color: #147AC8;
+	box-shadow: 0 0 2px #333;
+	border-radius: 50%;
+}
 
-.box { 
+
+.box {
 	position: absolute;
 
 	top: 0px;
@@ -81,4 +97,63 @@ body {
 	right: 0px;
 	bottom: 0px;
 
+}
+
+
+
+/* https://codepen.io/peeke/pen/BjxXZa */
+.pulsating-circle {
+	position: absolute;
+	transform: translateX(-6px) translateY(-6px);
+	width: 12px;
+	height: 12px;
+}
+
+.pulsating-circle:before {
+	content: '';
+	position: relative;
+	display: block;
+	width: 300%;
+	height: 300%;
+	box-sizing: border-box;
+	margin-left: -100%;
+	margin-top: -100%;
+	border-radius: 30px;
+	background-color: #01a4e9;
+	animation: pulse-ring 1.25s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+.pulsating-circle:after {
+	content: '';
+	position: absolute;
+	left: 0;
+	top: 0;
+	display: block;
+	width: 100%;
+	height: 100%;
+	background-color: white;
+	border-radius: 15px;
+	box-shadow: 0 0 8px rgba(0,0,0,.6);
+	animation: pulse-dot 1.25s cubic-bezier(0.455, 0.03, 0.515, 0.955) -.4s infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(.33);
+  }
+  80%, 100% {
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-dot {
+  0% {
+    transform: scale(.8);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(.8);
+  }
 }

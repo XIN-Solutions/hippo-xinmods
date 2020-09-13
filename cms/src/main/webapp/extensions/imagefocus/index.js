@@ -1,25 +1,29 @@
-
 document.addEventListener('DOMContentLoaded', async () => {
 
 	const button = document.querySelector("#open");
 	const labels = document.querySelector("#labels")
+	const loading = document.querySelector("[data-state='loading']");
 	const notSet = document.querySelector("[data-state='none']");
 	const valueSet = document.querySelector("[data-state='set']");
+	const unavailable = document.querySelector('[data-state="unavailable"]');
+
+	const imageThumbnail = document.querySelector('[data-image]');
+	const imageContainer = document.querySelector("[data-image-container]");
+	const imageTarget = document.querySelector('[data-target]');
 
 
 	try {
 		const ui = await UiExtension.register();
 		const brDocument = await ui.document.get();
-		const value = await ui.document.field.getValue();
+		let value = await ui.document.field.getValue() || '{"x":0, "y":0}';
 		const extConfig = JSON.parse(ui.extension.config || "{}");
 		const { mode } = brDocument;
 
 
 		/**
-		 * If in 'view' mode, add the current state label 
+		 * If in 'view' mode, add the current state label
 		 */
 		function initialiseLabels() {
-			labels.classList.remove('hide');
 			if (!value) {
 				notSet.classList.remove('hide');
 			}
@@ -48,11 +52,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 							uuid: brDocument.id,
 							value
 						}),
-					};    
+					};
 
 					const response = await ui.dialog.open(dialogOptions);
 					await ui.document.field.setValue(response);
-				} 
+					value = response;
+					setTarget();
+				}
 				catch (error) {
 					if (error.code === 'DialogCanceled') {
 						return;
@@ -63,24 +69,63 @@ document.addEventListener('DOMContentLoaded', async () => {
 			});
 		}
 
+		function setTarget() {
+			const {width: w, height: h} = imageThumbnail;
+			const {x: xPerc, y: yPerc} = JSON.parse(value);
 
-		if (mode === 'edit') {
-			initialiseButton()
+			const cw = w / 2, ch = h / 2;
+			const tX = Math.floor(cw + (w * xPerc));
+			const tY = Math.floor(ch + (h * yPerc));
+
+			imageTarget.style.left = `${tX}px`;
+			imageTarget.style.top = `${tY}px`;
 		}
-		else {
+
+
+		async function initialisePreview() {
+			const imgInfo = await Common.getImageInfo(extConfig);
+
+			if (imgInfo.imageUrl.indexOf(".svg") !== -1) {
+				return false;
+			}
+
+			return new Promise((resolve, reject) => {
+
+				const maxHeight = mode === 'edit' ? 100 : 130;
+				const url = imgInfo.imageUrl.replace("/binaries", `/assetmod/scale=_,${maxHeight}/binaries`)
+
+				imageThumbnail.onload = () => {
+					setTarget();
+					imageContainer.classList.remove('hide');
+					loading.classList.add('hide');
+					resolve(true);
+				};
+
+				imageThumbnail.src = url;
+			});
+		}
+
+
+		labels.classList.remove('hide');
+
+		const canPreview = await initialisePreview();
+		if (canPreview) {
+
+			if (mode === 'edit') {
+				initialiseButton();
+			}
 			initialiseLabels();
 		}
+		else {
+			unavailable.classList.remove('hide');
+			loading.classList.add('hide');
+		}
 
-		
+
 	} catch (error) {
 		console.error('Failed to register extension:', error.message);
 		console.error('- error code:', error.code);
 	}
 
-
-
-
-
 });
-
 

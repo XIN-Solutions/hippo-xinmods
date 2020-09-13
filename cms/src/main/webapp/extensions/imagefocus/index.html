@@ -1,17 +1,41 @@
 <!doctype html>
 <html>
-  <head>
-    <title>ImageFocus Selector</title>
+	<head>
+		<title>Image Focus Selector</title>
 
-    <script type="text/javascript" src="https://unpkg.com/@bloomreach/ui-extension@13.4.4/dist/ui-extension.min.js"></script>
-    <script type="text/javascript" src="index.js"></script>
-    <link href="styles.css" rel="stylesheet" type="text/css">
-  </head>
-  <body>
-  	<p id="labels" class="hide">
-  		<span data-state="none" class="text hide">No image focus set.</span>
-  		<span data-state="set" class="text hide">Image focus set.</span>
-  	</p>
-    <button class="button hide" id="open">Select Image Focus</button>
-  </body>
+		<script type="text/javascript" src="https://unpkg.com/@bloomreach/ui-extension@13.4.4/dist/ui-extension.min.js"></script>
+		<link href="styles.css" rel="stylesheet" type="text/css">
+	</head>
+	<body>
+		<div id="labels" class="hide">
+
+			<div data-state="loading">
+				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin: auto; background: white; display: block; display: inline-block; width: 50px; height:50px; shape-rendering: auto;" width="50px" height="50px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid">
+					<circle cx="50" cy="50" r="0" fill="none" stroke="#93dbe9" stroke-width="2">
+					  <animate attributeName="r" repeatCount="indefinite" dur="1s" values="0;40" keyTimes="0;1" keySplines="0 0.2 0.8 1" calcMode="spline" begin="-0.5s"></animate>
+					  <animate attributeName="opacity" repeatCount="indefinite" dur="1s" values="1;0" keyTimes="0;1" keySplines="0.2 0 0.8 1" calcMode="spline" begin="-0.5s"></animate>
+					</circle>
+					<circle cx="50" cy="50" r="0" fill="none" stroke="#689cc5" stroke-width="2">
+					  <animate attributeName="r" repeatCount="indefinite" dur="1s" values="0;40" keyTimes="0;1" keySplines="0 0.2 0.8 1" calcMode="spline"></animate>
+					  <animate attributeName="opacity" repeatCount="indefinite" dur="1s" values="1;0" keyTimes="0;1" keySplines="0.2 0 0.8 1" calcMode="spline"></animate>
+					</circle>
+				</svg>
+			</div>
+
+			<div data-state="unavailable" class="text hide">Focus cannot be set on this image.</div>
+
+			<!-- if focus data there, show the label and a target on the small image -->
+			<div data-state="set" class="hide">
+				<div class="image-container hide" data-image-container>
+					<div data-target class="pulsating-circle"></div>
+					<img data-image class="image">
+				</div>
+			</div>
+
+		</div>
+		<button class="button hide" id="open">Change</button>
+
+		<script type="text/javascript" src="common.js"></script>
+		<script type="text/javascript" src="index.js"></script>
+	</body>
 </html>
