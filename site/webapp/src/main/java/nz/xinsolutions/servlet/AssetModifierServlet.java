@@ -299,13 +299,18 @@ public class AssetModifierServlet extends HttpServlet {
 			offsetY = centerY - halfCropH
 		;
 
+		int clippedOffsetX = Math.max(0, offsetX);
+		int clippedOffsetY = Math.max(0, offsetY);
+
 		return
 			Scalr.crop(img,
 				// bound to 0, 0
-				Math.max(0, offsetX), Math.max(0, offsetY),
+				clippedOffsetX,
+				clippedOffsetY,
 
 				// bound to width, height
-				Math.min(imgW, cropW), Math.min(imgH, cropH)
+				Math.min(imgW - clippedOffsetX, cropW),
+				Math.min(imgH - clippedOffsetY, cropH)
 			);
 	}
 

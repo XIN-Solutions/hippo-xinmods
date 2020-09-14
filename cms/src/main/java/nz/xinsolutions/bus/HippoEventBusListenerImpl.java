@@ -22,6 +22,10 @@ import org.onehippo.cms7.services.eventbus.Subscribe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.observation.Event;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -33,7 +37,7 @@ import java.util.concurrent.TimeUnit;
  *      Receives and distributes events
  *
  */
-public class HippoEventBusListenerImpl implements HippoEventBusListener {
+public class HippoEventBusListenerImpl implements HippoEventBusListener, EventListener {
 
     /**
      * Property or environment variable containing the hippo event bus arn.
@@ -69,7 +73,34 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener {
         ;
         
     }
-    
+
+
+    /**
+     * This method is called when a JCR event has been lodged
+     *
+     * @param eventIterator
+     */
+    @Override
+    public void onEvent(EventIterator eventIterator) {
+        while (eventIterator.hasNext()) {
+            Event event = eventIterator.nextEvent();
+            LOG.info("Got JCR Event: " + event.toString());
+
+            try {
+                Map<String, Object> eventVal = new LinkedHashMap<>();
+                eventVal.put("_origin", "jcr");
+                eventVal.putAll(event.getInfo());
+                eventVal.put("identifier", event.getIdentifier());
+                eventVal.put("user", event.getUserID());
+                eventVal.put("subjectPath", event.getPath());
+                sendEvent(eventVal);
+            }
+            catch (RepositoryException rEx) {
+                LOG.error("Repository exception: ", rEx);
+            }
+        }
+    }
+
     /**
      * Called when an event is to be handled.
      *
@@ -86,12 +117,21 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener {
             ", message: " + event.message() +
             ", user: " + event.user()
         );
-    
-        Map<String, Object> map = new LinkedHashMap<>(event.getValues());
-        
-        map.put("_origin", "hippo");
+
+        Map values = new LinkedHashMap<>(event.getValues());
+        values.put("_origin", "hippo");
+        this.sendEvent(values);
+    }
+
+
+    /**
+     *
+     * @param map
+     */
+    public void sendEvent(Map<String, Object> map) {
+
         map.put("_timestamp", System.currentTimeMillis());
-    
+
         String jsonMessage = Jackson.toJsonString(map);
 
         if (!config.isValid()) {
@@ -106,8 +146,8 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener {
         for (String webhook : config.getWebhookUrls()) {
             attemptSendToWebhook(webhook, jsonMessage);
         }
-
     }
+
 
     /**
      * Try to send the hippo message to a webhook. The webhook will be expected to accept
