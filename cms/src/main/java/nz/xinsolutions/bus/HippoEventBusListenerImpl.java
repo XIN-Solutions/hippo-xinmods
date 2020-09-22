@@ -26,7 +26,9 @@ import javax.jcr.RepositoryException;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -71,7 +73,7 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener, EventLi
                 .withRegion(Regions.AP_SOUTHEAST_2)
                 .build()
         ;
-        
+
     }
 
 
@@ -82,6 +84,9 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener, EventLi
      */
     @Override
     public void onEvent(EventIterator eventIterator) {
+
+        List<Map> events = new ArrayList<>();
+
         while (eventIterator.hasNext()) {
             Event event = eventIterator.nextEvent();
             LOG.info("Got JCR Event: " + event.toString());
@@ -89,16 +94,19 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener, EventLi
             try {
                 Map<String, Object> eventVal = new LinkedHashMap<>();
                 eventVal.put("_origin", "jcr");
+                eventVal.put("_timestamp", System.currentTimeMillis());
                 eventVal.putAll(event.getInfo());
                 eventVal.put("identifier", event.getIdentifier());
                 eventVal.put("user", event.getUserID());
                 eventVal.put("subjectPath", event.getPath());
-                sendEvent(eventVal);
+                events.add(eventVal);
             }
             catch (RepositoryException rEx) {
                 LOG.error("Repository exception: ", rEx);
             }
         }
+
+        sendMultipleEvents(events);
     }
 
     /**
@@ -120,7 +128,37 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener, EventLi
 
         Map values = new LinkedHashMap<>(event.getValues());
         values.put("_origin", "hippo");
+        values.put("_timestamp", System.currentTimeMillis());
         this.sendEvent(values);
+    }
+
+
+    /**
+     * Send event payload in separate thread.
+     *
+     * @param events all the events to send.
+     */
+    public void sendMultipleEvents(final List<Map> events) {
+
+        new Thread(() -> {
+
+            String jsonMessage = Jackson.toJsonString(events);
+
+            if (!config.isValid()) {
+                LOG.info("The xinmods configuration was not valid so no messages will be sent.");
+                return;
+            }
+
+            for (String topicArn: config.getSNSArns()) {
+                attemptSendToSNS(topicArn, jsonMessage);
+            }
+
+            for (String webhook : config.getWebhookUrls()) {
+                attemptSendToWebhook(webhook, jsonMessage);
+            }
+
+        }).start();
+
     }
 
 
@@ -129,23 +167,9 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener, EventLi
      * @param map
      */
     public void sendEvent(Map<String, Object> map) {
-
-        map.put("_timestamp", System.currentTimeMillis());
-
-        String jsonMessage = Jackson.toJsonString(map);
-
-        if (!config.isValid()) {
-            LOG.info("The xinmods configuration was not valid so no messages will be sent.");
-            return;
-        }
-
-        for (String topicArn: config.getSNSArns()) {
-            attemptSendToSNS(topicArn, jsonMessage);
-        }
-
-        for (String webhook : config.getWebhookUrls()) {
-            attemptSendToWebhook(webhook, jsonMessage);
-        }
+        List<Map> events = new ArrayList<>();
+        events.add(map);
+        sendMultipleEvents(events);
     }
 
 
@@ -198,14 +222,6 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener, EventLi
         catch (Exception ex) {
             LOG.error("Could not send message to SNS `{}`.", topicArn);
         }
-    }
-
-    /**
-     * @return the AWS SNS topic to send to, can be null or emtpy
-     */
-    @NotNull
-    protected String getAwsSnsTopic() {
-        return System.getProperty(AWS_HIPPOBUS_ARN, System.getenv(AWS_HIPPOBUS_ARN));
     }
 
 

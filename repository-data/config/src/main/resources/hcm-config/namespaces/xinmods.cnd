@@ -15,3 +15,16 @@
 
 [xinmods:rigidfolder]
   mixin
+
+[xinmods:rigiddocument]
+  mixin
+
+
+[hippogallery:imageset] > hippo:document
+  orderable primaryitem hippogallery:thumbnail
+  - hippogallery:description (string)
+  - hippogallery:filename (string)
+  - hippogallery:focus (string)
+  + hippogallery:thumbnail (hippogallery:image) = hippogallery:image mandatory autocreated
+  + hippogallery:original (hippogallery:image) = hippogallery:image
+
