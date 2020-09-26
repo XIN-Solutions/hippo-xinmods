@@ -5,4 +5,4 @@ JVM_OPTS="-server -Xmx386m -Xms128m"
 #REMOTE_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000"
 
 CATALINA_OPTS="\${JVM_OPTS} \${REP_OPTS} \${L4J_OPTS} \${REMOTE_OPTS}"
-JAVA_HOME="/usr/lib/jvm/java-11-amazon-corretto.x86_64"
+JAVA_HOME="/usr/lib/jvm/java-openjdk"

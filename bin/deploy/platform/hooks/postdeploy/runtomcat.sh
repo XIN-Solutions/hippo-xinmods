@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # installing java (might already be there depending on the AMI)
-#yum -y install java-11-amazon-corretto-headless
+yum -y install java-1.8.0-openjdk-devel.x86_64
 
 # make space for repository storage
 mkdir /var/lib/hippostorage -p
