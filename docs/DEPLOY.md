@@ -2,6 +2,38 @@
 
 Make sure to install the official Oracle Java JDK 1.8 and have your alternatives point at the java executables.
 
+# Elastic Beanstalk
+
+In the root of the project, run `./bin/deploy/build-eb.sh <configFile>` with a reference to a configuration file
+of the shape below. This will prepare tomcat settings, repository xmls etc and zips it into an EB-ready ZIP artifact
+that can be uploaded into your AWS account. 
+
+Nginx will be configured as well to route traffic properly.  
+
+    {
+        "distributionName" : "",
+    
+        "eb" : {
+            "app" : "appname",
+            "env" : "envname",
+            "region" : "ap-southeast-2"
+        },
+    
+        "mysql": {
+            "host" : "mysql server (rds) url",
+            "port": 3306,
+            "database" : "dbname",
+            "username" : "username",
+            "password": "password"
+        },
+    
+        "xin" : {
+            "cmsHost": "base url for cms",
+            "adminPass": "admin"
+        }
+    
+    }
+
 # Create hippo distribution
 
 Checkout the tag you wish to build a distribution for:
