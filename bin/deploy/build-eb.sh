@@ -14,20 +14,20 @@ SCRIPT_BASE=$(dirname $0)
 mvn clean verify
 mvn -Pdist clean package
 
+# clean up previous
 rm -f $BASE/target/eb-application.zip
 
 #
 # create target
-# 
+#
 mkdir -p $SCRIPT_BASE/target
 mkdir -p $SCRIPT_BASE/target/bin
 
 
 #
 # copy distribution
-# 
+#
 cp target/*-distribution.tar.gz $SCRIPT_BASE/target/dist.tar.gz
-cp $SCRIPT_BASE/eternal.jar $SCRIPT_BASE/target
 cp $SCRIPT_BASE/Procfile $SCRIPT_BASE/target
 cp $SCRIPT_BASE/platform $SCRIPT_BASE/target/.platform -R
 cd $SCRIPT_BASE/target
@@ -39,7 +39,7 @@ rm webapps -Rf
 
 #
 # unzip distribution
-# 
+#
 tar -xvzf dist.tar.gz
 rm dist.tar.gz
 
@@ -47,12 +47,12 @@ cd $BASE
 
 #
 # copy mysql connector
-# 
+#
 cp $SCRIPT_BASE/libs/mysql-connector-*.jar $SCRIPT_BASE/target/common/lib
 
 #
-# move webapps 
-# 
+# move webapps
+#
 mv $SCRIPT_BASE/target/webapps/cms.war $SCRIPT_BASE/target
 mv $SCRIPT_BASE/target/webapps/site.war $SCRIPT_BASE/target
 mv $SCRIPT_BASE/target/site.war $SCRIPT_BASE/target/webapps
@@ -60,12 +60,15 @@ mv $SCRIPT_BASE/target/cms.war $SCRIPT_BASE/target/webapps
 
 #
 # interpret configurations
-# 
+#
 node $SCRIPT_BASE/merge.js $CONFIG $SCRIPT_BASE/templates/context.xml.tpl > $SCRIPT_BASE/target/conf/context.xml
 node $SCRIPT_BASE/merge.js $CONFIG $SCRIPT_BASE/templates/repository.xml.tpl > $SCRIPT_BASE/target/conf/repository.xml
 node $SCRIPT_BASE/merge.js $CONFIG $SCRIPT_BASE/templates/catalina.properties.tpl > $SCRIPT_BASE/target/conf/catalina.properties
 node $SCRIPT_BASE/merge.js $CONFIG $SCRIPT_BASE/templates/server.xml.tpl > $SCRIPT_BASE/target/conf/server.xml
 node $SCRIPT_BASE/merge.js $CONFIG $SCRIPT_BASE/templates/setenv.sh.tpl > $SCRIPT_BASE/target/bin/setenv.sh
+
+# custom script that removes going to background, healthier when used with Procfile.
+cp $SCRIPT_BASE/templates/catalina.sh.tpl $SCRIPT_BASE/target/bin/catalina.sh
 
 cd $SCRIPT_BASE/target 
 zip $BASE/target/eb-application.zip . -r
