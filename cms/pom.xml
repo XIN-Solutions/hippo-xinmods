@@ -28,6 +28,34 @@
 
     <build>
         <finalName>cms</finalName>
+
+        <defaultGoal>package</defaultGoal>
+
+        <resources>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.html</include>
+                    <include>**/*.png</include>
+                    <include>**/*.gif</include>
+                    <include>**/*.json</include>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.css</include>
+                    <include>**/*.yaml</include>
+                    <include>**/*.svg</include>
+                    <include>**/*.js</include>
+                    <include>**/*.json</include>
+                </includes>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <artifactId>maven-war-plugin</artifactId>

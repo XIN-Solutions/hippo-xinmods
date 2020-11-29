@@ -5,18 +5,15 @@ import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.amazonaws.thirdparty.apache.http.HttpEntity;
 import com.amazonaws.thirdparty.apache.http.StatusLine;
-import com.amazonaws.thirdparty.apache.http.client.HttpClient;
 import com.amazonaws.thirdparty.apache.http.client.methods.CloseableHttpResponse;
 import com.amazonaws.thirdparty.apache.http.client.methods.HttpPost;
 import com.amazonaws.thirdparty.apache.http.entity.ContentType;
 import com.amazonaws.thirdparty.apache.http.entity.StringEntity;
 import com.amazonaws.thirdparty.apache.http.impl.client.CloseableHttpClient;
-import com.amazonaws.thirdparty.apache.http.impl.client.HttpClientBuilder;
 import com.amazonaws.thirdparty.apache.http.impl.client.HttpClients;
 import com.amazonaws.util.json.Jackson;
 import nz.xinsolutions.config.XinmodsConfig;
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import org.onehippo.cms7.event.HippoEvent;
 import org.onehippo.cms7.services.eventbus.Subscribe;
 import org.slf4j.Logger;
@@ -26,11 +23,8 @@ import javax.jcr.RepositoryException;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
@@ -52,6 +46,11 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener, EventLi
     private static final Logger LOG = LoggerFactory.getLogger(HippoEventBusListenerImpl.class);
 
     /**
+     * Delay in webhook sending.
+     */
+    public static final int EVENT_DELAY_IN_MS = 5000;
+
+    /**
      * SNS service
      */
     private AmazonSNS sns;
@@ -62,10 +61,29 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener, EventLi
     private XinmodsConfig config;
 
     /**
+     * Timer object used to schedule sending information
+     */
+    private ScheduledExecutorService executor;
+
+    /**
+     * Ongoing task if exists.
+     */
+    private ScheduledFuture<Void> scheduledTask = null;
+
+    /**
+     * A list of queued events
+     */
+    private List<Map> queuedEvents;
+
+    /**
      * Initialise data-members
      */
     public HippoEventBusListenerImpl(XinmodsConfig config) {
         this.config = config;
+
+
+        this.queuedEvents = new ArrayList<>();
+        this.executor = Executors.newSingleThreadScheduledExecutor();
 
         this.sns =
             AmazonSNSClientBuilder
@@ -83,7 +101,7 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener, EventLi
      * @param eventIterator
      */
     @Override
-    public void onEvent(EventIterator eventIterator) {
+    public synchronized void onEvent(EventIterator eventIterator) {
 
         List<Map> events = new ArrayList<>();
 
@@ -106,7 +124,16 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener, EventLi
             }
         }
 
-        sendMultipleEvents(events);
+        // schedule the timer to send something
+        if (this.queuedEvents.size() == 0) {
+            LOG.info("Queue is empty, scheduling delayed sending.");
+            sendDelayedQueuedEvents();
+        }
+
+        // queue events
+        LOG.info("Queued {} events for processing", events.size());
+        this.queuedEvents.addAll(events);
+
     }
 
     /**
@@ -119,19 +146,58 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener, EventLi
 
         LOG.debug(
             "PUBLISH EVENT: " +
-            ", cat " + event.category() +
-            ", action: " + event.action() +
-            ", application: " + event.application() +
-            ", message: " + event.message() +
-            ", user: " + event.user()
+                ", cat " + event.category() +
+                ", action: " + event.action() +
+                ", application: " + event.application() +
+                ", message: " + event.message() +
+                ", user: " + event.user()
         );
 
         Map values = new LinkedHashMap<>(event.getValues());
         values.put("_origin", "hippo");
         values.put("_timestamp", System.currentTimeMillis());
-        this.sendEvent(values);
+
+
+        // schedule the timer to send something
+        if (this.queuedEvents.size() == 0) {
+            LOG.info("Queue is empty, scheduling delayed sending.");
+            sendDelayedQueuedEvents();
+        }
+
+        this.queuedEvents.add(values);
     }
 
+
+    /**
+     * Send a delayed queued event
+     */
+    public synchronized void sendDelayedQueuedEvents() {
+
+        // send something.
+        Callable<Void> send = () -> {
+            LOG.info("Sending events");
+            this.sendMultipleEvents(this.queuedEvents);
+            return null;
+        };
+
+        // already had a timer? cancel and forget
+        if (this.scheduledTask != null && !this.scheduledTask.isDone()) {
+            LOG.info("Cancelled running task");
+            this.scheduledTask.cancel(true);
+            this.scheduledTask = null;
+        }
+
+        LOG.info("Scheduling timer for {} ms", EVENT_DELAY_IN_MS);
+
+        // cancelling timer
+        this.scheduledTask = this.executor.schedule(
+            send,
+            EVENT_DELAY_IN_MS,
+            TimeUnit.MILLISECONDS
+        );
+
+
+    }
 
     /**
      * Send event payload in separate thread.
@@ -157,19 +223,10 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener, EventLi
                 attemptSendToWebhook(webhook, jsonMessage);
             }
 
+            this.queuedEvents.clear();
+
         }).start();
 
-    }
-
-
-    /**
-     *
-     * @param map
-     */
-    public void sendEvent(Map<String, Object> map) {
-        List<Map> events = new ArrayList<>();
-        events.add(map);
-        sendMultipleEvents(events);
     }
 
 
@@ -199,7 +256,7 @@ public class HippoEventBusListenerImpl implements HippoEventBusListener, EventLi
             }
         }
         catch (Exception ex) {
-            LOG.error("Exception sending webhook: ", ex.getMessage());
+            LOG.error("Exception sending webhook: {}", ex.getMessage());
         }
     }
 

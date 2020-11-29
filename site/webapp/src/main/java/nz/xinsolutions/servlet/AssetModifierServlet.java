@@ -1,5 +1,7 @@
 package nz.xinsolutions.servlet;
 
+import nz.xinsolutions.config.SiteXinmodsConfig;
+import nz.xinsolutions.core.jackrabbit.JcrSessionHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.imgscalr.Scalr;
@@ -12,13 +14,14 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
@@ -52,6 +55,11 @@ public class AssetModifierServlet extends HttpServlet {
 	public static final String PATH_ASSETMOD = "assetmod";
 
 	private static int CACHE_TIME = 5 * 60;
+
+	/**
+	 * Session
+	 */
+	private static Session adminSession = null;
 
 	/**
 	 * Mimetypes to write to response
@@ -98,23 +106,32 @@ public class AssetModifierServlet extends HttpServlet {
 		// go over all the instructions we found
 		for (Instruction instr : instruction) {
 
-			if (instr.getName().equals("scale")) {
-				buffImg = scale(buffImg, instr);
-			}
-			else if (instr.getName().equals("crop")) {
-				buffImg = crop(buffImg, instr);
-			}
-			else if (instr.getName().equals("filter")) {
-				buffImg = filter(buffImg, instr);
-			}
-			else if (instr.getName().equals("quality")) {
-				String qualityStr = instr.getParam(0);
-				if (qualityStr != null) {
-					quality = Float.parseFloat(qualityStr);
-				}
-			}
-			else {
-				LOG.info("Do not know about: {}", instr.getName());
+			switch (instr.getName()) {
+				case "scale":
+					buffImg = scale(buffImg, instr);
+					break;
+
+				case "crop":
+					buffImg = crop(buffImg, instr);
+					break;
+
+				case "filter":
+					buffImg = filter(buffImg, instr);
+					break;
+
+				case "quality":
+					String qualityStr = instr.getParam(0);
+					if (qualityStr != null) {
+						quality = Float.parseFloat(qualityStr);
+					}
+					break;
+
+				// just a cache-busting version.
+				case "v":
+					break;
+				default:
+					LOG.info("Do not know about: {}", instr.getName());
+					break;
 			}
 
 		}
@@ -144,11 +161,19 @@ public class AssetModifierServlet extends HttpServlet {
 		}
 	}
 
-	private boolean shouldRenderWithQualitySettings(String ext, Float quality) {
+	/**
+	 * @return true if we should do some quality manipulation before returning the image.
+	 */
+	protected boolean shouldRenderWithQualitySettings(String ext, Float quality) {
 		return (ext.equalsIgnoreCase("jpg") || ext.equalsIgnoreCase("jpeg")) && quality != null;
 	}
 
 
+	/**
+	 * Page not found returning.
+	 *
+	 * @param resp
+	 */
 	protected void pageNotFound(HttpServletResponse resp) {
 		resp.setStatus(404);
 		resp.setHeader("Content-Length", "0");
@@ -345,11 +370,42 @@ public class AssetModifierServlet extends HttpServlet {
 	 * @param resp	is the response object to put it on
 	 */
 	protected void setImageResponseHeaders(HttpServletResponse resp, String extension) {
-		String mimeType = s_mimeTypes.getOrDefault(extension, "application/octet-stream");
-		String cacheControl = String.format("max-age=%d", CACHE_TIME);
 
-		resp.setHeader("Cache-Control", cacheControl);
+		String mimeType = s_mimeTypes.getOrDefault(extension, "application/octet-stream");
 		resp.setHeader("Content-Type", mimeType);
+
+		Session adminSession = null;
+
+		try {
+			adminSession = getAdminJcrSession();
+			SiteXinmodsConfig xmCfg = new SiteXinmodsConfig(adminSession);
+			long cacheLength = xmCfg.getAssetCacheLength(CACHE_TIME);
+
+			// set header
+			String cacheControl = String.format("max-age=%d", cacheLength);
+			resp.setHeader("Cache-Control", cacheControl);
+		}
+		catch (Exception ex) {
+			LOG.error("Couldn't set response header, caused by: ", ex);
+
+		}
+	}
+
+	/**
+	 * @return the administrative session
+	 * @throws RepositoryException
+	 */
+	protected static synchronized Session getAdminJcrSession() throws RepositoryException {
+
+		if (adminSession == null) {
+			return (adminSession = JcrSessionHelper.loginAdministrative());
+		}
+
+		if (!adminSession.isLive()) {
+			adminSession.refresh(false);
+		}
+
+		return adminSession;
 	}
 
 

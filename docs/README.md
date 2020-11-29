@@ -1,3 +1,7 @@
+# General
+
+Read more documentation here: https://xinsolutions.co.nz/bloomreach-hippo-cms-caas
+
 # Packages
 
 xinMODS adds simple package management to the interface allowing you to add functional modules to a bare-bones CMS deployment 
@@ -55,7 +59,7 @@ curl -X GET -H "Content-Type: application/json" "http://localhost:8080/site/cust
 ```
 
 
-# SNS/Webhooks 
+# XinMODS configuration 
 
 Configure a module configuration here:
 
@@ -65,6 +69,7 @@ With allowed values:
 
     snsTopics : string[] -- a list of SNS topics to write hippo bus events to
     webhooks : string[] -- a list of webhooks to POST the JSON payload of the hippo bus event to.
+    assetCacheLength: long -- the cache-control max-age=<d> value passed back to the requestee.
     
 # Rigid Folders
 
