@@ -1,5 +1,8 @@
 package nz.xinsolutions.servlet;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.S3Object;
 import nz.xinsolutions.config.SiteXinmodsConfig;
 import nz.xinsolutions.core.jackrabbit.JcrSessionHelper;
 import org.apache.commons.lang.StringUtils;
@@ -52,9 +55,10 @@ public class AssetModifierServlet extends HttpServlet {
 	public static final int SCALE_PARAM_Y = 1;
 
 	public static final String PATH_BINARIES = "binaries";
+	public static final String PATH_EXTERNAL = "external";
 	public static final String PATH_ASSETMOD = "assetmod";
 
-	private static int CACHE_TIME = 5 * 60;
+	private static final int CACHE_TIME = 5 * 60;
 
 	/**
 	 * Session
@@ -91,11 +95,7 @@ public class AssetModifierServlet extends HttpServlet {
 		String rawInstructions = getInstructionString(fullUrl);
 		Instruction[] instruction = interpretInstruction(rawInstructions);
 
-		String binaryLocation = getBinaryLocation(fullUrl);
-		URL binaryUrl = new URL(host + context + binaryLocation);
-
-		BufferedImage buffImg = ImageIO.read(binaryUrl);
-
+		BufferedImage buffImg = getBufferedImageForRequest(fullUrl, host, context);
 		if (buffImg == null) {
 			pageNotFound(resp);
 			return;
@@ -139,6 +139,8 @@ public class AssetModifierServlet extends HttpServlet {
 		// set the response headers
 		setImageResponseHeaders(resp, ext);
 
+		LOG.info("Rendering {}", fullUrl);
+
 		if (shouldRenderWithQualitySettings(ext, quality)) {
 			// create quality parameters
 			JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
@@ -159,6 +161,55 @@ public class AssetModifierServlet extends HttpServlet {
 			// write the resulting image to the response
 			ImageIO.write(buffImg, ext, resp.getOutputStream());
 		}
+	}
+
+	/**
+	 * Depending on the request, we're going to be either getting an asset from the hippo
+	 * repository (through the normal /binaries path), or we're going to reach out to S3 and
+	 * get a buffered image from an S3 object's input stream.
+	 *
+	 * @param fullUrl	the full url
+	 * @param host		the host we're operating on
+	 * @param context	the context url (/site etc.)
+	 * @return a buffered image instance.
+	 * @throws IOException
+	 */
+	protected BufferedImage getBufferedImageForRequest(String fullUrl, String host, String context) throws IOException {
+
+		// referencing something in the local hippo repo?
+		if (this.isLocalRequest(fullUrl)) {
+			URL binaryUrl = new URL(host + context + getBinaryLocation(fullUrl));
+			return ImageIO.read(binaryUrl);
+		}
+
+		// referencing an external entity? try to get it through S3.
+		if (this.isExternalRequest(fullUrl)) {
+			try {
+				String externalPathRef = fullUrl.substring(fullUrl.indexOf(PATH_EXTERNAL) + PATH_EXTERNAL.length() + 1);
+				int firstSlash = externalPathRef.indexOf("/");
+				if (firstSlash == -1) {
+					return null;
+				}
+				String bucket = externalPathRef.substring(0, firstSlash);
+				String key = externalPathRef.substring(firstSlash + 1);
+
+				// try to retrieve from S3
+				AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
+				S3Object obj = s3Client.getObject(bucket, key);
+				if (obj == null) {
+					LOG.info("Could not retrieve an object at location: s3://{}/{}, skipping.", bucket, key);
+					return null;
+				}
+
+				return ImageIO.read(obj.getObjectContent());
+			}
+			catch (Exception ex) {
+				LOG.error("Something went wrong trying to get an external image: {}", ex.getMessage());
+				return null;
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -350,6 +401,11 @@ public class AssetModifierServlet extends HttpServlet {
 			startIdx = fullUrl.indexOf(PATH_ASSETMOD) + PATH_ASSETMOD.length(),
 			endIdx = fullUrl.indexOf(PATH_BINARIES);
 
+		// not using /binaries? perhaps using /external instead.
+		if (endIdx == -1) {
+			endIdx = fullUrl.indexOf(PATH_EXTERNAL);
+		}
+
 		return fullUrl.substring(startIdx, endIdx);
 	}
 
@@ -413,7 +469,25 @@ public class AssetModifierServlet extends HttpServlet {
 	//		Query parsing
 	// ------------------------------------------------------------------------------------------------
 
+	/**
+	 * Determine whether it's an internal or external request
+	 * @param fullUrl the url that is being requested.
+	 * @return
+	 */
+	protected boolean isExternalRequest(String fullUrl) {
+		int extPathIdx = fullUrl.indexOf("/" + PATH_EXTERNAL);
+		return extPathIdx != -1;
+	}
 
+	/**
+	 * Determine whether it's an internal or external request
+	 * @param fullUrl the url that is being requested.
+	 * @return
+	 */
+	protected boolean isLocalRequest(String fullUrl) {
+		int binariesPathIdx = fullUrl.indexOf("/" + PATH_BINARIES);
+		return binariesPathIdx != -1;
+	}
 
 	/**
 	 * @return part of the url where the actual thing lives

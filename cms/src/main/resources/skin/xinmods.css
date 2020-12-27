@@ -14,3 +14,16 @@
     max-width: 100%;
     height: auto;
 }
+
+
+/**
+ * For options that need to be in the rest output, but should not show in the document editor
+ */
+.hippo-preview-document .hide,
+.hippo-editor-body .hide {
+    display: none;
+}
+
+.hippo-editor-body .hippo-editor-template-field .hide {
+    display: block !important;
+}

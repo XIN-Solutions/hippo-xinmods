@@ -71,6 +71,7 @@
     <xalan.version>2.7.2</xalan.version>
     <junit.version>4.12</junit.version>
     <easymock.version>3.4</easymock.version>
+    <aws.version>1.11.186</aws.version>
 
     <development-module-deploy-dir>shared/lib</development-module-deploy-dir>
     <content-module-deploy-dir>shared/lib</content-module-deploy-dir>

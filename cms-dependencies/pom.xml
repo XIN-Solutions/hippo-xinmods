@@ -14,9 +14,6 @@
     <name>XINmods - CMS - Dependencies</name>
     <description>XINmods CMS Dependencies</description>
 
-    <properties>
-        <aws.version>1.11.186</aws.version>
-    </properties>
 
     <dependencies>
         <dependency>
