@@ -125,6 +125,18 @@
             <artifactId>hst-addon-hcm-site</artifactId>
             <version>${hippo.hst.version}</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>org.onehippo.cms7.hst</groupId>
+            <artifactId>hst-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.onehippo.cms7.hst.components</groupId>
+            <artifactId>hst-restapi</artifactId>
+        </dependency>
+
     </dependencies>
     <build>
         <resources>

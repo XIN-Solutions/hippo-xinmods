@@ -3,7 +3,9 @@ package nz.xinsolutions.rest;
 import nz.xinsolutions.beans.ContextVariablesBean;
 import nz.xinsolutions.core.Rest;
 import nz.xinsolutions.queries.QueryParser;
+import nz.xinsolutions.services.NodeConversion;
 import org.apache.commons.lang.StringUtils;
+import org.hippoecm.hst.configuration.hosting.Mount;
 import org.hippoecm.hst.content.beans.query.HstQuery;
 import org.hippoecm.hst.content.beans.query.HstQueryManager;
 import org.hippoecm.hst.content.beans.query.HstQueryResult;
@@ -11,17 +13,21 @@ import org.hippoecm.hst.content.beans.standard.HippoBean;
 import org.hippoecm.hst.content.beans.standard.HippoBeanIterator;
 import org.hippoecm.hst.content.beans.standard.HippoDocument;
 import org.hippoecm.hst.content.beans.standard.HippoFolder;
+import org.hippoecm.hst.core.request.HstRequestContext;
+import org.hippoecm.hst.restapi.ResourceContextFactory;
 import org.onehippo.cms7.essentials.components.rest.BaseRestResource;
 import org.onehippo.cms7.essentials.components.rest.ctx.RestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.*;
 import java.util.*;
 import java.util.stream.Collectors;
+
 
 
 /**
@@ -53,6 +59,13 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
     public static final String KEY_NAME = "name";
     public static final String KEY_LABEL = "label";
     public static final String KEY_DOCUMENTS = "documents";
+    public static final String KEY_DOCUMENT = "document";
+
+    /**
+     * Resource context factory.
+     */
+    private ResourceContextFactory resourceContextFactory;
+
 
     /**
      * This action ingests a query. The query structure is outlined in {@link docs/QUERIES.md}. It outputs a response
@@ -66,9 +79,9 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
     @GET
     @Path("/query/")
     public Response performQuery(@Context UriInfo uriInfo, @Context HttpServletRequest request, @QueryParam(value = "query") String query) {
-    
+
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
-    
+
         RestContext restCtx = newRestContext(this, request);
         ContextVariablesBean ctxVars = newContextVariablesInstance(request);
 
@@ -81,7 +94,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
 
             HstQueryManager qMgr = restCtx.getRequestContext().getQueryManager();
             HstQuery hstQuery = getQueryParserInstance().createFromString(qMgr, query, queryParams);
-            
+
             HstQueryResult queryResult = hstQuery.execute();
             int totalItems = queryResult.getTotalSize();
 
@@ -92,7 +105,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
                 HippoBean bean = it.nextHippoBean();
                 beans.add(bean);
             }
-            
+
             // respond
             return
                 Response.status(200)
@@ -101,6 +114,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
                             put(KEY_SUCCESS, true);
                             put(KEY_MESSAGE, beans.size() > 0 ? "Result found" : "No result found");
                             put(KEY_UUIDS, convertToResponseObject(beans, ctxVars.getApiUrl()));
+                            put(KEY_DOCUMENTS, beansToMap(beans));
                             put(KEY_TOTAL_SIZE, totalItems);
                         }}
                     )
@@ -108,7 +122,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
                 ;
         }
         catch (Exception ex) {
-        
+
             LOG.error("Could not parse a query properly, caused by: ", ex);
 
             return
@@ -121,7 +135,73 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
                     ).build()
             ;
         }
-        
+
+    }
+
+
+    /**
+     * Retrieve the document at a certain path
+     * @param request
+     * @param path
+     * @return
+     */
+    @GET
+    @Path("/document-at-path/")
+    public Response getDocumentAtPath(@Context HttpServletRequest request, @QueryParam(value = KEY_PATH) String path) {
+
+        RestContext ctx = newRestContext(this, request);
+        NodeConversion nodeConversion = new NodeConversion(this.resourceContextFactory);
+
+        try {
+            if (StringUtils.isEmpty(path)) {
+                LOG.info("The path is empty");
+                return notFoundResponse();
+            }
+
+            HippoBean bean = (HippoBean) ctx.getRequestContext().getObjectBeanManager().getObject(path);
+
+            if (bean == null) {
+                LOG.error("Cannot find bean at folder of `{}`", path);
+                return notFoundResponse();
+            }
+
+            if (!(bean instanceof HippoDocument)) {
+                LOG.error("Not a proper document.");
+                return notFoundResponse();
+            }
+
+            Node node = bean.getNode();
+
+            if (!isNodePartOfApiContent(ctx.getRequestContext(), node)) {
+                LOG.error("Item '{}' not found below scope '{}'", path, getMountContentPath(ctx.getRequestContext()));
+                return notFoundResponse();
+            }
+
+            String docPath = ((HippoDocument) bean).getCanonicalHandlePath();
+            if (!docPath.equals(path)) {
+                LOG.error("Cannot query non-handle uuids.");
+                return notFoundResponse();
+            }
+
+            Map<String, Object> result = new LinkedHashMap<>();
+
+            result.put(KEY_SUCCESS, true);
+            result.put(KEY_MESSAGE, "Found.");
+            result.put(KEY_DOCUMENT, nodeConversion.toMap(bean));
+
+            return (
+                Response
+                    .status(200)
+                    .entity(result)
+                    .build()
+            );
+        }
+        catch (Exception ex) {
+            LOG.error("Exception when retrieving document at path '{}'", path, ex);
+        }
+
+        return null;
+
     }
 
     @GET
@@ -130,6 +210,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
 
         RestContext ctx = newRestContext(this, request);
         ContextVariablesBean ctxVars = newContextVariablesInstance(request);
+        NodeConversion nodeConversion = new NodeConversion(this.resourceContextFactory);
 
         try {
             if (StringUtils.isEmpty(path)) {
@@ -167,10 +248,11 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
             List<Map> childDocuments =
                     folder.getDocuments()
                         .stream()
-                        .map(childDoc -> new LinkedHashMap<String, String>() {{
+                        .map(childDoc -> new LinkedHashMap<String, Object>() {{
                             put(KEY_UUID, childDoc.getCanonicalHandleUUID());
                             put(KEY_PATH, childDoc.getPath());
                             put(KEY_NAME, childDoc.getName());
+                            put(KEY_DOCUMENT, nodeConversion.toMap(childDoc));
                         }})
                         .collect(Collectors.toList())
                     ;
@@ -217,6 +299,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
 
         RestContext ctx = newRestContext(this, request);
         ContextVariablesBean ctxVars = newContextVariablesInstance(request);
+        NodeConversion nodeConversion = new NodeConversion(resourceContextFactory);
 
         try {
             if (StringUtils.isEmpty(uuid)) {
@@ -269,9 +352,10 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
     @GET
     @Path("/path-to-uuid/")
     public Response pathToUuid(@Context HttpServletRequest request, @QueryParam(value = KEY_PATH) String path) {
-    
+
         RestContext ctx = newRestContext(this, request);
         ContextVariablesBean ctxVars = newContextVariablesInstance(request);
+        NodeConversion nodeConversion = new NodeConversion(resourceContextFactory);
 
         try {
             if (StringUtils.isEmpty(path)) {
@@ -292,12 +376,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
 
                 put(KEY_PATH, path);
                 put(KEY_TYPE, bean.getNode().getPrimaryNodeType().getName());
-
-                if (bean instanceof HippoDocument) {
-                    put(KEY_UUID, ((HippoDocument) bean).getCanonicalHandleUUID());
-                } else {
-                    put(KEY_UUID, bean.getCanonicalUUID());
-                }
+                put(KEY_UUID, nodeConversion.getUuid(bean));
             }};
 
             return (
@@ -384,10 +463,60 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
 
 
     /**
+     * Convert a list of beans to a uuid->maprepresentation map
+     * @param beans the list of beans to map
+     * @return the map with uuid as key and node-as-map as value
+     */
+    protected Map<String, Object> beansToMap(List<HippoBean> beans) {
+        NodeConversion nodeConversion = new NodeConversion(this.resourceContextFactory);
+
+        return (
+            beans.stream()
+                .map(bean ->
+                    new AbstractMap.SimpleEntry<String, Object>(
+                        nodeConversion.getUuid(bean),
+                        nodeConversion.toMap(bean)
+                    )
+                )
+                .collect(
+                    Collectors.toMap(
+                        AbstractMap.SimpleEntry::getKey,
+                        AbstractMap.SimpleEntry::getValue
+                    )
+                )
+        );
+    }
+
+
+    /**
+     * @return true if the node is part of the api content as per tha mount configuration
+     * @throws RepositoryException
+     */
+    protected boolean isNodePartOfApiContent(HstRequestContext requestContext, Node node) throws RepositoryException {
+        String mountContentPath = getMountContentPath(requestContext);
+        return node.getPath().startsWith(mountContentPath+ "/");
+    }
+
+    /**
+     * @return the content base path
+     */
+    protected String getMountContentPath(HstRequestContext requestContext) {
+        Mount mount = requestContext.getResolvedMount().getMount();
+        return mount.getContentPath();
+    }
+
+    /**
      * @return the query parser instance
      */
     protected QueryParser getQueryParserInstance() {
         return new QueryParser();
     }
 
+    /**
+     * Bean setter for resource context factory instance
+     * @param resourceContextFactory
+     */
+    public void setResourceContextFactory(ResourceContextFactory resourceContextFactory) {
+        this.resourceContextFactory = resourceContextFactory;
+    }
 }
