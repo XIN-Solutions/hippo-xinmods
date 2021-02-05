@@ -5,18 +5,21 @@ import org.hippoecm.hst.content.beans.standard.HippoDocument;
 import org.hippoecm.hst.restapi.NodeVisitor;
 import org.hippoecm.hst.restapi.ResourceContext;
 import org.hippoecm.hst.restapi.ResourceContextFactory;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
+import javax.jcr.*;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Author: Marnix Kok <marnix@elevate.net.nz>
- * <p>
+ * Author: Marnix Kok <marnix@xinsolutions.co.nz>
+ *
  * Purpose:
  *
  *  To convert a JCR node into a map that can be added to the response. It will use the same logic
@@ -28,6 +31,12 @@ public class NodeConversion {
      * Logger
      */
     private static final Logger LOG = LoggerFactory.getLogger(NodeConversion.class);
+
+    public static final String HIPPOSTD_STATE = "hippostd:state";
+    public static final String HIPPOSTD_STATE_SUMMARY = "hippostd:stateSummary";
+
+    public static final String STATE_PUBLISHED = "published";
+    public static final String SUMMARY_LIVE = "live";
 
     /**
      * Resource factory
@@ -59,8 +68,21 @@ public class NodeConversion {
      * @return the map representation.
      */
     public Map<String, Object> toMap(HippoBean bean) {
-        Node jcrNode = bean.getNode();
+
         try {
+
+            Node jcrNode;
+
+            if (bean instanceof HippoDocument) {
+                HippoDocument doc = (HippoDocument) bean;
+                jcrNode = findPublishedDocument(doc);
+                if (jcrNode == null) {
+                    return null;
+                }
+            }
+            else {
+                jcrNode = bean.getNode();
+            }
 
             ResourceContext context =
                 resFactory.createResourceContext(Collections.emptyList(), true);
@@ -68,6 +90,7 @@ public class NodeConversion {
             Map<String, Object> map = new LinkedHashMap<>();
 
             map.put("id", getUuid(bean));
+            map.put("name", bean.getName());
             map.put("displayName", bean.getDisplayName());
             map.put("path", bean.getNode().getParent().getPath());
 
@@ -82,6 +105,38 @@ public class NodeConversion {
 
         return null;
 
+    }
+
+    /**
+     * Find one of the hippo document's variations that is set to be the published version.
+     *
+     * @param doc   the hippo document to interrogate the nodes of
+     * @return the node of the published version, or null if not found
+     * @throws RepositoryException
+     */
+    protected Node findPublishedDocument(HippoDocument doc) throws RepositoryException {
+
+        Session session = doc.getNode().getSession();
+        Node parentNode = session.getNodeByIdentifier(doc.getCanonicalHandleUUID());
+
+        NodeIterator nIt = parentNode.getNodes();
+        while (nIt.hasNext()) {
+            Node childNode = nIt.nextNode();
+
+            if (!childNode.hasProperty(HIPPOSTD_STATE) || !childNode.hasProperty(HIPPOSTD_STATE_SUMMARY)) {
+                continue;
+            }
+
+            Property stateValue = childNode.getProperty(HIPPOSTD_STATE);
+            Property summaryValue = childNode.getProperty(HIPPOSTD_STATE_SUMMARY);
+
+
+            if (stateValue.getString().equals(STATE_PUBLISHED) && summaryValue.getString().equals(SUMMARY_LIVE)) {
+                return childNode;
+            }
+        }
+
+        return null;
     }
 
 }

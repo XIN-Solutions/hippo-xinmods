@@ -183,11 +183,17 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
                 return notFoundResponse();
             }
 
+            Map<String, Object> docMap = nodeConversion.toMap(bean);
+            if (docMap == null) {
+                LOG.error("Could not convert document to map, maybe not published?");
+                return notFoundResponse();
+            }
+
             Map<String, Object> result = new LinkedHashMap<>();
 
             result.put(KEY_SUCCESS, true);
             result.put(KEY_MESSAGE, "Found.");
-            result.put(KEY_DOCUMENT, nodeConversion.toMap(bean));
+            result.put(KEY_DOCUMENT, docMap);
 
             return (
                 Response
