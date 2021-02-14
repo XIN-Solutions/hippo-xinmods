@@ -15,7 +15,7 @@ import java.io.IOException;
  * the HTTP session for this user to accommodate the hst:subjectbasedsession. Out of the box
  * it works fine with the LoginServlet, but for some reason the Basic Authentication valve doesn't care.
  *
- * @author: Marnix Kok <marnix@xinsolutions.co.nz>
+ * @author Marnix Kok <marnix@xinsolutions.co.nz>
  *
  */
 public class AuthenticationSubjectPersistFilter implements Filter {
@@ -53,6 +53,13 @@ public class AuthenticationSubjectPersistFilter implements Filter {
         // has an authentication header? no need to do anything.
         if (!BasicAuthUtility.hasAuthorizationHeader(httpRequest)) {
             LOG.debug("No authentication header");
+            chain.doFilter(request, response);
+            return;
+        }
+
+        String authHeader = httpRequest.getHeader("Authorization");
+        if (!authHeader.startsWith("Basic")) {
+            LOG.debug("Authentication header not of Basic type");
             chain.doFilter(request, response);
             return;
         }

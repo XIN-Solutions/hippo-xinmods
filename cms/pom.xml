@@ -24,6 +24,11 @@
             <version>${project.version}</version>
             <type>pom</type>
         </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -52,6 +57,8 @@
                     <include>**/*.svg</include>
                     <include>**/*.js</include>
                     <include>**/*.json</include>
+                    <include>**/*.pem</include>
+                    <include>**/*.der</include>
                 </includes>
             </resource>
         </resources>

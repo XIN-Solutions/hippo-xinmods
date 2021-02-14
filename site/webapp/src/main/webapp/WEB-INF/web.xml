@@ -89,6 +89,7 @@
     </init-param>
   </filter>
 
+
   <filter>
     <filter-name>EnsureRestUserBlockingFilter</filter-name>
     <filter-class>nz.xinsolutions.core.security.EnsureUserRoleBlockingFilter</filter-class>
@@ -96,6 +97,11 @@
       <param-name>groups</param-name>
       <param-value>admin,restuser</param-value>
     </init-param>
+  </filter>
+
+  <filter>
+    <filter-name>TestRepositoryCredentialsFilter</filter-name>
+    <filter-class>nz.xinsolutions.core.security.TestRepositoryCredentialsFilter</filter-class>
   </filter>
 
   <filter>
@@ -120,12 +126,6 @@
   </filter-mapping>
 
   <filter-mapping>
-    <filter-name>AuthenticationSubjectPersistFilter</filter-name>
-    <url-pattern>/custom-api/*</url-pattern>
-    <url-pattern>/api/*</url-pattern>
-  </filter-mapping>
-
-  <filter-mapping>
     <filter-name>PackageManagerBlockingFilter</filter-name>
     <url-pattern>/custom-api/packages/*</url-pattern>
   </filter-mapping>
@@ -135,6 +135,20 @@
     <url-pattern>/custom-api/*</url-pattern>
     <url-pattern>/api/*</url-pattern>
   </filter-mapping>
+
+
+  <filter-mapping>
+    <filter-name>TestRepositoryCredentialsFilter</filter-name>
+    <url-pattern>/custom-api/*</url-pattern>
+    <url-pattern>/api/*</url-pattern>
+  </filter-mapping>
+
+  <filter-mapping>
+    <filter-name>AuthenticationSubjectPersistFilter</filter-name>
+    <url-pattern>/custom-api/*</url-pattern>
+    <url-pattern>/api/*</url-pattern>
+  </filter-mapping>
+
 
   <filter-mapping>
     <filter-name>CharacterEncodingFilter</filter-name>
@@ -310,18 +324,19 @@
       <url-pattern>/packages/*</url-pattern>
     </web-resource-collection>
 
-    <!-- protect the /custom-api path -->
+    <!-- protect the /custom-api path
     <web-resource-collection>
       <web-resource-name>XinMODS API endpoints</web-resource-name>
       <url-pattern>/custom-api/*</url-pattern>
     </web-resource-collection>
+-->
 
-    <!-- protect the /api path -->
+    <!-- protect the /api path
     <web-resource-collection>
       <web-resource-name>Normal API endpoint</web-resource-name>
       <url-pattern>/api/*</url-pattern>
     </web-resource-collection>
-
+-->
     <auth-constraint>
       <role-name>*</role-name>
     </auth-constraint>

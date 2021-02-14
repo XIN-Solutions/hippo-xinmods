@@ -62,6 +62,10 @@
       <param-name>upload-limit</param-name>
       <param-value>51200k</param-value>
     </init-param>
+    <init-param>
+      <param-name>ignorePaths</param-name>
+      <param-value>/ws/jwt,/ws/jwks.json</param-value>
+    </init-param>
   </filter>
 
   <!--Builtin console-->
@@ -184,6 +188,17 @@
     <load-on-startup>6</load-on-startup>
   </servlet>
 
+  <servlet>
+    <servlet-name>JWTGeneratorServlet</servlet-name>
+    <servlet-class>nz.xinsolutions.jwt.servlets.JWTGeneratorServlet</servlet-class>
+  </servlet>
+
+  <servlet>
+    <servlet-name>JWKSMapServlet</servlet-name>
+    <servlet-class>nz.xinsolutions.jwt.servlets.JWKSMapServlet</servlet-class>
+  </servlet>
+
+
   <servlet-mapping>
     <servlet-name>LoggingServlet</servlet-name>
     <url-pattern>/logging/*</url-pattern>
@@ -215,9 +230,20 @@
   </servlet-mapping>
 
   <servlet-mapping>
+    <servlet-name>JWTGeneratorServlet</servlet-name>
+    <url-pattern>/ws/jwt</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>JWKSMapServlet</servlet-name>
+    <url-pattern>/ws/jwks.json</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
     <servlet-name>RepositoryJaxrsServlet</servlet-name>
     <url-pattern>/ws/*</url-pattern>
   </servlet-mapping>
+
 
   <!-- Timeout in minutes -->
   <session-config>
