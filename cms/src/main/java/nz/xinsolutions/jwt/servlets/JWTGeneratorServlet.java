@@ -81,8 +81,8 @@ public class JWTGeneratorServlet extends HttpServlet {
         JwtUserInfo userInfo = userInfoGen.createUserInfo(req);
         String token = jwtGenerator.generateTokenForBloomreachAccessFeatures(userInfo);
 
-        resp.setHeader("Content-Type", "application/jwt");
-        resp.getWriter().print(token);
+        resp.setHeader("Content-Type", "application/json");
+        resp.getWriter().print(String.format("\"%s\"", token));
         resp.flushBuffer();
 
     }

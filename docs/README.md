@@ -286,6 +286,64 @@ Secondly a report panel plugin node (eg. `my-new-report-plugin`) -- this one con
     
 ```
 
+# JWT credential provider 
+
+To enable 3rd party web applications to integrate with the Bloomreach CMS a JWT provider is part of XIN Mods. 
+
+Once a user has been logged in to the CMS, a call to `/cms/ws/jwt` will provide you with a JSON string containing a
+JWT. It contains the following additional claims:
+
+* `username`: the name of the user that was logged in with
+* `usergroups`: the groups this user belongs to in the CMS. 
+
+To validate the signature of this token, you can point at a JWKS found here `cms/ws/jwks.json`. The private key
+used to generate the tokens is found in `webapps/keys/*.pem|der` in the CMS project. 
+
+Before using this facility, make sure to generate new keys using the script in `./bin/jwt/generate_key.sh` by calling
+it as follows:
+
+    $ cd bin/jwt/ 
+    $ ./generate_key.sh jwt
+
+This will generate four new files, that will replace the existing key files. Ideally you do not store private keys in
+the repo, instead you could make bundling it from an external source part of your build process. 
+
+JWTs obtained through the `/cms/ws/jwt` endpoint can be sent through to the `/api` and `/custom-api` endpoints as
+bearer tokens in the `Authorization` header.
+
+    Authorization: Bearer <jwt>
+
+The token will be checked against the `jwks.json` specified in the configuration. By default, if the JWT validation was
+successful, a JCR session is opened as `admin`. If you do not want that, you can provide an alternative set of credentials 
+in the deployment configuration. 
+
+    ..
+    "xin" : { 
+        "cmsHost": "https://<your_cms_deployment_url>",
+        "adminPass": ",
+        "jwksUrl": "https://<your_cms_deployment_url>/cms/ws/jwks.json",
+        "jwtRepoUser": "jwt_user", 
+        "jwtRepoPassword": ""
+    } 
+    ..
+
+As with normal Basic authentication for the API endpoints, only users either `admin` or contained within the
+`restapi` group are allowed to access the endpoints.  
+
+## Integration scenario
+
+What follows is an example of how a 3rd party webapp can integrate into Bloomreach using JWTs: 
+
+* Using the XINmods dashboard extensions create a new entry point into your external code;
+* When a user visits the the dashboard button, the iframe will invoke your application;
+* The application is aware of where the CMS is located and will invoke the `/cms/ws/jwt` endpoint to obtain a JWT;
+* It can then use regular HTTP calls (preferably from a backend) or the `xinmods` NPM module (as an abstraction) to query the CMS's repository.
+* Make sure to regularly fetch a new token so that it does not expire (the default expiration is set to 1 hour). 
+* The claims of the JWT could be inspected to determine their level of access to the third party integration by restricting functionality based on group membership. 
+
+
+
+
 # Queries
 
 ## Other endpoints

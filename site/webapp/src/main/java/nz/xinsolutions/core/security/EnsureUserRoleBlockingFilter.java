@@ -10,6 +10,7 @@ import nz.xinsolutions.core.jackrabbit.AutoCloseableSession;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.util.Base64;
 import org.hippoecm.hst.core.container.ContainerConstants;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -228,7 +229,7 @@ public class EnsureUserRoleBlockingFilter implements Filter {
             String token = getBearerToken(request);
 
             DecodedJWT jwt = JWT.decode(token);
-            JwkProvider provider = new UrlJwkProvider(new URL("http://localhost:8080/cms/ws/jwks.json"));
+            JwkProvider provider = new UrlJwkProvider(new URL(getJwksLocation()));
             Jwk jwk = provider.get(jwt.getKeyId());
 
             Algorithm algorithm = Algorithm.RSA256((RSAPublicKey) jwk.getPublicKey(), null);
@@ -241,6 +242,11 @@ public class EnsureUserRoleBlockingFilter implements Filter {
             return null;
         }
 
+    }
+
+    @NotNull
+    private String getJwksLocation() {
+        return System.getProperty("jwks.url", "http://localhost:8080/cms/ws/jwks.json");
     }
 
     /**

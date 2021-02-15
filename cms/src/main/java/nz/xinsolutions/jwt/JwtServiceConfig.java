@@ -1,7 +1,6 @@
 package nz.xinsolutions.jwt;
 
 import javax.servlet.ServletContext;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class JwtServiceConfig {
     /**
      * Hour in milliseconds, default expiration time.
      */
-    public static final int DAY_IN_MS = 1000 * 60 * 60 * 24;
+    public static final int HOUR_IN_MS = 1000 * 60 * 60;
 
 
     /**
@@ -73,6 +72,6 @@ public class JwtServiceConfig {
      * @return the expiration time
      */
     public long getJWTExpirationTime() {
-        return DAY_IN_MS;
+        return HOUR_IN_MS;
     }
 }
