@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
 import static nz.xinsolutions.core.jackrabbit.JcrSessionHelper.closeableSession;
 import static nz.xinsolutions.core.jackrabbit.JcrSessionHelper.loginAdministrative;
 
@@ -38,6 +37,11 @@ public class UserInfoGenerator {
      * Query to run to get all group memberships
      */
     public static final String QUERY_GROUP_MEMBERSHIPS = "//element(*, hipposys:group)[jcr:contains(@hipposys:members, '%s')]";
+    public static final String HIPPOSYS_LASTNAME = "hipposys:lastname";
+    public static final String HIPPOSYS_FIRSTNAME = "hipposys:firstname";
+    public static final String HIPPOSYS_EMAIL = "hipposys:email";
+    public static final String HIPPOSYS_ACTIVE = "hipposys:active";
+    public static final String USER_BASE_PATH = "/hippo:configuration/hippo:users/";
 
     /**
      * Populate a JwtUser information object based on the information related to the
@@ -58,12 +62,44 @@ public class UserInfoGenerator {
         try (AutoCloseableSession adminSession = closeableSession(loginAdministrative())) {
             List<String> userGroups = queryUserGroups(username, adminSession);
             userInfo.setGroups(userGroups);
+
+            Node node = getNodeForUsername(adminSession, username);
+
+            // populate jwt user info object with personal information
+            if (node.hasProperty(HIPPOSYS_EMAIL)) {
+                userInfo.setEmail(node.getProperty(HIPPOSYS_EMAIL).getString());
+            }
+
+            if (node.hasProperty(HIPPOSYS_FIRSTNAME)) {
+                userInfo.setFirstName(node.getProperty(HIPPOSYS_FIRSTNAME).getString());
+            }
+
+            if (node.hasProperty(HIPPOSYS_LASTNAME)) {
+                userInfo.setLastName(node.getProperty(HIPPOSYS_LASTNAME).getString());
+            }
+
+            if (node.hasProperty(HIPPOSYS_ACTIVE)) {
+                userInfo.setActive(node.getProperty(HIPPOSYS_ACTIVE).getBoolean());
+            }
+
         }
         catch (Exception rEx) {
             LOG.error("Could not check user memberships, caused by: ", rEx);
         }
 
         return userInfo;
+    }
+
+    /**
+     * Find the user node for <code>username</code>
+     *
+     * @param session the session to query with
+     * @param username  the username to look for
+     * @return the node or null if it doesn't exist.
+     * @throws RepositoryException
+     */
+    protected Node getNodeForUsername(AutoCloseableSession session, String username) throws RepositoryException {
+        return session.getNode(USER_BASE_PATH + username);
     }
 
     /**

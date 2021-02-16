@@ -23,6 +23,10 @@ public class JwtGenerator {
     public static final String JWT_AUDIENCE = "brxm-xinmods";
     public static final String CLAIM_USERNAME = "username";
     public static final String CLAIM_USERGROUPS = "usergroups";
+    public static final String CLAIM_IS_ACTIVE = "is_active";
+    public static final String CLAIM_FIRST_NAME = "first_name";
+    public static final String CLAIM_LAST_NAME = "last_name";
+    public static final String CLAIM_EMAIL_ADDRESS = "email_address";
 
     /**
      * JWT Service configuration
@@ -58,7 +62,12 @@ public class JwtGenerator {
             // set the audience
             builder.withAudience(JWT_AUDIENCE);
 
+            // add claims
             builder.withClaim(CLAIM_USERNAME, info.getUsername());
+            builder.withClaim(CLAIM_IS_ACTIVE, info.isActive());
+            builder.withClaim(CLAIM_FIRST_NAME, info.getFirstName());
+            builder.withClaim(CLAIM_LAST_NAME, info.getLastName());
+            builder.withClaim(CLAIM_EMAIL_ADDRESS, info.getEmail());
 
             if (CollectionUtils.isNotEmpty(info.getGroups())) {
                 builder.withArrayClaim(
