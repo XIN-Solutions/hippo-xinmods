@@ -4,7 +4,7 @@
     <parent>
         <groupId>nz.xinsolutions</groupId>
         <artifactId>xinmods-site</artifactId>
-        <version>1.14.19-SNAPSHOT</version>
+        <version>1.14.19</version>
     </parent>
     <artifactId>xinmods-site-components</artifactId>
     <packaging>jar</packaging>
