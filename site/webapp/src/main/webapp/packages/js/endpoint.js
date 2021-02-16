@@ -93,7 +93,19 @@
              * @return {[type]} [description]
              */
             downloadPackage : function(id, postfix) {
-                return window.open(BASE_URL + "/packages/" + id + "/export?postfix=" + encodeURIComponent(postfix));
+                $http.get(
+                    BASE_URL + "/packages/" + id + "/export?postfix=" + encodeURIComponent(postfix),
+                    {
+                        responseType: 'arraybuffer'
+                    }
+                ).then(function(result) {
+                    var file = new Blob([result.data], {type: 'application/zip'});
+                    var fileURL = window.URL.createObjectURL(file);
+                    var a = document.createElement("a");
+                    a.href = fileURL;
+                    a.download = id + "_" + postfix + ".zip";
+                    a.click();
+                })
             }
 
         };

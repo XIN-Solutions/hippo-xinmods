@@ -76,7 +76,10 @@
             <artifactId>hippo-plugin-content-tagging</artifactId>
         </dependency>
 
-
+        <dependency>
+            <groupId>org.bloomreach.forge.iframeperspective</groupId>
+            <artifactId>iframeperspective</artifactId>
+        </dependency>
 
     </dependencies>
 </project>

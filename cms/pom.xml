@@ -59,6 +59,7 @@
                     <include>**/*.json</include>
                     <include>**/*.pem</include>
                     <include>**/*.der</include>
+                    <include>**/*.properties</include>
                 </includes>
             </resource>
         </resources>

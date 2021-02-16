@@ -75,7 +75,6 @@
 
     <development-module-deploy-dir>shared/lib</development-module-deploy-dir>
     <content-module-deploy-dir>shared/lib</content-module-deploy-dir>
-
     <hippo.cms.locales>nl,de,fr,es,zh</hippo.cms.locales>
 
     <zip-library.version>1.12</zip-library.version>
@@ -87,6 +86,19 @@
       <id>hippo</id>
       <name>Hippo maven 2 repository.</name>
       <url>https://maven.onehippo.com/maven2/</url>
+    </repository>
+
+    <repository>
+      <id>hippo-forge</id>
+      <name>Bloomreach Forge Maven 2 repository.</name>
+      <url>https://maven.onehippo.com/maven2-forge/</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <layout>default</layout>
     </repository>
   </repositories>
 
@@ -178,6 +190,12 @@
         <artifactId>easymock</artifactId>
         <version>${easymock.version}</version>
         <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.bloomreach.forge.iframeperspective</groupId>
+        <artifactId>iframeperspective</artifactId>
+        <version>5.0.0</version>
       </dependency>
 
     </dependencies>
