@@ -42,7 +42,7 @@
                         <div class="alert alert-info" role="alert">
                             Hitting the submit button will upload and immediately install the package to the repository.
                         </div>
-                        <form id="uploadForm" target="_blank" enctype="multipart/form-data">
+                        <form id="uploadForm" enctype="multipart/form-data">
 
                             <div class="well well-lg">
                                 <div class="form-group">
@@ -76,7 +76,7 @@
 
                             <!-- button bar -->
                             <div class="ButtonBar ButtonBar--bottom">
-                                <button class="btn right btn-md btn-primary" type="submit"><i class="glyphicon glyphicon-upload"><!-- --></i> Ingest package</button>
+                                <a href="#" class="btn right btn-md btn-primary" onclick="uploadPackage()"><i class="glyphicon glyphicon-upload"><!-- --></i> Ingest package</a>
                                 <a class="btn btn-link" onclick="javascript: document.location.href='index.jsp'">Cancel</a>
                             </div>
 
@@ -98,6 +98,26 @@
         <script src="js/app.js"></script>
         <script src="js/endpoint.js"></script>
         <script src="js/ingestController.js"></script>
+
+        <script>
+            function uploadPackage() {
+
+                var form = $("form");
+                var fData = new FormData(form[0]);
+                var xhr = new XMLHttpRequest();
+
+                xhr.open("POST", form.attr("action"));
+                xhr.setRequestHeader("Authorization", Config.ApiAuth);
+                xhr.send(fData);
+
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4) {
+                        alert("Upload completed");
+                        history.go(-2);
+                    }
+                }
+            }
+        </script>
 
     </body>
 </html>
