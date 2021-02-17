@@ -58,6 +58,7 @@
   <bean id="customRestPlainResourceProviders" class="org.springframework.beans.factory.config.ListFactoryBean">
     <property name="sourceList">
       <list>
+
         <bean class="org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider">
           <constructor-arg>
             <bean class="nz.xinsolutions.rest.ContentQueryResource">
@@ -65,11 +66,21 @@
             </bean>
           </constructor-arg>
         </bean>
+
         <bean class="org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider">
           <constructor-arg>
-            <bean class="nz.xinsolutions.rest.PackageManagerResource"/>
+            <bean class="nz.xinsolutions.rest.PackageManagerResource" />
           </constructor-arg>
         </bean>
+
+        <bean class="org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider">
+          <constructor-arg>
+            <bean class="nz.xinsolutions.rest.CollectionsResource">
+              <property name="resourceContextFactory" ref="resourceContextFactory"></property>
+            </bean>
+          </constructor-arg>
+        </bean>
+
       </list>
     </property>
   </bean>

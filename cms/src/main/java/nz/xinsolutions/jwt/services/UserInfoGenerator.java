@@ -60,7 +60,7 @@ public class UserInfoGenerator {
 
         // login to repo and check memberships
         try (AutoCloseableSession adminSession = closeableSession(loginAdministrative())) {
-            List<String> userGroups = queryUserGroups(username, adminSession);
+            List<String> userGroups = queryUserGroups(adminSession, username);
             userInfo.setGroups(userGroups);
 
             Node node = getNodeForUsername(adminSession, username);
@@ -98,19 +98,19 @@ public class UserInfoGenerator {
      * @return the node or null if it doesn't exist.
      * @throws RepositoryException
      */
-    protected Node getNodeForUsername(AutoCloseableSession session, String username) throws RepositoryException {
+    protected Node getNodeForUsername(Session session, String username) throws RepositoryException {
         return session.getNode(USER_BASE_PATH + username);
     }
 
     /**
      * Retrieve a list of groups the current user is directly
      *
-     * @param userName      is the username to find the groups for
      * @param adminSession  the session to use for the query (should be administrative session).
+     * @param userName      is the username to find the groups for
      * @return a list of declared group memberships
      * @throws RepositoryException
      */
-    protected List<String> queryUserGroups(String userName, Session adminSession) throws RepositoryException {
+    protected List<String> queryUserGroups(Session adminSession, String userName) throws RepositoryException {
 
         QueryManager qMgr = adminSession.getWorkspace().getQueryManager();
 

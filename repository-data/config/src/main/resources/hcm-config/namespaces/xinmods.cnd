@@ -19,6 +19,8 @@
 [xinmods:rigiddocument]
   mixin
 
+[xinmods:collectionitem] > hippo:compound, hippostd:relaxed
+  orderable
 
 [hippogallery:imageset] > hippo:document
   orderable primaryitem hippogallery:thumbnail

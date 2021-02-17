@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.Repository;
 import javax.jcr.Session;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -50,6 +51,7 @@ public class TestRepositoryCredentialsFilter implements Filter {
             httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
+
 
         // make sure the credentials are correct.
         Session session = JcrSessionHelper.getAuthenticatedSession(httpRequest);
