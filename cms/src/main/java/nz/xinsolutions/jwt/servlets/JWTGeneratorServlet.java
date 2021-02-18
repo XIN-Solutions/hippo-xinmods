@@ -1,13 +1,12 @@
 package nz.xinsolutions.jwt.servlets;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nz.xinsolutions.core.jackrabbit.AutoCloseableSession;
 import nz.xinsolutions.jwt.JwtServiceConfig;
 import nz.xinsolutions.jwt.models.JwtUserInfo;
-import nz.xinsolutions.jwt.services.JwksGenerator;
 import nz.xinsolutions.jwt.services.JwtGenerator;
 import nz.xinsolutions.jwt.services.RSAKeyContainer;
 import nz.xinsolutions.jwt.services.UserInfoGenerator;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,12 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-
-import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
-import static nz.xinsolutions.core.jackrabbit.JcrSessionHelper.closeableSession;
-import static nz.xinsolutions.core.jackrabbit.JcrSessionHelper.loginAdministrative;
 
 /**
  * Author: Marnix Kok <marnix@elevate.net.nz>
@@ -40,9 +34,10 @@ public class JWTGeneratorServlet extends HttpServlet {
      * Logger
      */
     private static final Logger LOG = LoggerFactory.getLogger(JWTGeneratorServlet.class);
+    public static final String PARAM_SOURCE = "source";
 
     /**
-     * When called output the JWKS mapping.
+     * When called output the JWT Token.
      *
      * @param req      the request object for this request
      * @param resp     the response object for this request
@@ -53,7 +48,8 @@ public class JWTGeneratorServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        resp.setHeader("Access-Control-Allow-Origin", "*");
+        resp.setHeader("Access-Control-Allow-Origin", getSourceParameter(req));
+        resp.setHeader("Access-Control-Allow-Credentials", "true");
 
         if (!this.isUserLoggedIn(req)) {
             resp.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -85,6 +81,18 @@ public class JWTGeneratorServlet extends HttpServlet {
         resp.getWriter().print(String.format("\"%s\"", token));
         resp.flushBuffer();
 
+    }
+
+    /**
+     * Get the source to use in the response header.
+     * @param req the request parameter
+     * @return the access allow origin hostname
+     */
+    protected String getSourceParameter(HttpServletRequest req) {
+        if (!StringUtils.isBlank(req.getParameter(PARAM_SOURCE))) {
+            return req.getParameter(PARAM_SOURCE);
+        }
+        return "*";
     }
 
     @NotNull

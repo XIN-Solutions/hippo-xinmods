@@ -330,6 +330,11 @@ in the deployment configuration.
 As with normal Basic authentication for the API endpoints, only users either `admin` or contained within the
 `restapi` group are allowed to access the endpoints.  
 
+To successfully retrieve the JWT from the /cms/ws/jwt endpoint, one must be sure to include
+the `?source=http://<yourdomain>` parameter to allow the `Access-Control-Allow-Origin` parameter
+to be setup appropriately. Also, make sure the XHR has `withCredentials` enabled so that the session
+cookies are being sent along to the JWT endpoint.
+
 ## Integration scenario
 
 What follows is an example of how a 3rd party webapp can integrate into Bloomreach using JWTs: 
