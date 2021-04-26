@@ -320,7 +320,7 @@ in the deployment configuration.
     ..
     "xin" : { 
         "cmsHost": "https://<your_cms_deployment_url>",
-        "adminPass": ",
+        "adminPass": "",
         "jwksUrl": "https://<your_cms_deployment_url>/cms/ws/jwks.json",
         "jwtRepoUser": "jwt_user", 
         "jwtRepoPassword": ""

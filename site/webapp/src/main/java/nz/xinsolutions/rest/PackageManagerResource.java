@@ -56,7 +56,7 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
      */
     @Autowired private PackageImportService pkgImportService;
     
-    
+
     /**
      * @return a list of all the packages
      */
@@ -66,6 +66,8 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
     public Response getAllPackages(@Context HttpServletRequest request) {
         try {
             Session session = getSession(this, request);
+            session = impersonateFromRequest(session, request);
+
             LOG.info("Return a list of packages");
             return Response.ok(pkgListService.getPackages(session)).build();
         }
@@ -83,12 +85,14 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
     public Response getPackage(@Context HttpServletRequest request, @PathParam("id") String packageId) {
         try {
             Session session = getSession(this, request);
+            session = impersonateFromRequest(session, request);
+
             Package pkg = pkgListService.getPackage(session, packageId);
             if (pkg == null) {
                 LOG.info("Package with id `{}` not found", packageId);
                 return Response.status(404).build();
             }
-            
+
             return Response.ok(pkg).build();
         }
         catch (Exception ex) {
@@ -96,7 +100,7 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
             return errorResponse();
         }
     }
-    
+
     /**
      * This package imports the contents and CND elements of a package in the zip file for
      * the <code>file</code> query parameter.
@@ -112,12 +116,13 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
         @Multipart(value = "importCND", required = false) boolean importCND,
         @Multipart(value = "importPackageDef", required = false) boolean importPackageDef,
         @Multipart(value = "redirectTo", required = false) String redirectTo,
-        
+
         @Multipart("file") Attachment stream)
     {
 
         try {
             Session jcrSession = getSession(this, request);
+            jcrSession = impersonateFromRequest(jcrSession, request);
 
             // attachment found?
             if (stream == null) {
@@ -125,25 +130,25 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
                 response.setStatus(SC_BAD_REQUEST);
                 return errorResponse();
             }
-            
+
             // attachment of the correct type?
             if (!stream.getContentType().getSubtype().equals("zip")) {
                 LOG.error("Incoming stream was not of type `zip`, aborting.");
                 response.setStatus(SC_BAD_REQUEST);
                 return errorResponse();
             }
-            
+
             // copy file onto disk
             File tmpAttachmentFile = File.createTempFile("attachment_" + new Date().getTime(), ".zip");
             stream.transferTo(tmpAttachmentFile);
-            
+
             pkgImportService.importFile(
                 jcrSession, tmpAttachmentFile,
                 importContent, importCND, importPackageDef
             );
-            
+
             LOG.info("Package temporarily stored at: " + tmpAttachmentFile.getCanonicalPath());
-            
+
             return Response.ok(
                     "Package was imported succesfully, you can " +
                            "<a href='#' onclick='window.close();'>close this window</a>."
@@ -161,7 +166,7 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
 
         return errorResponse();
     }
-    
+
 
 
     /**
@@ -182,6 +187,7 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
 
         try {
             Session jcrSession = getSession(this, request);
+            jcrSession = impersonateFromRequest(jcrSession, request);
 
             // source doesn't exists?
             if (!pkgListService.packageExists(jcrSession, srcName)) {
@@ -216,7 +222,7 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
 
         return Response.ok().build();
     }
-    
+
     /**
      * Build a package that was already defined
      *
@@ -239,14 +245,15 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
 
         try {
             Session jcrSession = getSession(this, request);
-    
+            jcrSession = impersonateFromRequest(jcrSession, request);
+
             if (!pkgListService.packageExists(jcrSession, packageId)) {
                 response.setStatus(SC_NOT_FOUND);
                 return;
             }
 
             String pkgFilename = getPkgFilename(packageId, postfix);
-            
+
             response.setStatus(SC_OK);
             response.setHeader("Content-Type", "application/zip");
             response.setHeader("Content-Disposition", "attachment; filename=\"" + pkgFilename + "\"");
@@ -262,7 +269,7 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
         catch (PackageException pkgEx) {
             LOG.error("Something went wrong, caused by: ", pkgEx);
         }
-        
+
     }
 
 
@@ -279,12 +286,13 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
 
         try {
             Session jcrSession = getSession(this, request);
-        
+            jcrSession = impersonateFromRequest(jcrSession, request);
+
             if (!pkgListService.packageExists(jcrSession, packageId)) {
                 LOG.error("Package with ID `{}` doesn't exist", packageId);
                 return Response.serverError().build();
             }
-        
+
             pkgListService.deletePackage(jcrSession, packageId);
             return Response.ok().build();
         }
@@ -292,11 +300,11 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
             LOG.error("Could not complete package creation, caused by: ", ex);
             return Response.serverError().build();
         }
-        
-    }
-    
 
-    
+    }
+
+
+
     /**
      * Create a new package
      */
@@ -308,15 +316,16 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
         Package packageInfo
     ) {
         LOG.info("Requesting creation of new package: " + packageId);
-        
+
         try {
             Session jcrSession = getSession(this, request);
-            
+            jcrSession = impersonateFromRequest(jcrSession, request);
+
             if (pkgListService.packageExists(jcrSession, packageId)) {
                 LOG.error("Package with ID `{}` already exists, aborting.", packageId);
                 return Response.serverError().build();
             }
-            
+
             packageInfo.setId(packageId);
             pkgListService.addPackage(jcrSession, packageInfo);
 
@@ -327,8 +336,8 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
             return Response.serverError().build();
         }
     }
-    
-    
+
+
     /**
      * Edit a package definition
      */
@@ -340,10 +349,11 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
         Package packageInfo
     ) {
         LOG.info("Requesting creation of new package: " + packageId);
-    
+
         try {
             Session jcrSession = getSession(this, request);
-            
+            jcrSession = impersonateFromRequest(jcrSession, request);
+
             // should exist.
             if (!pkgListService.packageExists(jcrSession, packageId)) {
                 LOG.error("Package with ID `{}` does not exist, aborting.", packageId);
@@ -359,8 +369,6 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
             return Response.serverError().build();
         }
     }
-
-
 
     /**
      * @return the package filename when exporting.

@@ -1,13 +1,19 @@
 package nz.xinsolutions.core;
 
+import org.hippoecm.hst.core.container.ContainerConstants;
 import org.onehippo.cms7.essentials.components.rest.BaseRestResource;
 import org.onehippo.cms7.essentials.components.rest.ctx.DefaultRestContext;
 import org.onehippo.cms7.essentials.components.rest.ctx.RestContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
+
+import static nz.xinsolutions.core.Rest.LogContainer.LOG;
 
 /**
  * Contains common functions you'd want to use when building rest controllers but aren't
@@ -16,6 +22,10 @@ import javax.ws.rs.core.Response;
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
  */
 public interface Rest {
+
+    class LogContainer {
+        public static final Logger LOG = LoggerFactory.getLogger(Rest.class);
+    }
 
     /**
      * Creates and returns a typical error response.
@@ -64,6 +74,26 @@ public interface Rest {
      */
     default Session getSession(RestContext ctx) throws RepositoryException {
         return ctx.getRequestContext().getSession();
+    }
+
+    /**
+     * Impersonate a session to be the same as person that was used to login. Make sure to only
+     * call this when the user has already been authentication because `impersonate` does not do this
+     * on its own.
+     *
+     * @param request       the request to use for the remote user id
+     * @param jcrSession    the session to upgrade
+     */
+    default Session impersonateFromRequest(Session jcrSession, HttpServletRequest request) throws RepositoryException {
+        SimpleCredentials creds = (SimpleCredentials) request.getSession().getAttribute(ContainerConstants.SUBJECT_REPO_CREDS_ATTR_NAME);
+
+        if (creds == null) {
+            LOG.error("No credential information found in the request session, cannot impersonate.");
+            return jcrSession;
+        }
+
+        // impersonate
+        return jcrSession.impersonate(creds);
     }
 
 }
