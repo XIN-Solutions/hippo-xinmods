@@ -6,11 +6,13 @@ import com.auth0.jwk.UrlJwkProvider;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import nz.xinsolutions.core.Rest;
 import nz.xinsolutions.core.jackrabbit.AutoCloseableSession;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jackrabbit.util.Base64;
 import org.hippoecm.hst.core.container.ContainerConstants;
 import org.jetbrains.annotations.NotNull;
+import org.onehippo.cms7.essentials.components.rest.ctx.RestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,15 +27,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import static javax.servlet.http.HttpServletResponse.SC_FORBIDDEN;
-import static nz.xinsolutions.core.jackrabbit.JcrSessionHelper.closeableSession;
-import static nz.xinsolutions.core.jackrabbit.JcrSessionHelper.loginAdministrative;
+import static nz.xinsolutions.core.jackrabbit.JcrSessionHelper.*;
 
 /**
  * Blocks further calls by setting 403 if incoming requests aren't authenticated, and
@@ -45,7 +45,7 @@ import static nz.xinsolutions.core.jackrabbit.JcrSessionHelper.loginAdministrati
  *
  * @author: Marnix Kok <marnix@xinsolutions.co.nz>
  */
-public class EnsureUserRoleBlockingFilter implements Filter {
+public class EnsureUserRoleBlockingFilter implements Filter, Rest {
 
     /**
      * Logger
@@ -81,7 +81,7 @@ public class EnsureUserRoleBlockingFilter implements Filter {
     }
 
     /**
-     * Execute the filter and stop unauthorised acces.
+     * Execute the filter and stop unauthorised access.
      *
      * @param request   is the incoming request instance
      * @param response  is the response instance
@@ -103,42 +103,16 @@ public class EnsureUserRoleBlockingFilter implements Filter {
             return;
         }
 
-        // login to repo and check memberships
-        try (AutoCloseableSession adminSession = closeableSession(loginAdministrative())) {
+        // create a session based on the auth credentials in the request
+        Session requestSession = getAuthenticatedSession(httpRequest);
+        if (requestSession == null) {
+            LOG.error("No authentication information available, can never adhere to check. 403");
+            httpResponse.sendError(SC_FORBIDDEN, "No authentication information found.");
+            return;
+        }
 
-            if (this.hasBearerToken(httpRequest)) {
-
-                DecodedJWT jwt = this.decodeBearerToken(httpRequest, httpResponse);
-
-                if (jwt == null) {
-                    httpResponse.sendError(SC_FORBIDDEN, "Invalid JWT");
-                    return;
-                }
-
-                // extract information from token.
-                String jwtUser = jwt.getClaim("username").asString();
-                List<String> userGroups = jwt.getClaim("usergroups").asList(String.class);
-
-                if (!isAdministrator(jwtUser) && !foundValidGroupMembership(userGroups)) {
-                    httpResponse.sendError(SC_FORBIDDEN, "No allowed group memberships found.");
-                    return;
-                }
-
-                // shim in a request wrapper that overrides the authorization header with administrative credentials
-                HttpServletRequestWrapper reqWrap = new HttpServletRequestWrapper(httpRequest) {
-                    @Override
-                    public String getHeader(String name) {
-                        if (name.equals("Authorization")) {
-                            String adminHash = getDownstreamJwtRepoCredentials();
-                            return "Basic " + adminHash;
-                        }
-                        return super.getHeader(name);
-                    }
-                };
-
-                chain.doFilter(reqWrap, response);
-                return;
-            }
+        // impersonate admin
+        try (AutoCloseableSession adminSession = closeableSession(loginAdministrative(requestSession))) {
 
             // assuming it's using BASIC authentication
             SimpleCredentials basicAuthCreds = BasicAuthUtility.parseAuthorizationHeader(httpRequest);
@@ -180,73 +154,11 @@ public class EnsureUserRoleBlockingFilter implements Filter {
         catch (Exception rEx) {
             LOG.error("Could not check user memberships, caused by: ", rEx);
         }
-
-
-    }
-
-    /**
-     * @return the authorization header using the JWT credentials if set.
-     */
-    protected String getDownstreamJwtRepoCredentials() {
-        String repoUser = System.getProperty("jwt.repo.user");
-        String repoPass = System.getProperty("jwt.repo.password");
-
-        // the repository user basic auth information to satisfy the test repository credentials filter.
-        if (StringUtils.isNotEmpty(repoUser) && StringUtils.isNotEmpty(repoPass)) {
-            return Base64.encode(String.format("%s:%s", repoUser, repoPass));
+        finally {
+            if (requestSession.isLive()) {
+                requestSession.logout();
+            }
         }
-
-        // if no jwt user was specified, let's assume we're using the admin user password.
-        return Base64.encode("admin:" + System.getProperty("admin.password", "admin"));
-    }
-
-    /**
-     * @return true if the Authorization is a bearer token.
-     */
-    protected boolean hasBearerToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        return !StringUtils.isEmpty(authHeader) && authHeader.startsWith("Bearer ");
-    }
-
-    /**
-     * @return true if the Authorization is a bearer token.
-     */
-    protected String getBearerToken(HttpServletRequest request) {
-        String authHeader = request.getHeader("Authorization");
-        return authHeader.substring("Bearer ".length());
-    }
-
-    /**
-     * Make sure
-     * @param request
-     * @param response
-     * @return
-     * @throws IOException
-     */
-    protected DecodedJWT decodeBearerToken(HttpServletRequest request, HttpServletResponse response) {
-
-        try {
-            String token = getBearerToken(request);
-
-            DecodedJWT jwt = JWT.decode(token);
-            JwkProvider provider = new UrlJwkProvider(new URL(getJwksLocation()));
-            Jwk jwk = provider.get(jwt.getKeyId());
-
-            Algorithm algorithm = Algorithm.RSA256((RSAPublicKey) jwk.getPublicKey(), null);
-            algorithm.verify(jwt);
-
-            return jwt;
-        }
-        catch (Exception ex) {
-            LOG.error("Could not validate JWT, caused by: {}", ex.getMessage());
-            return null;
-        }
-
-    }
-
-    @NotNull
-    private String getJwksLocation() {
-        return System.getProperty("jwks.url", "http://localhost:8080/cms/ws/jwks.json");
     }
 
     /**
@@ -289,13 +201,6 @@ public class EnsureUserRoleBlockingFilter implements Filter {
         }
 
         return userGroups;
-    }
-
-    /**
-     * @return the credentials instance supposedly stored in the session object
-     */
-    protected SimpleCredentials getSessionCredentials(HttpSession session) {
-        return (SimpleCredentials) session.getAttribute(ContainerConstants.SUBJECT_REPO_CREDS_ATTR_NAME);
     }
 
     /**

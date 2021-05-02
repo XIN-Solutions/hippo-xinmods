@@ -4,6 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.S3Object;
 import nz.xinsolutions.config.SiteXinmodsConfig;
+import nz.xinsolutions.core.jackrabbit.AutoCloseableSession;
 import nz.xinsolutions.core.jackrabbit.JcrSessionHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
@@ -31,6 +32,9 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static nz.xinsolutions.core.jackrabbit.JcrSessionHelper.closeableSession;
+import static nz.xinsolutions.core.jackrabbit.JcrSessionHelper.loginAdministrative;
 
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
@@ -137,7 +141,7 @@ public class AssetModifierServlet extends HttpServlet {
 		}
 
 		// set the response headers
-		setImageResponseHeaders(resp, ext);
+		setImageResponseHeaders(req, resp, ext);
 
 		LOG.info("Rendering {}", fullUrl);
 
@@ -423,17 +427,15 @@ public class AssetModifierServlet extends HttpServlet {
 	/**
 	 * Set the headers
 	 *
-	 * @param resp	is the response object to put it on
+	 * @param req
+	 * @param resp    is the response object to put it on
 	 */
-	protected void setImageResponseHeaders(HttpServletResponse resp, String extension) {
+	protected void setImageResponseHeaders(HttpServletRequest req, HttpServletResponse resp, String extension) {
 
 		String mimeType = s_mimeTypes.getOrDefault(extension, "application/octet-stream");
 		resp.setHeader("Content-Type", mimeType);
 
-		Session adminSession = null;
-
-		try {
-			adminSession = getAdminJcrSession();
+		try (AutoCloseableSession adminSession = closeableSession(loginAdministrative(req))) {
 			SiteXinmodsConfig xmCfg = new SiteXinmodsConfig(adminSession);
 			long cacheLength = xmCfg.getAssetCacheLength(CACHE_TIME);
 
@@ -446,24 +448,6 @@ public class AssetModifierServlet extends HttpServlet {
 
 		}
 	}
-
-	/**
-	 * @return the administrative session
-	 * @throws RepositoryException
-	 */
-	protected static synchronized Session getAdminJcrSession() throws RepositoryException {
-
-		if (adminSession == null) {
-			return (adminSession = JcrSessionHelper.loginAdministrative());
-		}
-
-		if (!adminSession.isLive()) {
-			adminSession.refresh(false);
-		}
-
-		return adminSession;
-	}
-
 
 	// ------------------------------------------------------------------------------------------------
 	//		Query parsing

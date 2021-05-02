@@ -50,7 +50,7 @@ public class PackageDefinitionJcrPersister {
     public void persistPackages(Session session, List<Package> packages) throws PackageException {
         
         try {
-            ensurePackageNodeExists(getStorageLocation());
+            ensurePackageNodeExists(session, getStorageLocation());
 
             if (packages == null) {
                 LOG.info("Nothing to persist");
@@ -76,7 +76,7 @@ public class PackageDefinitionJcrPersister {
      */
     public List<Package> loadPackages(Session session) throws PackageException {
         try {
-            ensurePackageNodeExists(getStorageLocation());
+            ensurePackageNodeExists(session, getStorageLocation());
             Node pkgNode = getPackageNode(session, getStorageLocation());
             String nodeDefValue = getPackageDefinitionProperty(pkgNode);
             if (StringUtils.isEmpty(nodeDefValue)) {
@@ -171,10 +171,10 @@ public class PackageDefinitionJcrPersister {
      * @param storageLocation       is the storage location that should exist
      * @throws RepositoryException  something went wrong in the JCR.
      */
-    protected void ensurePackageNodeExists(String storageLocation) throws RepositoryException {
+    protected void ensurePackageNodeExists(Session session, String storageLocation) throws RepositoryException {
         Session adminSession = null;
         try {
-            adminSession = JcrSessionHelper.loginAdministrative();
+            adminSession = JcrSessionHelper.loginAdministrative(session);
             
             if (!adminSession.nodeExists("/" + storageLocation)) {
                 adminSession.getRootNode().addNode(storageLocation, NT_UNSTRUCTURED);

@@ -1,14 +1,17 @@
 package nz.xinsolutions.core.jackrabbit;
 
+import nz.xinsolutions.core.Rest;
 import nz.xinsolutions.core.security.BasicAuthUtility;
 import org.hippoecm.repository.HippoRepository;
 import org.hippoecm.repository.HippoRepositoryFactory;
+import org.onehippo.cms7.essentials.components.rest.ctx.RestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -17,7 +20,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  *      Some useful JCR functions
  */
-public class JcrSessionHelper {
+public class JcrSessionHelper implements Rest {
 
     /**
      * Logger
@@ -31,11 +34,28 @@ public class JcrSessionHelper {
     }
 
     /**
-     * @return an administrator session basi
+     * Create administrative session by impersonating from http request
+     *
+     * @param request  is the http request to impersonate off of.
+     * @return the new impersonated admin session (make sure to close it)
      * @throws RepositoryException
      */
-    public static Session loginAdministrative() throws RepositoryException {
-        return getAuthenticatedSession("admin", System.getProperty("admin.password", "admin"));
+    public static Session loginAdministrative(HttpServletRequest request) throws RepositoryException {
+        Rest restInstance = new Rest() {};
+        RestContext context = restInstance.newRestContext(null, request);
+        Session requestSession = context.getRequestContext().getSession();
+        Session adminSession = loginAdministrative(requestSession);
+        return adminSession;
+    }
+
+    /**
+     * @return an administrator session
+     * @throws RepositoryException
+     * @param jcrSession base JCR session to start impersonation off of.
+     */
+    public static Session loginAdministrative(Session jcrSession) throws RepositoryException {
+        Session adminSession = jcrSession.impersonate(new SimpleCredentials("admin", "".toCharArray()));
+        return adminSession;
     }
 
     /**
@@ -61,6 +81,12 @@ public class JcrSessionHelper {
 
         try {
             SimpleCredentials creds = BasicAuthUtility.parseAuthorizationHeader(request);
+
+            if (creds == null) {
+                LOG.info("No Authorization header found on the request.");
+                return null;
+            }
+
             return getAuthenticatedSession(
                     creds.getUserID(),
                     new String(creds.getPassword())

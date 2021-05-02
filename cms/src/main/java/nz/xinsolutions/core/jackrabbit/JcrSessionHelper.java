@@ -2,6 +2,7 @@ package nz.xinsolutions.core.jackrabbit;
 
 import org.hippoecm.repository.HippoRepository;
 import org.hippoecm.repository.HippoRepositoryFactory;
+import org.onehippo.repository.security.JvmCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,17 +25,40 @@ public class JcrSessionHelper {
     private static final Logger LOG = LoggerFactory.getLogger(Logger.class);
 
 
+    /**
+     * Create a new JCR session based on the user and password provided
+     *
+     * @param user      user to create a session for
+     * @param password  the password to create a session with
+     * @return the new session
+     * @throws RepositoryException
+     */
     public static Session getAuthenticatedSession(String user, String password) throws RepositoryException {
         HippoRepository repository = HippoRepositoryFactory.getHippoRepository("vm://");
         return repository.login(user, password.toCharArray());
     }
 
     /**
-     * @return an administrator session basi
+     * Create a new administrative session based on the live user credentials ability
+     * to impersonate the 'admin' user. Make sure to close the session.
+     *
+     * @return an administrator session
      * @throws RepositoryException
      */
     public static Session loginAdministrative() throws RepositoryException {
-        return getAuthenticatedSession("admin", System.getProperty("admin.password", "admin"));
+
+        // get the liveuser service user credentials
+        JvmCredentials liveUserPass = JvmCredentials.getCredentials("liveuser");
+
+        // create a new session
+        Session baseSession = getAuthenticatedSession(
+            liveUserPass.getUserID(),
+            new String(liveUserPass.getPassword())
+        );
+
+        Session adminSession = baseSession.impersonate(new SimpleCredentials("admin", "".toCharArray()));
+        baseSession.logout();
+        return adminSession;
     }
 
     /**
