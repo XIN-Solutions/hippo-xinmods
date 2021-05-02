@@ -96,4 +96,24 @@ public interface Rest {
         return jcrSession.impersonate(creds);
     }
 
+    /**
+     * Impersonate a session to be the same as person that was used to login. Make sure to only
+     * call this when the user has already been authentication because `impersonate` does not do this
+     * on its own.
+     *
+     * @param request       the request to use for the remote user id
+     * @param jcrSession    the session to upgrade
+     */
+    default Session impersonateFromRequest(Session jcrSession, HttpServletRequest request) throws RepositoryException {
+        SimpleCredentials creds = (SimpleCredentials) request.getSession().getAttribute(ContainerConstants.SUBJECT_REPO_CREDS_ATTR_NAME);
+
+        if (creds == null) {
+            LOG.error("No credential information found in the request session, cannot impersonate.");
+            return jcrSession;
+        }
+
+        // impersonate
+        return jcrSession.impersonate(creds);
+    }
+
 }
