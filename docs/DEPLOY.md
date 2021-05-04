@@ -28,8 +28,7 @@ Nginx will be configured as well to route traffic properly.
         },
     
         "xin" : {
-            "cmsHost": "base url for cms",
-            "adminPass": "admin"
+            "cmsHost": "base url for cms"
         }
     
     }

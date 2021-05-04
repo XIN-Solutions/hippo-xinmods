@@ -95,5 +95,5 @@ public interface Rest {
         // impersonate
         return jcrSession.impersonate(creds);
     }
-    
+
 }

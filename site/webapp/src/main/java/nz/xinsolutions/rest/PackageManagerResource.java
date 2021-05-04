@@ -64,9 +64,11 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
     @Path("/list")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getAllPackages(@Context HttpServletRequest request) {
+
+        Session session = null;
         try {
-            Session session = getSession(this, request);
-            session = impersonateFromRequest(session, request);
+            Session reqSession = getSession(this, request);
+            session = impersonateFromRequest(reqSession, request);
 
             LOG.info("Return a list of packages");
             return Response.ok(pkgListService.getPackages(session)).build();
@@ -74,6 +76,11 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
         catch (Exception ex) {
             LOG.error("Couldn't get all packages, caused by: ", ex);
             return errorResponse();
+        }
+        finally {
+            if (session != null && session.isLive()) {
+                session.logout();
+            }
         }
     }
 
@@ -83,9 +90,11 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getPackage(@Context HttpServletRequest request, @PathParam("id") String packageId) {
+
+        Session session = null;
         try {
-            Session session = getSession(this, request);
-            session = impersonateFromRequest(session, request);
+            Session reqSession = getSession(this, request);
+            session = impersonateFromRequest(reqSession, request);
 
             Package pkg = pkgListService.getPackage(session, packageId);
             if (pkg == null) {
@@ -98,6 +107,11 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
         catch (Exception ex) {
             LOG.error("Something went wrong while trying to retrieve package with id `{}`", packageId);
             return errorResponse();
+        }
+        finally {
+            if (session != null && session.isLive()) {
+                session.logout();
+            }
         }
     }
 
@@ -119,10 +133,10 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
 
         @Multipart("file") Attachment stream)
     {
-
+        Session jcrSession = null;
         try {
-            Session jcrSession = getSession(this, request);
-            jcrSession = impersonateFromRequest(jcrSession, request);
+            Session reqSession = getSession(this, request);
+            jcrSession = impersonateFromRequest(reqSession, request);
 
             // attachment found?
             if (stream == null) {
@@ -163,6 +177,11 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
         catch (Exception pEx) {
             LOG.error("Could not create package, caused by: ", pEx);
         }
+        finally {
+            if (jcrSession != null && jcrSession.isLive()) {
+                jcrSession.logout();
+            }
+        }
 
         return errorResponse();
     }
@@ -185,9 +204,10 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
 
         LOG.info("Trying to clone " + srcName + " to " + dstName);
 
+        Session jcrSession = null;
         try {
-            Session jcrSession = getSession(this, request);
-            jcrSession = impersonateFromRequest(jcrSession, request);
+            Session reqSession = getSession(this, request);
+            jcrSession = impersonateFromRequest(reqSession, request);
 
             // source doesn't exists?
             if (!pkgListService.packageExists(jcrSession, srcName)) {
@@ -219,6 +239,11 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
         catch (PackageException pkgEx) {
             LOG.error("Something went wrong, caused by: ", pkgEx);
         }
+        finally {
+            if (jcrSession != null && jcrSession.isLive()) {
+                jcrSession.logout();
+            }
+        }
 
         return Response.ok().build();
     }
@@ -243,9 +268,10 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
     {
         LOG.info("Requesting build of " + packageId);
 
+        Session jcrSession = null;
         try {
-            Session jcrSession = getSession(this, request);
-            jcrSession = impersonateFromRequest(jcrSession, request);
+            Session reqSession = getSession(this, request);
+            jcrSession = impersonateFromRequest(reqSession, request);
 
             if (!pkgListService.packageExists(jcrSession, packageId)) {
                 response.setStatus(SC_NOT_FOUND);
@@ -284,9 +310,10 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
     public Response deletePackage(@Context HttpServletRequest request, @PathParam("id") String packageId) {
         LOG.info("Requesting deletion of " + packageId);
 
+        Session jcrSession = null;
         try {
-            Session jcrSession = getSession(this, request);
-            jcrSession = impersonateFromRequest(jcrSession, request);
+            Session reqSession = getSession(this, request);
+            jcrSession = impersonateFromRequest(reqSession, request);
 
             if (!pkgListService.packageExists(jcrSession, packageId)) {
                 LOG.error("Package with ID `{}` doesn't exist", packageId);
@@ -317,9 +344,10 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
     ) {
         LOG.info("Requesting creation of new package: " + packageId);
 
+        Session jcrSession = null;
         try {
-            Session jcrSession = getSession(this, request);
-            jcrSession = impersonateFromRequest(jcrSession, request);
+            Session reqSession = getSession(this, request);
+            jcrSession = impersonateFromRequest(reqSession, request);
 
             if (pkgListService.packageExists(jcrSession, packageId)) {
                 LOG.error("Package with ID `{}` already exists, aborting.", packageId);
@@ -334,6 +362,11 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
         catch (RepositoryException | PackageException ex) {
             LOG.error("Could not complete package creation, caused by: ", ex);
             return Response.serverError().build();
+        }
+        finally {
+            if (jcrSession != null && jcrSession.isLive()) {
+                jcrSession.logout();
+            }
         }
     }
 
@@ -350,9 +383,10 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
     ) {
         LOG.info("Requesting creation of new package: " + packageId);
 
+        Session jcrSession = null;
         try {
-            Session jcrSession = getSession(this, request);
-            jcrSession = impersonateFromRequest(jcrSession, request);
+            Session reqSession = getSession(this, request);
+            jcrSession = impersonateFromRequest(reqSession, request);
 
             // should exist.
             if (!pkgListService.packageExists(jcrSession, packageId)) {
@@ -367,6 +401,11 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
         catch (RepositoryException | PackageException ex) {
             LOG.error("Could not complete package creation, caused by: ", ex);
             return Response.serverError().build();
+        }
+        finally {
+            if (jcrSession != null && jcrSession.isLive()) {
+                jcrSession.logout();
+            }
         }
     }
 

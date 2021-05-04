@@ -435,7 +435,7 @@ public class AssetModifierServlet extends HttpServlet {
 		String mimeType = s_mimeTypes.getOrDefault(extension, "application/octet-stream");
 		resp.setHeader("Content-Type", mimeType);
 
-		try (AutoCloseableSession adminSession = closeableSession(loginAdministrative(req))) {
+		try (AutoCloseableSession adminSession = closeableSession(loginAdministrative())) {
 			SiteXinmodsConfig xmCfg = new SiteXinmodsConfig(adminSession);
 			long cacheLength = xmCfg.getAssetCacheLength(CACHE_TIME);
 

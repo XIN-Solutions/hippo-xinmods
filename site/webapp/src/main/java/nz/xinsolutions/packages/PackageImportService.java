@@ -156,6 +156,7 @@ public class PackageImportService {
             configService.importZippedContent(zipFile, session.getNode(parentPath));
             
             session.save();
+            session.refresh(false);
 
         }
         catch (IOException | RepositoryException ex) {

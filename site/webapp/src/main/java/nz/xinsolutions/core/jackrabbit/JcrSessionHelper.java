@@ -4,7 +4,7 @@ import nz.xinsolutions.core.Rest;
 import nz.xinsolutions.core.security.BasicAuthUtility;
 import org.hippoecm.repository.HippoRepository;
 import org.hippoecm.repository.HippoRepositoryFactory;
-import org.onehippo.cms7.essentials.components.rest.ctx.RestContext;
+import org.onehippo.repository.security.JvmCredentials;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,19 +34,28 @@ public class JcrSessionHelper implements Rest {
     }
 
     /**
-     * Create administrative session by impersonating from http request
+     * Create a new administrative session based on the live user credentials ability
+     * to impersonate the 'admin' user. Make sure to close the session.
      *
-     * @param request  is the http request to impersonate off of.
-     * @return the new impersonated admin session (make sure to close it)
+     * @return an administrator session
      * @throws RepositoryException
      */
-    public static Session loginAdministrative(HttpServletRequest request) throws RepositoryException {
-        Rest restInstance = new Rest() {};
-        RestContext context = restInstance.newRestContext(null, request);
-        Session requestSession = context.getRequestContext().getSession();
-        Session adminSession = loginAdministrative(requestSession);
+    public static Session loginAdministrative() throws RepositoryException {
+
+        // get the liveuser service user credentials
+        JvmCredentials liveUserPass = JvmCredentials.getCredentials("liveuser");
+
+        // create a new session
+        Session baseSession = getAuthenticatedSession(
+            liveUserPass.getUserID(),
+            new String(liveUserPass.getPassword())
+        );
+
+        Session adminSession = baseSession.impersonate(new SimpleCredentials("admin", "".toCharArray()));
+        baseSession.logout();
         return adminSession;
     }
+
 
     /**
      * @return an administrator session
