@@ -256,10 +256,8 @@ public class NodeConversion {
             }
 
             Property stateValue = childNode.getProperty(HIPPOSTD_STATE);
-            Property summaryValue = childNode.getProperty(HIPPOSTD_STATE_SUMMARY);
 
-
-            if (stateValue.getString().equals(STATE_PUBLISHED) && summaryValue.getString().equals(SUMMARY_LIVE)) {
+            if (stateValue.getString().equals(STATE_PUBLISHED)) {
                 return childNode;
             }
         }

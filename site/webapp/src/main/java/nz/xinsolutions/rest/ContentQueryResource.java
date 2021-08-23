@@ -9,6 +9,7 @@ import org.hippoecm.hst.configuration.hosting.Mount;
 import org.hippoecm.hst.content.beans.query.HstQuery;
 import org.hippoecm.hst.content.beans.query.HstQueryManager;
 import org.hippoecm.hst.content.beans.query.HstQueryResult;
+import org.hippoecm.hst.content.beans.query.exceptions.QueryException;
 import org.hippoecm.hst.content.beans.standard.HippoBean;
 import org.hippoecm.hst.content.beans.standard.HippoBeanIterator;
 import org.hippoecm.hst.content.beans.standard.HippoDocument;
@@ -60,6 +61,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
     public static final String KEY_LABEL = "label";
     public static final String KEY_DOCUMENTS = "documents";
     public static final String KEY_DOCUMENT = "document";
+    public static final String MISSING_SCOPE_MESSAGE = "There must be a scope for a search";
 
     /**
      * Resource context factory.
@@ -93,7 +95,34 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
             LOG.info("Received Query Request: " + query);
 
             HstQueryManager qMgr = restCtx.getRequestContext().getQueryManager();
-            HstQuery hstQuery = getQueryParserInstance().createFromString(qMgr, query, queryParams);
+
+            HstQuery hstQuery = null;
+            try {
+                hstQuery = getQueryParserInstance().createFromString(qMgr, query, queryParams);
+            }
+            catch (IllegalStateException isEx) {
+
+                //
+                // this particular exception should just return an empty list, it means that none of the
+                // expected query paths exist in the JCR -- which can be fine if you're working with systems
+                // that expect content to be or not to be there in certain scenarios.
+                //
+                boolean pathsDontExist = (isEx.getMessage().equals(MISSING_SCOPE_MESSAGE));
+                // respond
+                return (
+                    Response.status(200)
+                        .entity(
+                            new LinkedHashMap<String, Object>() {{
+                                put(KEY_SUCCESS, true);
+                                put(KEY_MESSAGE, "No result found: " + (pathsDontExist ? "Paths don't exist" : isEx.getMessage()));
+                                put(KEY_UUIDS, new Object[0]);
+                                put(KEY_DOCUMENTS, new Object[0]);
+                                put(KEY_TOTAL_SIZE, 0);
+                            }}
+                        )
+                        .build()
+                );
+            }
 
             HstQueryResult queryResult = hstQuery.execute();
             int totalItems = queryResult.getTotalSize();
@@ -484,6 +513,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
                         nodeConversion.toMap(bean)
                     )
                 )
+                .filter(entry -> entry.getKey() != null && entry.getValue() != null)
                 .collect(
                     Collectors.toMap(
                         AbstractMap.SimpleEntry::getKey,
