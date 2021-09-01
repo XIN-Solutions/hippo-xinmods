@@ -296,7 +296,7 @@ JWT. It contains the following additional claims:
 * `username`: the name of the user that was logged in with
 * `usergroups`: the groups this user belongs to in the CMS. 
 
-To validate the signature of this token, you can point at a JWKS found here `cms/ws/jwks.json`. The private key
+To validate the signature of this token, you can point at a JWKS found here `/cms/ws/jwks.json`. The private key
 used to generate the tokens is found in `webapps/keys/*.pem|der` in the CMS project. 
 
 Before using this facility, make sure to generate new keys using the script in `./bin/jwt/generate_key.sh` by calling

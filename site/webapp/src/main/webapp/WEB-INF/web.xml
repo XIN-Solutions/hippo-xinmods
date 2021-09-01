@@ -133,12 +133,6 @@
 
 
   <filter-mapping>
-    <filter-name>TestRepositoryCredentialsFilter</filter-name>
-    <url-pattern>/custom-api/*</url-pattern>
-    <url-pattern>/api/*</url-pattern>
-  </filter-mapping>
-
-  <filter-mapping>
     <filter-name>AuthenticationSubjectPersistFilter</filter-name>
     <url-pattern>/custom-api/*</url-pattern>
     <url-pattern>/api/*</url-pattern>
