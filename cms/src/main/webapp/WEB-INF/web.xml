@@ -114,6 +114,7 @@
     <listener-class>org.hippoecm.frontend.plugins.login.ConcurrentLoginListener</listener-class>
   </listener>
 
+
   <servlet>
     <servlet-name>AngularResourceServlet</servlet-name>
     <servlet-class>org.onehippo.cms7.utilities.servlet.SecureCmsResourceServlet</servlet-class>
@@ -189,6 +190,11 @@
   </servlet>
 
   <servlet>
+    <servlet-name>Auth0SessionBridgeServlet</servlet-name>
+    <servlet-class>nz.xinsolutions.authentication.Auth0SessionBridgeServlet</servlet-class>
+  </servlet>
+
+  <servlet>
     <servlet-name>JWTGeneratorServlet</servlet-name>
     <servlet-class>nz.xinsolutions.jwt.servlets.JWTGeneratorServlet</servlet-class>
   </servlet>
@@ -237,6 +243,11 @@
   <servlet-mapping>
     <servlet-name>JWKSMapServlet</servlet-name>
     <url-pattern>/ws/jwks.json</url-pattern>
+  </servlet-mapping>
+
+  <servlet-mapping>
+    <servlet-name>Auth0SessionBridgeServlet</servlet-name>
+    <url-pattern>/ws/auth0-bridge</url-pattern>
   </servlet-mapping>
 
   <servlet-mapping>

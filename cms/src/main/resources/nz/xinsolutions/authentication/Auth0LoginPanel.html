@@ -1,0 +1,175 @@
+<html xmlns:wicket="http://wicket.apache.org/">
+<head></head>
+<body>
+    <wicket:extend>
+        <script src="/cms/ws/auth0-bridge"></script>
+
+        <div class="auth0-login">
+            <p class="login-label">
+                Click below to login to <script>document.write(auth0Config.appTitle)</script>.
+            </p>
+
+            <button type="button"
+                    class="btn btn-primary login-form-submit"
+                    onclick="return loginWithAuth0();"
+            >
+                <span class="login-form-submit-label">login</span>
+
+                <span class="login-form-submit-icon">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="16px" height="16px"
+                         viewBox="0 0 16 16" enable-background="new 0 0 16 16">
+                        <g>
+                            <path fill="none" stroke="currentColor" stroke-miterlimit="10"
+                                d="M5.031,2l5.609,5.643c0.187,0.186,0.187,0.483,0,0.669l-5.625,5.641"></path>
+                        </g>
+                    </svg>
+                </span>
+            </button>
+        </div>
+
+        <script src="https://cdn.auth0.com/js/auth0/9.11/auth0.min.js"></script>
+        <script>
+
+            (function() {
+
+                // Initialize app
+                const webAuth = new auth0.WebAuth({
+                    domain : auth0Config.domain,
+                    clientID : auth0Config.clientId
+                });
+
+                /**
+                 * Parse incoming hash information and return a map with
+                 * parsed information.
+                 */
+                function parseHashParameters(rawInfo) {
+
+                    var rawArr = rawInfo.split("&");
+                    var params = {};
+
+                    for (var idx = 0; idx < rawArr.length; ++idx) {
+                        var rawParam = rawArr[idx];
+                        var param = rawParam.split("=")
+
+                        params[param[0]] = decodeURIComponent(param[1]);
+                    }
+
+                    return params;
+                }
+
+
+                /**
+                 * Construct profile information and query the server for the persons
+                 * information.
+                 */
+                function toBaseProfile(params) {
+
+                    var profile = {
+                        accessToken: params.access_token,
+                        scopes: params.scope ? params.scope.split(" ") : [],
+                        expires: parseInt(params.expires_in, 10),
+                        tokenType: params.token_type,
+                        state: params.state
+                    };
+
+                    return profile;
+
+                }
+
+
+                function parseCallbackValues() {
+
+                    var rawInfo = document.location.hash.substring(1);
+                    var params = parseHashParameters(rawInfo);
+
+                    if (params.error) {
+                        showError(params);
+                    }
+                    else {
+
+                        var profile = toBaseProfile(params);
+
+                        webAuth.client.userInfo(profile.accessToken, function(err, user) {
+                            var completeProfile = Object.assign(profile, user);
+
+                            $.post("/cms/ws/auth0-bridge", JSON.stringify(completeProfile), null, "json")
+                                .done((response) => {
+
+                                    if (!response.success) {
+                                        alert("Could not login: " + response.message);
+                                        return;
+                                    }
+
+                                    $("input[name='username']").attr("readonly", "readonly").val(completeProfile.email);
+                                    $("input[name='password']").attr("readonly", "readonly").val(response.message);
+                                    $("button[type='submit']").click();
+                                })
+                                .fail((err) => {
+                                    console.log("Something went wrong: ", err);
+                                })
+
+                        });
+                    }
+
+                }
+
+
+                /**
+                 * Logout from auth0
+                 */
+                window.logoutFromAuth0 = function() {
+                    webAuth.logout({
+                        returnTo: auth0Config.afterLogoutUrl,
+                        clientID: auth0Config.clientId
+                    });
+                };
+
+                /**
+                 * Trigger the social login for auth0.
+                 * @returns {boolean} false to cancel any other events.
+                 */
+                window.loginWithAuth0 = function() {
+
+                    webAuth.authorize({
+                        responseType: 'token',
+                        client_id: auth0Config.clientId,
+                        redirect_uri: auth0Config.afterLoginUrl,
+                        audience: auth0Config.requiredAudience,
+                        scope: 'openid profile email read:users'
+                    });
+
+                    return false;
+                }
+
+                //
+                // likely has access token information in the hash that we're wanting to interpret
+                //
+                if (document.location.hash.indexOf("access_token") !== -1) {
+                    parseCallbackValues();
+                }
+
+                //
+                // User Logged out? Let's log them out from auth0.
+                //
+                if (document.location.href.indexOf("&loginmessage=UserLoggedOut") !== -1) {
+                    logoutFromAuth0();
+                }
+
+                if (document.location.href.indexOf("system") === -1) {
+                    setTimeout(() => {
+                        $(".login-form-buttons").hide();
+                        $(".login-form-input").hide();
+                    }, 0);
+                }
+                else {
+                    $(".auth0-login").hide();
+                }
+
+            })();
+
+
+        </script>
+
+    </wicket:extend>
+</body>
+</html>

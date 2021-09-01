@@ -110,7 +110,7 @@ public class UserInfoGenerator {
      * @return a list of declared group memberships
      * @throws RepositoryException
      */
-    protected List<String> queryUserGroups(Session adminSession, String userName) throws RepositoryException {
+    public List<String> queryUserGroups(Session adminSession, String userName) throws RepositoryException {
 
         QueryManager qMgr = adminSession.getWorkspace().getQueryManager();
 

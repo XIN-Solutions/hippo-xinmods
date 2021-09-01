@@ -29,6 +29,20 @@
             <artifactId>junit</artifactId>
             <scope>compile</scope>
         </dependency>
+
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.4.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>jwks-rsa</artifactId>
+            <version>0.6.1</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -53,6 +67,7 @@
                 <directory>src/main/resources</directory>
                 <includes>
                     <include>**/*.css</include>
+                    <include>**/*.html</include>
                     <include>**/*.yaml</include>
                     <include>**/*.svg</include>
                     <include>**/*.js</include>

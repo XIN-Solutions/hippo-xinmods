@@ -6,6 +6,19 @@
     display: none;
 }
 
+
+.login-wrap {
+    width: 360px;
+}
+
+.login-wrap .login-label {
+    margin-top: 0;
+    text-align: center;
+}
+.auth0-login .login-form-submit {
+    border-radius: 5px;
+}
+
 .login-panel-header-logo {
     background-image: url("./logo-brxm.svg");
 }
@@ -26,4 +39,11 @@
 
 .hippo-editor-body .hippo-editor-template-field .hide {
     display: block !important;
+}
+
+.auth0-button {
+    height: 50px;
+    background-color:#2898D5;
+    width: 100%;
+    font-weight: bold;
 }
