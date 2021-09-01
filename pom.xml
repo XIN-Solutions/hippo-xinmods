@@ -12,14 +12,14 @@
   <description>XINmods</description>
   <groupId>nz.xinsolutions</groupId>
   <artifactId>xinmods</artifactId>
-  <version>1.15.5</version>
+  <version>1.15.6-SNAPSHOT</version>
   <packaging>pom</packaging>
 
 
   <scm>
     <connection>scm:git:ssh://xinsolutions.co.nz:2222/home/marnix/git/~marnix/xin/hippo-backend.git</connection>
     <developerConnection>scm:git:ssh://xinsolutions.co.nz:2222/home/marnix/git/~marnix/xin/hippo-backend.git</developerConnection>
-    <tag>xinmods-1.15.5</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <!-- 
