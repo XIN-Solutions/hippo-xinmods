@@ -107,6 +107,9 @@ Example URLs:
 * http://localhost:8080/site/assetmod/scale=100,_/binaries/content/gallery/images/image.jpg -- scale image to 100 width
 * http://localhost:8080/site/assetmod/scale=100,_/crop=50,50/binaries/content/gallery/images/image.jpg -- scale image to 100 width then crop to 50x50
 
+You can also specify the `quality`, a number between 0 and 1 that indicates the amount of compression applied to the output where
+quality of `0` is horribly compressed but reduced in output size and `1` is the largest filesize with the least compression
+applied.
 
 
 # Integrating User Management with Auth0
