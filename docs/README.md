@@ -2,14 +2,21 @@
 
 Read more documentation here: https://xinsolutions.co.nz/bloomreach-hippo-cms-caas
 
+If you're interested in implementing a NodeJS based client consider using the `xinmods` package found here: 
+
+* https://www.npmjs.com/package/xinmods
+
 # Packages
 
-xinMODS adds simple package management to the interface allowing you to add functional modules to a bare-bones CMS deployment 
+XIN mods adds simple package management to the interface allowing you to add functional modules to a bare-bones CMS deployment 
 without redeployments or restarting. 
 
 On your instance go to this URL: http://localhost:8080/site/packages/
 
 It shows you an interface to a set of endpoints described loosely below.
+
+To enable a number of standard features of the XIN mods go into the packages interface and install the
+`Enable XIN Mods - Common.zip` package you can find in `docs/packages`.
 
 ## REST Endpoints
 
@@ -76,6 +83,37 @@ With allowed values:
 Out of the box the `xinmods` namespace has a `xinmods:rigidfolder` mixin. If the common package has been installed
 and a folder has been tagged with this mixin, authors will not be able to do any workflow actions on this folder. 
 
+# Image Focus
+
+After installing the XIN Mods Common package (from the docs/packages/ folder), your assets will get an additional
+field that allows you to set the focal point of the image which will be stored on the image as additional properties. 
+
+You could feed the additional focal values into the focalX and focalY cropping options shown below.
+
+# Image Manipulation
+
+XIN Mods enrich the standard CMS with a asset modification servlet found under `/assetmod`.
+
+It allows you to scale, crop and apply filters to images in the DAM, and if configured properly from an external S3 source as well.
+This functionality is commonly pushed behind a proper caching layer.
+
+Example URLs:
+
+* http://localhost:8080/site/binaries/content/gallery/images/image.jpg -- original binary
+* http://localhost:8080/site/assetmod/binaries/content/gallery/images/image.jpg -- asset mod url without instructions
+* http://localhost:8080/site/assetmod/crop=100,100/binaries/content/gallery/images/image.jpg -- crop to 100x100 on the center
+* http://localhost:8080/site/assetmod/crop=100,100,<focalX>,<focalY>/binaries/content/gallery/images/image.jpg -- crop to 100x100 but focus on x,y in the image where x and y are numbers between -0.5 and 0.5
+* http://localhost:8080/site/assetmod/scale=_,100/binaries/content/gallery/images/image.jpg -- scale image to 100 height
+* http://localhost:8080/site/assetmod/scale=100,_/binaries/content/gallery/images/image.jpg -- scale image to 100 width
+* http://localhost:8080/site/assetmod/scale=100,_/crop=50,50/binaries/content/gallery/images/image.jpg -- scale image to 100 width then crop to 50x50
+
+
+
+# Integrating User Management with Auth0
+
+To understand how to integrate Auth0 into your brXM instance, read through `docs/AUTH0_INTEGRATION.md`. It only takes
+a few minutes to configure!
+
 # Extension points
 
 XINmods makes it easier to integrate external tools into the CMS by offering a number of easy to use integration points:
@@ -118,102 +156,8 @@ toolbar-option1/
 
 ### Icon identifiers
 
-* ARROW_DOWN
-* ARROW_FAT_DOWN_CIRCLE
-* ARROW_UP
-* ARROW_RIGHT_SQUARE
-* BELL
-* BULLET
-* BULLHORN
-* CALENDAR_DAY
-* CALENDAR_MONTH
-* CARET_DOWN
-* CARET_DOWN_CIRCLE
-* CARET_RIGHT
-* CARET_UP_CIRCLE
-* CHECK_CIRCLE
-* CHECK_CIRCLE_CLOCK
-* CHECK_SQUARE
-* CHEVRON_DOWN_CIRCLE
-* CHEVRON_DOWN
-* CHEVRON_LEFT_CIRCLE
-* CHEVRON_LEFT
-* CHEVRON_RIGHT_CIRCLE
-* CHEVRON_RIGHT
-* CHEVRON_UP_CIRCLE
-* CHEVRON_UP
-* CODE
-* COMPONENT
-* COMPRESS
-* CROP
-* EMPTY
-* EXCLAMATION_CIRCLE
-* EXCLAMATION
-* EXCLAMATION_TRIANGLE
-* EXPAND
-* FILE_COMPOUND
-* FILE_IMAGE
-* FILE
-* FILE_NEWS
-* FILE_PENCIL
-* FILE_TEXT
-* FILES
-* FLASK
-* FLOPPY
-* FOLDER
-* FOLDER_OPEN
-* FONT
-* FORWARD
-* GEAR
-* GLOBE_ABSTRACT
-* GLOBE
-* INFO_CIRCLE
-* INFO
-* LINK
-* LIST_UL
-* LOCKED
-* MIMETYPE_AUDIO
-* MIMETYPE_BINARY
-* MIMETYPE_DOC
-* MIMETYPE_DOCX
-* MIMETYPE_FLASH
-* MIMETYPE_IMAGE
-* MIMETYPE_ODP
-* MIMETYPE_ODS
-* MIMETYPE_ODT
-* MIMETYPE_PDF
-* MIMETYPE_PPT
-* MIMETYPE_PPTX
-* MIMETYPE_RTF
-* MIMETYPE_SXC
-* MIMETYPE_SXI
-* MIMETYPE_SXW
-* MIMETYPE_TEXT
-* MIMETYPE_VIDEO
-* MIMETYPE_XLS
-* MIMETYPE_XLSX
-* MIMETYPE_ZIP
-* MINUS_CIRCLE
-* MINUS_CIRCLE_CLOCK
-* MOVE_INTO
-* PENCIL_SQUARE
-* PIE_CHART
-* PLUS
-* PLUS_SQUARE
-* REFRESH
-* RESTORE
-* SEARCH
-* SORT
-* STEP_BACKWARD
-* STEP_FORWARD
-* THUMBNAILS
-* TIMES
-* TIMES_CIRCLE
-* TRANSLATE
-* TYPE
-* UNLINK
-* UNLOCKED
-* USER_CIRCLE
+For all possible values for the icons please read `docs/ICONS.md`.
+
 
 ## Content properties
 
@@ -349,72 +293,12 @@ What follows is an example of how a 3rd party webapp can integrate into Bloomrea
 
 # Collections
 
-A common use-case for web applications is saving small bits of information (think of
-user profile information, contact form values etc.), so a mechanism to push information 
-into the CMS would be very useful. 
-
-With that in mind, Collections have been introduced to XIN Mods. After installing the
-XIN Mods Common package, you will notice a new `hippostd:folder` at `/content/collections`. 
-This is where new collections can be added. 
-
-A collection is container of folders, and `jcr:content` handle nodes with a single always-live
-`jcr:content` node underneath of primary type: `xinmods:collectionitem`. 
-
-Collections cannot be created through the endpoints, you will have manually create a new 
-`hippostd:folder` node directly underneath the `collections` base folder. 
-
-Endpoints that now are available are:
-
-* GET: `/site/custom-api/collections/list`; provides a list of collections currently available
-* GET: `/site/custom-api/collections/{collectionName}/item?path=...`; retrieves the JSON representation
-of an item at path `...`
-* DELETE: `/site/custom-api/collections/{collectionName}/item?path=...&forceDelete=true/false`; removes 
-an item from the tree. If `forceDelete` is set to false, then only leaf items can be removed, if set
-  to true, parts of the collection tree can be removed all at once.
-* POST: `/site/custom-api/collections/{collectionName}/item?path=...` this endpoint allows you 
-push new content items into the collection. If the folders of the path do not exist yet, they are 
-created on the fly. The body of the POST request is a JSON object shaped as follows:
-     
-
-     {
-         "saveMode":"Overwrite|Merge|IfNotExists",
-         "values": {
-             "story": {
-                 "value" : "The story just goes on and on",
-                 "type": "String"
-             },
-             
-             "summary": {
-                 "value" : "This is a summayr of the story that keeps going.",
-                 "type": "String"
-             },
-             
-             "age": {
-                 "value": "10",
-                 "type": "Long"
-             },
-             
-             "date": {
-                 "value": "2021-02-18T11:08:18.450+13:00",
-                 "type": "Date"
-             }
-     
-         }
-     }
-
-The following types are supported: `Boolean`, `String`, `Long`, `Double`, `Date`.
-
-Savemodes come in handy when you wish to exert control over how information is 
-pushed into the repostiory.
-
-* If SaveMode is set to `Overwrite`, all existing content at the path is replaced.
-* If set to `Merge`, then existing content is retained; existing fields with new values
-are overwritten, and new fields are merged into the existing document;
- * If set to `IfNotExists`, then only if no such item exists yet, the item content is added.
-
-All these endpoints are available through an abstraction in the `xinmods` Javascript wrapper. 
+To understand how you can use XIN Collections to interact with the repository to store, retrieve and query small
+documents read through `docs/COLLECTIONS.md`.
 
 # Queries
+
+To understand how to use the queries endpoints read `docs/QUERIES.md`.
 
 ## Other endpoints
 
