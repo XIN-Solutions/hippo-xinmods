@@ -33,11 +33,8 @@ public class XinmodsConfig {
     public static final String XINMODS_CONFIG_PATH = "/hippo:configuration/hippo:modules/xinmods/hippo:moduleconfig";
     public static final String PROP_WEBHOOKS = "webhooks";
     public static final String PROP_SNS_TOPICS = "snsTopics";
+    public static final String PROP_JWT_WHITELIST = "jwt.whitelist";
 
-    /**
-     * JCR Session
-     */
-    private Session session;
 
     /**
      * Jcr node where configuration is stored
@@ -51,7 +48,6 @@ public class XinmodsConfig {
      * @param session   the JCR session to request the configuration with
      */
     public XinmodsConfig(Session session) {
-        this.session = session;
 
         try {
 
@@ -64,6 +60,32 @@ public class XinmodsConfig {
         }
         catch (RepositoryException rEx) {
             LOG.error("Exception trying to retrieve the xinmods configuration, caused by:", rEx);
+        }
+    }
+
+    public List<String> getJwtSourceWhitelist() {
+        if (config == null) {
+            return Collections.EMPTY_LIST;
+        }
+
+        try {
+            if (!this.config.hasProperty(PROP_JWT_WHITELIST)) {
+                return Collections.EMPTY_LIST;
+            }
+
+
+            Value[] whitelistValues = this.config.getProperty(PROP_JWT_WHITELIST).getValues();
+            List<String> whitelist = new ArrayList<>();
+
+            for (Value snsVal : whitelistValues) {
+                whitelist.add(snsVal.getString());
+            }
+
+            return whitelist;
+        }
+        catch (RepositoryException rEx) {
+            LOG.error("Something went wrong trying to retrieve the white list", rEx);
+            return Collections.EMPTY_LIST;
         }
     }
 
