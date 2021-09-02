@@ -5,7 +5,7 @@ Make sure to install the official Oracle Java JDK 1.8 and have your alternatives
 # Elastic Beanstalk
 
 In the root of the project, run `./bin/deploy/build-eb.sh <configFile>` with a reference to a configuration file
-of the shape below. This will prepare tomcat settings, repository xmls etc and zips it into an EB-ready ZIP artifact
+of the shape below. This will prepare tomcat settings, repository XMLs and zips it into an EB-ready ZIP artifact
 that can be uploaded into your AWS account. 
 
 Nginx will be configured as well to route traffic properly.  
@@ -33,7 +33,22 @@ Nginx will be configured as well to route traffic properly.
     
     }
 
-# Create hippo distribution
+The routing from nginx to the CMS and Site applications is as follows 
+(read along in `./bin/deploy/platform/nginx/nginx.conf`):
+
+* `/cms` and `/cms/console` forwards to the CMS and Console applications respectively;
+* `/mods/packages/index.jsp` will load the package manager
+* `/api/xin` is forwarded to the XIN Mods provisioned endpoints at `/site/custom-api`
+* `/api` is forwarded to the out-of-the-box endpoints 
+* `/binaries` is forwarded to `/site/binaries` to access the DAM assets.
+* `/assetmod` is forwarded to `/site/assetmod` the servlet in charge of resizing/cropping
+
+
+# Manual deployment instructions
+
+If you're not deploying to an EB you could follow the deployment instructions below. 
+
+## Create hippo distribution
 
 Checkout the tag you wish to build a distribution for:
 
@@ -47,7 +62,7 @@ To install new releases you no longer need all of the distribution, you would un
 
 	$ tar xvzf dist-version.tar.gz shared common webapps
 
-# Tomcat Setup
+## Tomcat Setup
 
 To setup tomcat:
 
@@ -98,7 +113,7 @@ the SNS topic Hippo CMS events are sent to.
 
 
 
-# MySQL setup:
+## MySQL setup:
 
 	$ apt-get install mysql-server
 
@@ -242,13 +257,13 @@ Create repository.xml at `tomcat/conf/repository.xml`:
 	</Repository>
 
 
-## References:
+### References:
 
 * https://www.a2hosting.com/kb/developer-corner/mysql/managing-mysql-databases-and-users-from-the-command-line
 * https://www.onehippo.org/library/deployment/configuring/configuring-hippo-for-mysql.html 
 
 
-# Setup Apache Virtualhost
+## Setup Apache Virtualhost
 
 Install apache:
     
@@ -362,7 +377,7 @@ Make sure to replace the host names with proper host names.  Enable the virtual 
     $ a2ensite hippo
 
 
-# Useful scripts
+## Useful scripts
 
 `new-instance.sh`:
 
