@@ -1,7 +1,9 @@
 package nz.xinsolutions.services;
 
+import org.hippoecm.hst.content.beans.standard.HippoAsset;
 import org.hippoecm.hst.content.beans.standard.HippoBean;
 import org.hippoecm.hst.content.beans.standard.HippoDocument;
+import org.hippoecm.hst.content.beans.standard.HippoGalleryImageSet;
 import org.hippoecm.hst.restapi.NodeVisitor;
 import org.hippoecm.hst.restapi.ResourceContext;
 import org.hippoecm.hst.restapi.ResourceContextFactory;
@@ -153,7 +155,11 @@ public class NodeConversion {
 
             Node jcrNode;
 
-            if (bean instanceof HippoDocument) {
+            boolean isImage = bean instanceof HippoGalleryImageSet;
+            boolean isAsset = bean instanceof HippoAsset;
+            boolean isPublishedDocument = bean instanceof HippoDocument && !isImage && !isAsset;
+
+            if (isPublishedDocument) {
                 HippoDocument doc = (HippoDocument) bean;
                 jcrNode = findPublishedDocument(doc);
                 if (jcrNode == null) {
