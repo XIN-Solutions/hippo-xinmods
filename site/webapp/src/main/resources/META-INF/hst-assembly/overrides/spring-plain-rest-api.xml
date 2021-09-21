@@ -32,7 +32,7 @@
           <property name="restApiHtmlParser" ref="restApiHtmlParser"/>
         </bean>
         <bean id="hippoFacetSelectVisitor" class="org.hippoecm.hst.restapi.content.visitors.HippoFacetSelectVisitor"/>
-        <bean id="hippoMirrorVisitor" class="org.hippoecm.hst.restapi.content.visitors.HippoMirrorVisitor"/>
+        <bean id="hippoMirrorVisitor" class="nz.xinsolutions.rest.content.visitors.XinHippoMirrorVisitor"/>
         <bean id="hippoGalleryImageVisitor" class="org.hippoecm.hst.restapi.content.visitors.HippoGalleryImageVisitor"/>
         <bean id="hippoResourceVisitor" class="org.hippoecm.hst.restapi.content.visitors.HippoResourceVisitor"/>
         <bean id="defaultNodeVisitor" class="org.hippoecm.hst.restapi.content.visitors.DefaultNodeVisitor"/>

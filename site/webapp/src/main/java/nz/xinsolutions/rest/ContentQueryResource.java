@@ -9,7 +9,6 @@ import org.hippoecm.hst.configuration.hosting.Mount;
 import org.hippoecm.hst.content.beans.query.HstQuery;
 import org.hippoecm.hst.content.beans.query.HstQueryManager;
 import org.hippoecm.hst.content.beans.query.HstQueryResult;
-import org.hippoecm.hst.content.beans.query.exceptions.QueryException;
 import org.hippoecm.hst.content.beans.standard.HippoBean;
 import org.hippoecm.hst.content.beans.standard.HippoBeanIterator;
 import org.hippoecm.hst.content.beans.standard.HippoDocument;
@@ -170,6 +169,39 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
 
     /**
      * Retrieve the document at a certain path
+     *
+     * @param request   the request object
+     * @param uuid      the uuid we're interested in.
+     *
+     * @return the response object that contains the node's json version.
+     */
+    @GET
+    @Path("/document-with-uuid/")
+    public Response getDocumentForUuid(@Context HttpServletRequest request, @QueryParam(value = KEY_UUID) String uuid) {
+
+        RestContext ctx = newRestContext(this, request);
+        NodeConversion nodeConversion = new NodeConversion(this.resourceContextFactory);
+
+        try {
+            if (StringUtils.isEmpty(uuid)) {
+                LOG.info("The path is empty");
+                return notFoundResponse();
+            }
+
+            HippoBean bean = (HippoBean) ctx.getRequestContext().getObjectBeanManager().getObjectByUuid(uuid);
+            return convertHippoBeanToResponse(ctx, nodeConversion, uuid, bean);
+        }
+        catch (Exception ex) {
+            LOG.error("Exception when retrieving document at path '{}'", uuid, ex);
+        }
+
+        return null;
+
+    }
+
+    /**
+     * Retrieve the document at a certain path
+     *
      * @param request
      * @param path
      * @return
@@ -189,47 +221,13 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
 
             HippoBean bean = (HippoBean) ctx.getRequestContext().getObjectBeanManager().getObject(path);
 
-            if (bean == null) {
-                LOG.error("Cannot find bean at folder of `{}`", path);
-                return notFoundResponse();
-            }
-
-            if (!(bean instanceof HippoDocument)) {
-                LOG.error("Not a proper document.");
-                return notFoundResponse();
-            }
-
-            Node node = bean.getNode();
-
-            if (!isNodePartOfApiContent(ctx.getRequestContext(), node)) {
-                LOG.error("Item '{}' not found below scope '{}'", path, getMountContentPath(ctx.getRequestContext()));
-                return notFoundResponse();
-            }
-
             String docPath = ((HippoDocument) bean).getCanonicalHandlePath();
             if (!docPath.equals(path)) {
                 LOG.error("Cannot query non-handle uuids.");
                 return notFoundResponse();
             }
 
-            Map<String, Object> docMap = nodeConversion.toMap(bean);
-            if (docMap == null) {
-                LOG.error("Could not convert document to map, maybe not published?");
-                return notFoundResponse();
-            }
-
-            Map<String, Object> result = new LinkedHashMap<>();
-
-            result.put(KEY_SUCCESS, true);
-            result.put(KEY_MESSAGE, "Found.");
-            result.put(KEY_DOCUMENT, docMap);
-
-            return (
-                Response
-                    .status(200)
-                    .entity(result)
-                    .build()
-            );
+            return convertHippoBeanToResponse(ctx, nodeConversion, path, bean);
         }
         catch (Exception ex) {
             LOG.error("Exception when retrieving document at path '{}'", path, ex);
@@ -237,6 +235,54 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
 
         return null;
 
+    }
+
+    /**
+     * Convert a hippobean to a JSON variation
+     *
+     * @param ctx
+     * @param nodeConversion
+     * @param beanIdentifier
+     * @param bean
+     * @return
+     * @throws RepositoryException
+     */
+    protected Response convertHippoBeanToResponse(RestContext ctx, NodeConversion nodeConversion, String beanIdentifier, HippoBean bean) throws RepositoryException {
+        if (bean == null) {
+            LOG.error("Cannot find bean at folder of `{}`", beanIdentifier);
+            return notFoundResponse();
+        }
+
+        if (!(bean instanceof HippoDocument)) {
+            LOG.error("Not a proper document.");
+            return notFoundResponse();
+        }
+
+        Node node = bean.getNode();
+
+        if (!isNodePartOfApiContent(ctx.getRequestContext(), node)) {
+            LOG.error("Item '{}' not found below scope '{}'", beanIdentifier, getMountContentPath(ctx.getRequestContext()));
+            return notFoundResponse();
+        }
+
+        Map<String, Object> docMap = nodeConversion.toMap(bean);
+        if (docMap == null) {
+            LOG.error("Could not convert document to map, maybe not published?");
+            return notFoundResponse();
+        }
+
+        Map<String, Object> result = new LinkedHashMap<>();
+
+        result.put(KEY_SUCCESS, true);
+        result.put(KEY_MESSAGE, "Found.");
+        result.put(KEY_DOCUMENT, docMap);
+
+        return (
+            Response
+                .status(200)
+                .entity(result)
+                .build()
+        );
     }
 
     @GET
