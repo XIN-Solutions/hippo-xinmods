@@ -7,6 +7,10 @@
 
 [xinmods:genericimageset] > hippogallery:imageset, hippogallery:relaxed
 
+[xinmods:assetset] > hippo:document
+  primaryitem hippogallery:asset
+  + hippogallery:asset (hippo:resource) = hippo:resource mandatory autocreated
+
 [xinmods:basedocument] > hippo:document, hippostd:publishableSummary, hippostdpubwf:document
   orderable
 

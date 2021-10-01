@@ -220,6 +220,10 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
             }
 
             HippoBean bean = (HippoBean) ctx.getRequestContext().getObjectBeanManager().getObject(path);
+            if (bean == null) {
+                LOG.error("Did not find any bean at path: `{}`", path);
+                return notFoundResponse();
+            }
 
             String docPath = ((HippoDocument) bean).getCanonicalHandlePath();
             if (!docPath.equals(path)) {

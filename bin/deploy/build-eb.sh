@@ -16,7 +16,7 @@ if [ ! -f $CONFIG ]; then
 fi
 
 
-TOMCAT_VERSION=8.5.65
+TOMCAT_VERSION=8.5.71
 
 BASE=$(pwd)
 SCRIPT_BASE=$(dirname $0)
