@@ -109,6 +109,9 @@ public class NodeConversion {
             visitor.visit(context, jcrNode, map);
 
             Map<String, Object> values = (Map<String, Object>) map.get("items");
+            if (values == null) {
+                values = new LinkedHashMap<>();
+            }
 
             Map<String, Object> finalMap = new LinkedHashMap<>();
 
