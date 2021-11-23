@@ -49,6 +49,7 @@ mkdir -p $SCRIPT_BASE/target/bin
 cp target/*-distribution.tar.gz $SCRIPT_BASE/target/dist.tar.gz
 cp $SCRIPT_BASE/Procfile $SCRIPT_BASE/target
 cp $SCRIPT_BASE/platform $SCRIPT_BASE/target/.platform -R
+cp $SCRIPT_BASE/ebextensions $SCRIPT_BASE/target/.ebextensions -R
 cd $SCRIPT_BASE/target
 
 TOMCAT_FILE=apache-tomcat-$TOMCAT_VERSION.tar.gz
