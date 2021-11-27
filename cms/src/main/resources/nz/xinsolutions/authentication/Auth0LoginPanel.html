@@ -6,7 +6,7 @@
 
         <div class="auth0-login">
             <p class="login-label">
-                Click below to login to <script>document.write(auth0Config.appTitle)</script>.
+                Click below to login to <script>document.write(auth0Config ? auth0Config.appTitle : "Unconfigured.")</script>.
             </p>
 
             <button type="button"
@@ -33,10 +33,11 @@
             (function() {
 
                 // Initialize app
-                const webAuth = new auth0.WebAuth({
-                    domain : auth0Config.domain,
-                    clientID : auth0Config.clientId
-                });
+                const webAuth = (
+                    auth0Config
+                        ? new auth0.WebAuth({ domain : auth0Config.domain, clientID : auth0Config.clientId })
+                        : null
+                );
 
                 /**
                  * Parse incoming hash information and return a map with
@@ -155,7 +156,7 @@
                     logoutFromAuth0();
                 }
 
-                if (document.location.href.indexOf("system") === -1) {
+                if (document.location.href.indexOf("system") === -1 && auth0Config) {
                     setTimeout(() => {
                         $(".login-form-buttons").hide();
                         $(".login-form-input").hide();
