@@ -53,6 +53,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
     public static final String KEY_SUCCESS = "success";
     public static final String KEY_MESSAGE = "message";
     public static final String KEY_TYPE = "type";
+    public static final String KEY_FETCH = "fetch";
     public static final String KEY_FOLDERS = "folders";
     public static final String KEY_UUIDS = "uuids";
     public static final String KEY_TOTAL_SIZE = "totalSize";
@@ -79,7 +80,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
      */
     @GET
     @Path("/query/")
-    public Response performQuery(@Context UriInfo uriInfo, @Context HttpServletRequest request, @QueryParam(value = "query") String query) {
+    public Response performQuery(@Context UriInfo uriInfo, @Context HttpServletRequest request, @QueryParam(value = "query") String query, @QueryParam(value = KEY_FETCH) String[] fetch) {
 
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
 
@@ -177,7 +178,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
      */
     @GET
     @Path("/document-with-uuid/")
-    public Response getDocumentForUuid(@Context HttpServletRequest request, @QueryParam(value = KEY_UUID) String uuid) {
+    public Response getDocumentForUuid(@Context HttpServletRequest request, @QueryParam(value = KEY_UUID) String uuid, @QueryParam(value = KEY_FETCH) String[] fetch) {
 
         RestContext ctx = newRestContext(this, request);
         NodeConversion nodeConversion = new NodeConversion(this.resourceContextFactory);
@@ -208,7 +209,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
      */
     @GET
     @Path("/document-at-path/")
-    public Response getDocumentAtPath(@Context HttpServletRequest request, @QueryParam(value = KEY_PATH) String path) {
+    public Response getDocumentAtPath(@Context HttpServletRequest request, @QueryParam(value = KEY_PATH) String path, @QueryParam(value = KEY_FETCH) String[] fetch) {
 
         RestContext ctx = newRestContext(this, request);
         NodeConversion nodeConversion = new NodeConversion(this.resourceContextFactory);

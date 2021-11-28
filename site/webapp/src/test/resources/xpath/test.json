@@ -1,0 +1,82 @@
+{
+    "id": "7e59cb67-f699-4066-a993-d88f411f1033",
+    "name": "test-document",
+    "displayName": "Test Document",
+    "path": "/content/documents/test/test-document",
+    "type": "xinmods:Test",
+    "locale": "document-type-locale",
+    "pubState": "published",
+    "pubwfCreationDate": "2021-11-27T22:53:46.363+13:00",
+    "pubwfLastModificationDate": "2021-11-27T23:46:10.072+13:00",
+    "pubwfPublicationDate": "2021-11-27T23:46:12.702+13:00",
+    "items": {
+        "summary": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent fringilla tortor accumsan justo ultricies pharetra. Proin placerat est vel massa efficitur, id aliquet nunc pulvinar. Integer posuere odio odio. Nam faucibus ligula ex. Nam cursus risus non aliquam blandit. In tristique scelerisque nisl ut dignissim. Duis non sem ac velit malesuada auctor. Sed felis sem, euismod sit amet leo sed, malesuada rutrum orci. Nunc in efficitur leo. Morbi odio est, porttitor sed ullamcorper in, malesuada ac justo. Duis pretium leo massa, quis porta nisl tincidunt quis. Quisque iaculis erat feugiat, auctor elit vitae, aliquam mi. Pellentesque tempor nunc libero, vel rhoncus metus elementum in.",
+        "title": "A test document",
+        "images": {
+            "0": {
+                "type": "hippogallerypicker:imagelink",
+                "link": {
+                    "type": "local",
+                    "id": "f4da56c0-ca0d-491d-9484-a5bd3f64b4f4",
+                    "url": "http://localhost:8080/site/custom-api/documents/f4da56c0-ca0d-491d-9484-a5bd3f64b4f4"
+                }
+            },
+            "1": {
+                "type": "hippogallerypicker:imagelink",
+                "link": {
+                    "type": "local",
+                    "id": "5cf87c8f-0850-44c5-a8f3-e6506710cdc2",
+                    "url": "http://localhost:8080/site/custom-api/documents/5cf87c8f-0850-44c5-a8f3-e6506710cdc2"
+                }
+            },
+            "2": {
+                "type": "hippogallerypicker:imagelink",
+                "link": {
+                    "type": "local",
+                    "id": "910aa1d9-4263-4937-bc9c-abcf0fe80f0e",
+                    "url": "http://localhost:8080/site/custom-api/documents/910aa1d9-4263-4937-bc9c-abcf0fe80f0e"
+                }
+            }
+        },
+        "body": {
+            "type": "hippostd:html",
+            "content": "<h1>Header 1</h1>\n\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent fringilla tortor accumsan justo ultricies pharetra. Proin placerat est vel massa efficitur, id aliquet nunc pulvinar. Integer posuere odio odio. Nam faucibus ligula ex. Nam cursus risus non aliquam blandit. In tristique scelerisque nisl ut dignissim. Duis non sem ac velit malesuada auctor. Sed felis sem, euismod sit amet leo sed, malesuada rutrum orci. Nunc in efficitur leo. Morbi odio est, porttitor sed ullamcorper in, malesuada ac justo. Duis pretium leo massa, quis porta nisl tincidunt quis. Quisque iaculis erat feugiat, auctor elit vitae, aliquam mi. Pellentesque tempor nunc libero, vel rhoncus metus elementum in.</p>\n\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent fringilla tortor accumsan justo ultricies pharetra. Proin placerat est vel massa efficitur, id aliquet nunc pulvinar. Integer posuere odio odio. Nam faucibus ligula ex. Nam cursus risus non aliquam blandit. In tristique scelerisque nisl ut dignissim. Duis non sem ac velit malesuada auctor. Sed felis sem, euismod sit amet leo sed, malesuada rutrum orci. Nunc in efficitur leo. Morbi odio est, porttitor sed ullamcorper in, malesuada ac justo. Duis pretium leo massa, quis porta nisl tincidunt quis. Quisque iaculis erat feugiat, auctor elit vitae, aliquam mi. Pellentesque tempor nunc libero, vel rhoncus metus elementum in.</p>\n\n<h2>Header 2</h2>\n\n<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent fringilla tortor accumsan justo ultricies pharetra. Proin placerat est vel massa efficitur, id aliquet nunc pulvinar. Integer posuere odio odio. Nam faucibus ligula ex. Nam cursus risus non aliquam blandit. In tristique scelerisque nisl ut dignissim. Duis non sem ac velit malesuada auctor. Sed felis sem, euismod sit amet leo sed, malesuada rutrum orci. Nunc in efficitur leo. Morbi odio est, porttitor sed ullamcorper in, malesuada ac justo. Duis pretium leo massa, quis porta nisl tincidunt quis. Quisque iaculis erat feugiat, auctor elit vitae, aliquam mi. Pellentesque tempor nunc libero, vel rhoncus metus elementum in.</p>"
+        },
+        "file": {
+            "type": "hippo:resource",
+            "mimeType": "image/jpeg",
+            "lastModified": "2021-11-27T22:53:59.243+13:00",
+            "isBlank": false,
+            "filename": "webpack.jpg",
+            "length": 32168,
+            "link": {
+                "type": "binary",
+                "url": "http://localhost:8080/site/binaries/content/documents/test/test-document/test-document/xinmods%3Afile"
+            }
+        },
+        "embedLinks": {
+            "0": {
+                "type": "xinmods:embed",
+                "items": {
+                    "title": "Embedded Title",
+                    "summary": "Summary of embed",
+                    "link": {
+                        "link": {
+                            "type": "local",
+                            "id": "fc58a6c7-2937-4a9c-a8c6-d1f4cccd0cb1",
+                            "url": "http://localhost:8080/site/custom-api/documents/fc58a6c7-2937-4a9c-a8c6-d1f4cccd0cb1"
+                        }
+                    },
+                    "thumbnail": {
+                        "type": "hippogallerypicker:imagelink",
+                        "link": {
+                            "type": "local",
+                            "id": "910aa1d9-4263-4937-bc9c-abcf0fe80f0e",
+                            "url": "http://localhost:8080/site/custom-api/documents/910aa1d9-4263-4937-bc9c-abcf0fe80f0e"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
