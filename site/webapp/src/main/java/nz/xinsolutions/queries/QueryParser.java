@@ -51,7 +51,7 @@ public class QueryParser {
     
     public HstQuery createFromString(HstQueryManager qMgr, String query, MultivaluedMap<String, String> queryParams) throws QueryParserException {
 
-        LOG.info("Received Query to Parse: " + query);
+        LOG.debug("Received Query to Parse: " + query);
 
         // parse the incoming text
         RuleState queryRuleState =

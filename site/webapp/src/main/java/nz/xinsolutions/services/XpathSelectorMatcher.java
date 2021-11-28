@@ -108,11 +108,28 @@ public class XpathSelectorMatcher {
         boolean allMatched = true;
         for (int elIdx = 0; elIdx < pathParts.length; ++elIdx) {
             String pathElement = pathParts[elIdx];
-            allMatched &= pathElement.equals("*") || pathBreadcrumb.get(elIdx).equals(pathElement);
+            String breadcrumbEl = pathBreadcrumb.get(elIdx);
+            allMatched &= matchesPathElement(breadcrumbEl, pathElement);
         }
 
         // should be true if all elements were equal, otherwise AND will have made it false.
         return allMatched;
+    }
+
+    /**
+     * @return true if the path element from the selector matches the current path breadcrumb element.
+     */
+    protected boolean matchesPathElement(String breadcrumbEl, String pathElement) {
+        if (pathElement.equals("*")) {
+            return true;
+        }
+
+        if (breadcrumbEl.equals(pathElement)) {
+            return true;
+        }
+
+        // might be a namespace identifier (xinmods:embedLinks), if so, should just match on second part.
+        return breadcrumbEl.contains(":") && breadcrumbEl.split(":")[1].equals(pathElement);
     }
 
     /**
@@ -131,7 +148,8 @@ public class XpathSelectorMatcher {
         for (int elIdx = pathParts.length - 1, revIdx = 1; elIdx >= 0; --elIdx, ++revIdx) {
             String pathElement = pathParts[elIdx];
             int breadcrumbElIdx = pathBreadcrumb.size() - revIdx;
-            allMatched &= pathElement.equals("*") || pathBreadcrumb.get(breadcrumbElIdx).equals(pathElement);
+            String breadcrumbEl = pathBreadcrumb.get(breadcrumbElIdx);
+            allMatched &= matchesPathElement(breadcrumbEl, pathElement);
         }
 
         // should be true if all elements were equal, otherwise AND will have made it false.

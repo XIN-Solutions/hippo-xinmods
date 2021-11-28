@@ -4,8 +4,11 @@ import nz.xinsolutions.beans.ContextVariablesBean;
 import nz.xinsolutions.core.Rest;
 import nz.xinsolutions.queries.QueryParser;
 import nz.xinsolutions.services.NodeConversion;
+import nz.xinsolutions.services.ReferenceNodeFetcher;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.hippoecm.hst.configuration.hosting.Mount;
+import org.hippoecm.hst.content.beans.manager.ObjectBeanManager;
 import org.hippoecm.hst.content.beans.query.HstQuery;
 import org.hippoecm.hst.content.beans.query.HstQueryManager;
 import org.hippoecm.hst.content.beans.query.HstQueryResult;
@@ -80,7 +83,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
      */
     @GET
     @Path("/query/")
-    public Response performQuery(@Context UriInfo uriInfo, @Context HttpServletRequest request, @QueryParam(value = "query") String query, @QueryParam(value = KEY_FETCH) String[] fetch) {
+    public Response performQuery(@Context UriInfo uriInfo, @Context HttpServletRequest request, @QueryParam(value = "query") String query, @QueryParam(value = KEY_FETCH) List<String> fetch) {
 
         MultivaluedMap<String, String> queryParams = uriInfo.getQueryParameters();
 
@@ -92,7 +95,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
                 throw new IllegalArgumentException("`query` parameter is empty");
             }
 
-            LOG.info("Received Query Request: " + query);
+            LOG.debug("Received Query Request: " + query);
 
             HstQueryManager qMgr = restCtx.getRequestContext().getQueryManager();
 
@@ -135,6 +138,8 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
                 beans.add(bean);
             }
 
+            ObjectBeanManager objBeanMgr = restCtx.getRequestContext().getObjectBeanManager();
+
             // respond
             return
                 Response.status(200)
@@ -143,7 +148,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
                             put(KEY_SUCCESS, true);
                             put(KEY_MESSAGE, beans.size() > 0 ? "Result found" : "No result found");
                             put(KEY_UUIDS, convertToResponseObject(beans, ctxVars.getApiUrl()));
-                            put(KEY_DOCUMENTS, beansToMap(beans));
+                            put(KEY_DOCUMENTS, beansToMap(beans, objBeanMgr, fetch));
                             put(KEY_TOTAL_SIZE, totalItems);
                         }}
                     )
@@ -178,7 +183,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
      */
     @GET
     @Path("/document-with-uuid/")
-    public Response getDocumentForUuid(@Context HttpServletRequest request, @QueryParam(value = KEY_UUID) String uuid, @QueryParam(value = KEY_FETCH) String[] fetch) {
+    public Response getDocumentForUuid(@Context HttpServletRequest request, @QueryParam(value = KEY_UUID) String uuid, @QueryParam(value = KEY_FETCH) List<String> fetch) {
 
         RestContext ctx = newRestContext(this, request);
         NodeConversion nodeConversion = new NodeConversion(this.resourceContextFactory);
@@ -190,7 +195,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
             }
 
             HippoBean bean = (HippoBean) ctx.getRequestContext().getObjectBeanManager().getObjectByUuid(uuid);
-            return convertHippoBeanToResponse(ctx, nodeConversion, uuid, bean);
+            return convertHippoBeanToResponse(ctx, nodeConversion, uuid, bean, fetch);
         }
         catch (Exception ex) {
             LOG.error("Exception when retrieving document at path '{}'", uuid, ex);
@@ -209,7 +214,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
      */
     @GET
     @Path("/document-at-path/")
-    public Response getDocumentAtPath(@Context HttpServletRequest request, @QueryParam(value = KEY_PATH) String path, @QueryParam(value = KEY_FETCH) String[] fetch) {
+    public Response getDocumentAtPath(@Context HttpServletRequest request, @QueryParam(value = KEY_PATH) String path, @QueryParam(value = KEY_FETCH) List<String> fetch) {
 
         RestContext ctx = newRestContext(this, request);
         NodeConversion nodeConversion = new NodeConversion(this.resourceContextFactory);
@@ -232,7 +237,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
                 return notFoundResponse();
             }
 
-            return convertHippoBeanToResponse(ctx, nodeConversion, path, bean);
+            return convertHippoBeanToResponse(ctx, nodeConversion, path, bean, fetch);
         }
         catch (Exception ex) {
             LOG.error("Exception when retrieving document at path '{}'", path, ex);
@@ -252,7 +257,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
      * @return
      * @throws RepositoryException
      */
-    protected Response convertHippoBeanToResponse(RestContext ctx, NodeConversion nodeConversion, String beanIdentifier, HippoBean bean) throws RepositoryException {
+    protected Response convertHippoBeanToResponse(RestContext ctx, NodeConversion nodeConversion, String beanIdentifier, HippoBean bean, List<String> fetch) throws RepositoryException {
         if (bean == null) {
             LOG.error("Cannot find bean at folder of `{}`", beanIdentifier);
             return notFoundResponse();
@@ -281,6 +286,13 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
         result.put(KEY_SUCCESS, true);
         result.put(KEY_MESSAGE, "Found.");
         result.put(KEY_DOCUMENT, docMap);
+
+        if (CollectionUtils.isNotEmpty(fetch)) {
+            ObjectBeanManager objBeanMgr = ctx.getRequestContext().getObjectBeanManager();
+            ReferenceNodeFetcher refFetcher = new ReferenceNodeFetcher(nodeConversion, objBeanMgr);
+            refFetcher.fetchReferencedNodes(docMap, fetch);
+        }
+
 
         return (
             Response
@@ -551,27 +563,35 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
     /**
      * Convert a list of beans to a uuid->maprepresentation map
      * @param beans the list of beans to map
+     * @param fetch a list of path selectors to fetch additional information for.
      * @return the map with uuid as key and node-as-map as value
      */
-    protected Map<String, Object> beansToMap(List<HippoBean> beans) {
+    protected List<Map<String, Object>> beansToMap(List<HippoBean> beans, ObjectBeanManager objBeanMgr, List<String> fetch) {
         NodeConversion nodeConversion = new NodeConversion(this.resourceContextFactory);
 
-        return (
-            beans.stream()
-                .map(bean ->
-                    new AbstractMap.SimpleEntry<String, Object>(
-                        nodeConversion.getUuid(bean),
-                        nodeConversion.toMap(bean)
-                    )
-                )
-                .filter(entry -> entry.getKey() != null && entry.getValue() != null)
-                .collect(
-                    Collectors.toMap(
-                        AbstractMap.SimpleEntry::getKey,
-                        AbstractMap.SimpleEntry::getValue
-                    )
-                )
-        );
+        List<Map<String, Object>> nodeList = new ArrayList<>();
+
+        // iterate over beans.
+        for (HippoBean bean : beans) {
+
+            String beanUuid = nodeConversion.getUuid(bean);
+            Map<String, Object> beanMap = nodeConversion.toMap(bean);
+
+            // incomplete result? skip.
+            if (beanUuid == null || beanMap == null) {
+                continue;
+            }
+
+            // did we have instructions to enrich the results?
+            if (CollectionUtils.isNotEmpty(fetch)) {
+                ReferenceNodeFetcher refFetcher = new ReferenceNodeFetcher(nodeConversion, objBeanMgr);
+                refFetcher.fetchReferencedNodes(beanMap, fetch);
+            }
+
+            nodeList.add(beanMap);
+        }
+
+        return nodeList;
     }
 
 

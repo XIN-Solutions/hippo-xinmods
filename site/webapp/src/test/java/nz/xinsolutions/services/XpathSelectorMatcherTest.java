@@ -22,7 +22,7 @@ public class XpathSelectorMatcherTest {
 
     @Test
     public void testMatchesXpathSelector() {
-        List<String> breadcrumb = Arrays.asList("item", "model", "component", "image", "thumbnail", "link");
+        List<String> breadcrumb = Arrays.asList("item", "model", "xinmods:component", "image", "thumbnail", "link");
 
         // -- absolute
 

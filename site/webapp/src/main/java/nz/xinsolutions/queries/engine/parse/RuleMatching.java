@@ -176,12 +176,12 @@ public class RuleMatching {
             RuleState mResult = matcher.match(elements, Arrays.asList(startingRules), rootState);
             
             if (mResult == null || !mResult.matched) {
-                LOG.info("No match");
+                LOG.debug("No match");
                 break;
             }
 
             if (mResult.consumedTokens == elements.size()) {
-                LOG.info(
+                LOG.debug(
                     "All tokens were consumed",
                     mResult.ruleName,
                     mResult.consumedTokens,

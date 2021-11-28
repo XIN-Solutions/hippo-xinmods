@@ -128,7 +128,7 @@ public class QuerySettingsFactory {
     protected static RuleState findFirstOf(RuleState queryState, String... rules) {
         List<RuleState> queryExprList = queryState.findRules(rules);
         if (CollectionUtils.isEmpty(queryExprList)) {
-            LOG.info("No query rule state found.");
+            LOG.debug("No query rule state found.");
             return null;
         }
         return queryExprList.get(0);

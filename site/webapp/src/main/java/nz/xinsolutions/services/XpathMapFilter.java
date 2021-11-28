@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -71,6 +72,28 @@ public class XpathMapFilter {
             // should we step into the child node?
             if (entry.getValue() instanceof Map) {
                 this.visitMap((Map) entry.getValue(), pathSelectors, scopedBreadcrumb, callback);
+            }
+
+            // if it's a list value, let's find any maps inside.
+            if (entry.getValue() instanceof Collection) {
+
+                int elIdx = 0;
+
+                // iterate over elements
+                for (Object valElement : (Collection) entry.getValue()) {
+
+                    // map? recurse.
+                    if (valElement instanceof Map) {
+
+                        // create new list with additional breadcrumb for this entry (adds current index integer)
+                        List<String> listElBreadcrumb = new ArrayList<>(scopedBreadcrumb);
+                        listElBreadcrumb.add(String.format("%d", elIdx));
+                        this.visitMap((Map) valElement, pathSelectors, listElBreadcrumb, callback);
+
+                        ++elIdx;
+                    }
+
+                }
             }
         }
     }
