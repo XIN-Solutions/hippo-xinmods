@@ -48,6 +48,10 @@ public class XpathSelectorMatcher {
             String startMatch = getMatchHead(xpathSelector);
             String relativeEnd = getMatchTail(xpathSelector);
 
+            if (StringUtils.isNotBlank(startMatch) && !this.isAbsoluteSelector(startMatch)) {
+                throw new IllegalArgumentException("When matching on wildcard, base path should be absolute");
+            }
+
             return (
                 // if the string starts with // we can just assume the start matches.
                 (StringUtils.isBlank(startMatch) || matchesFromStart(pathBreadcrumb, startMatch)) &&
@@ -104,7 +108,7 @@ public class XpathSelectorMatcher {
         boolean allMatched = true;
         for (int elIdx = 0; elIdx < pathParts.length; ++elIdx) {
             String pathElement = pathParts[elIdx];
-            allMatched &= pathBreadcrumb.get(elIdx).equals(pathElement);
+            allMatched &= pathElement.equals("*") || pathBreadcrumb.get(elIdx).equals(pathElement);
         }
 
         // should be true if all elements were equal, otherwise AND will have made it false.
@@ -127,7 +131,7 @@ public class XpathSelectorMatcher {
         for (int elIdx = pathParts.length - 1, revIdx = 1; elIdx >= 0; --elIdx, ++revIdx) {
             String pathElement = pathParts[elIdx];
             int breadcrumbElIdx = pathBreadcrumb.size() - revIdx;
-            allMatched &= pathBreadcrumb.get(breadcrumbElIdx).equals(pathElement);
+            allMatched &= pathElement.equals("*") || pathBreadcrumb.get(breadcrumbElIdx).equals(pathElement);
         }
 
         // should be true if all elements were equal, otherwise AND will have made it false.

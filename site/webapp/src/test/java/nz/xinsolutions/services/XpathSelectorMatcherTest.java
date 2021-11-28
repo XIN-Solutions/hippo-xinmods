@@ -1,6 +1,5 @@
 package nz.xinsolutions.services;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -30,10 +29,13 @@ public class XpathSelectorMatcherTest {
         // 1. should match entire path
         assertTrue(matcher.matchesXpathSelector(breadcrumb, "/item/model/component/image/thumbnail/link"));
 
-        // 2. should not match on partial path
+        // 2. should match entire path
+        assertTrue(matcher.matchesXpathSelector(breadcrumb, "/item/model/component/image/*/link"));
+
+        // 3. should not match on partial path
         assertFalse(matcher.matchesXpathSelector(breadcrumb, "/item/model/component/image/thumbnail"));
 
-        // 3. shouldn't match a path that doesn't exist
+        // 4. shouldn't match a path that doesn't exist
         assertFalse(matcher.matchesXpathSelector(breadcrumb, "/ite/model/component/image/thumbnail"));
 
         // -- relative
