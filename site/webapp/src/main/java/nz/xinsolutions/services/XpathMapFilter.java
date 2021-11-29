@@ -4,10 +4,8 @@ import com.amazonaws.services.dynamodbv2.xspec.M;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Author: Marnix Kok
@@ -48,12 +46,16 @@ public class XpathMapFilter {
 
         XpathSelectorMatcher matcher = new XpathSelectorMatcher();
 
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
+        List<String> keys = new ArrayList<>(map.keySet());
+
+        for (String key : keys) {
+            Object entryValue = map.get(key);
+
             // create new list with additional breadcrumb for this entry
             List<String> scopedBreadcrumb = new ArrayList<>(breadcrumb);
-            scopedBreadcrumb.add(entry.getKey());
+            scopedBreadcrumb.add(key);
 
-            LOG.debug("visiting: {} => {}", entry.getKey(), scopedBreadcrumb);
+            LOG.debug("visiting: {} => {}", key, scopedBreadcrumb);
 
             // match the breadcrumb against all path selectors
             String firstMatchedSelector = (
@@ -66,21 +68,21 @@ public class XpathMapFilter {
 
             // something matched? execute callback so we can "enrich" the node.
             if (firstMatchedSelector != null) {
-                callback.matchHit(firstMatchedSelector, scopedBreadcrumb, entry.getKey(), map);
+                callback.matchHit(firstMatchedSelector, scopedBreadcrumb, key, map);
             }
 
             // should we step into the child node?
-            if (entry.getValue() instanceof Map) {
-                this.visitMap((Map) entry.getValue(), pathSelectors, scopedBreadcrumb, callback);
+            if (entryValue instanceof Map) {
+                this.visitMap((Map) entryValue, pathSelectors, scopedBreadcrumb, callback);
             }
 
             // if it's a list value, let's find any maps inside.
-            if (entry.getValue() instanceof Collection) {
+            if (entryValue instanceof Collection) {
 
                 int elIdx = 0;
 
                 // iterate over elements
-                for (Object valElement : (Collection) entry.getValue()) {
+                for (Object valElement : (Collection) entryValue) {
 
                     // map? recurse.
                     if (valElement instanceof Map) {

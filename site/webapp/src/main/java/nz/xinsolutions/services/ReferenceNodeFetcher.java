@@ -1,11 +1,14 @@
 package nz.xinsolutions.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hippoecm.hst.content.beans.manager.ObjectBeanManager;
 import org.hippoecm.hst.content.beans.standard.HippoBean;
 import org.hippoecm.hst.restapi.content.linking.Link;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.StringWriter;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +28,9 @@ public class ReferenceNodeFetcher {
 
     public static final String KEY_UUID = "id";
     public static final String PROPERTY_REF = "ref";
+    public static final String PROPERTY_LINK_TYPE = "type";
+    public static final String PROPERTY_LINK_ID = "id";
+    public static final String PROPERTY_LINK_URL = "url";
 
     /**
      * Object bean manager instance we use retrieve hippo beans
@@ -88,8 +94,15 @@ public class ReferenceNodeFetcher {
                 return;
             }
 
+            Map<String, Object> linkMap = new LinkedHashMap<>();
+            linkMap.put(PROPERTY_LINK_TYPE, link.type);
+            linkMap.put(PROPERTY_LINK_ID, link.id);
+            linkMap.put(PROPERTY_LINK_URL, link.url);
+
             Map<String, Object> refNodeConversion = nodeConversion.toMap(bean);
-            currentMap.put(PROPERTY_REF, refNodeConversion);
+            linkMap.put(PROPERTY_REF, refNodeConversion);
+
+            currentMap.put(nodeName, linkMap);
         }
         catch (Exception ex) {
             LOG.error("Could not retrieve the referenced bean. Caused by: ", ex);
