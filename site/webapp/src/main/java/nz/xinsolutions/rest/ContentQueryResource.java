@@ -304,7 +304,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
 
     @GET
     @Path("/documents-list/")
-    public Response foldersAtPath(@Context HttpServletRequest request, @QueryParam(value = KEY_PATH) String path) {
+    public Response foldersAtPath(@Context HttpServletRequest request, @QueryParam(value = KEY_PATH) String path, @QueryParam(value = KEY_FETCH) List<String> fetch) {
 
         RestContext ctx = newRestContext(this, request);
         ContextVariablesBean ctxVars = newContextVariablesInstance(request);
@@ -354,6 +354,19 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
                         }})
                         .collect(Collectors.toList())
                     ;
+
+            if (CollectionUtils.isNotEmpty(fetch) && CollectionUtils.isNotEmpty(childDocuments)) {
+                ObjectBeanManager objBeanMgr = ctx.getRequestContext().getObjectBeanManager();
+                ReferenceNodeFetcher refFetcher = new ReferenceNodeFetcher(nodeConversion, objBeanMgr);
+
+                // for each child document, fetch referenced documnets as per fetch instructions in 'fetch'.
+                for (Map childDoc : childDocuments) {
+                    refFetcher.fetchReferencedNodes(
+                        (Map) childDoc.get(KEY_DOCUMENT),
+                        fetch
+                    );
+                }
+            }
 
             Map<String, Object> result = new LinkedHashMap<String, Object>() {{
 
