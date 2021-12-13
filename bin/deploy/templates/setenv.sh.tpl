@@ -1,6 +1,6 @@
 REP_OPTS="-Drepo.upgrade=false -Drepo.config=file:\${CATALINA_BASE}/conf/repository.xml -Drepo.path=/var/lib/hippostorage -Dproject.basedir=/tmp "
 REP_OPTS="\${REP_OPTS} -Dorg.apache.jackrabbit.core.cluster.node_id=\`hostname -f\`"
-L4J_OPTS="-Dlog4j.configurationFile=file:\${CATALINA_BASE}/conf/log4j2.xml"
+L4J_OPTS="-Dlog4j.configurationFile=file:\${CATALINA_BASE}/conf/log4j2.xml -Dlog4j2.formatMsgNoLookups=true"
 JVM_OPTS="-server -Xmx386m -Xms128m"
 
 #REMOTE_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000"
