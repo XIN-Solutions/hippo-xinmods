@@ -56,7 +56,7 @@ public class SiteXinmodsConfig {
                 this.config = session.getNode(XINMODS_CONFIG_PATH);
             }
             else {
-                LOG.info("Could not find the xinmods configuration at " + XINMODS_CONFIG_PATH);
+                LOG.debug("Could not find the xinmods configuration at " + XINMODS_CONFIG_PATH);
             }
         }
         catch (RepositoryException rEx) {

@@ -4,10 +4,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.S3Object;
 import nz.xinsolutions.config.SiteXinmodsConfig;
-import nz.xinsolutions.core.jackrabbit.AutoCloseableSession;
-import nz.xinsolutions.core.jackrabbit.JcrSessionHelper;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
+import org.hippoecm.hst.servlet.utils.SessionUtils;
+import org.imgscalr.AsyncScalr;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +18,9 @@ import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
 import javax.imageio.plugins.jpeg.JPEGImageWriteParam;
 import javax.imageio.stream.ImageOutputStream;
-import javax.jcr.RepositoryException;
+import javax.jcr.Binary;
+import javax.jcr.Node;
+import javax.jcr.Property;
 import javax.jcr.Session;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,10 +33,8 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
-
-import static nz.xinsolutions.core.jackrabbit.JcrSessionHelper.closeableSession;
-import static nz.xinsolutions.core.jackrabbit.JcrSessionHelper.loginAdministrative;
 
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
@@ -63,11 +63,14 @@ public class AssetModifierServlet extends HttpServlet {
 	public static final String PATH_ASSETMOD = "assetmod";
 
 	private static final int CACHE_TIME = 5 * 60;
+	private static final int DEFAULT_MAX_THROTTLE = 20;
 
-	/**
-	 * Session
-	 */
-	private static Session adminSession = null;
+	public static final String PATH_CONTENT_GALLERY = "/content/gallery";
+	public static final String PROP_JCR_DATA = "jcr:data";
+
+	private Semaphore semaphore = new Semaphore(getMaxThreadLimit());
+	private Long cacheTime;
+
 
 	/**
 	 * Mimetypes to write to response
@@ -85,11 +88,47 @@ public class AssetModifierServlet extends HttpServlet {
 	 *
 	 * @param req  	request instance
 	 * @param resp	response instance
+	 *
 	 * @throws ServletException
 	 * @throws IOException
 	 */
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+		try {
+			semaphore.acquire();
+			doThrottledGet(req, resp);
+			semaphore.release();
+		}
+		catch (Exception ex) {
+			LOG.error("Could not acquire semaphore.");
+			resp.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
+		}
+
+	}
+
+	/**
+	 * @return the max number of threads
+	 */
+	private static int getMaxThreadLimit() {
+		int limit = -1;
+		String limitStr = System.getProperty("asset.concurrent.max", "" + DEFAULT_MAX_THROTTLE);
+		if (!NumberUtils.isDigits(limitStr)) {
+			limit = DEFAULT_MAX_THROTTLE;
+		}
+		else {
+			Integer parsedLimit = Integer.parseInt(limitStr);
+			if (parsedLimit == null) {
+				limit = DEFAULT_MAX_THROTTLE;
+			}
+			else {
+				limit = parsedLimit;
+			}
+		}
+		return limit;
+	}
+
+	protected void doThrottledGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
 		String fullUrl = req.getRequestURI();
 		String ext = getExtension(fullUrl);
@@ -99,53 +138,78 @@ public class AssetModifierServlet extends HttpServlet {
 		String rawInstructions = getInstructionString(fullUrl);
 		Instruction[] instruction = interpretInstruction(rawInstructions);
 
-		BufferedImage buffImg = getBufferedImageForRequest(fullUrl, host, context);
-		if (buffImg == null) {
-			pageNotFound(resp);
-			return;
-		}
-
-		Float quality = null;
-
-		// go over all the instructions we found
-		for (Instruction instr : instruction) {
-
-			switch (instr.getName()) {
-				case "scale":
-					buffImg = scale(buffImg, instr);
-					break;
-
-				case "crop":
-					buffImg = crop(buffImg, instr);
-					break;
-
-				case "filter":
-					buffImg = filter(buffImg, instr);
-					break;
-
-				case "quality":
-					String qualityStr = instr.getParam(0);
-					if (qualityStr != null) {
-						quality = Float.parseFloat(qualityStr);
-					}
-					break;
-
-				// just a cache-busting version.
-				case "v":
-					break;
-				default:
-					LOG.info("Do not know about: {}", instr.getName());
-					break;
+		Session binarySession = null;
+		try {
+			binarySession = SessionUtils.getBinariesSession(req);
+			BufferedImage buffImg = getBufferedImageForRequest(binarySession, fullUrl, host, context);
+			if (buffImg == null) {
+				LOG.info("Could not load the image: {}", fullUrl);
+				pageNotFound(resp);
+				return;
 			}
 
+			Float quality = null;
+
+			// go over all the instructions we found
+			for (Instruction instr : instruction) {
+
+				switch (instr.getName()) {
+					case "scale":
+						buffImg = scale(buffImg, instr);
+						break;
+
+					case "crop":
+						buffImg = crop(buffImg, instr);
+						break;
+
+					case "quality":
+						String qualityStr = instr.getParam(0);
+						if (qualityStr != null) {
+							quality = Float.parseFloat(qualityStr);
+						}
+						break;
+
+					// just a cache-busting version.
+					case "v":
+						break;
+
+					default:
+						LOG.info("Do not know about: {}", instr.getName());
+						break;
+				}
+
+			}
+
+			// set the response headers
+			setImageResponseHeaders(req, resp, ext);
+
+			LOG.info("Rendering {}", fullUrl);
+
+			encodeImageToResponse(resp, ext, buffImg, quality);
 		}
+		catch (Exception ex) {
+			LOG.error("Could not complete manipulating the image '{}', caused by: ", fullUrl, ex);
+		}
+		finally {
+			SessionUtils.releaseSession(req, binarySession);
+		}
+	}
 
-		// set the response headers
-		setImageResponseHeaders(req, resp, ext);
+	/**
+	 * Encode the resulting buffered image into the response output stream of the response
+	 *
+	 * @param resp	the response object to write to
+	 * @param ext	the extension that determines what kind of image to write
+	 * @param buffImg the buffered image to write
+	 * @param quality an optional quality setting.
+	 *
+	 * @throws IOException
+	 */
+	protected void encodeImageToResponse(HttpServletResponse resp, String ext, BufferedImage buffImg, Float quality) throws IOException {
 
-		LOG.info("Rendering {}", fullUrl);
-
+		// if quality was specified, always output jpeg.
 		if (shouldRenderWithQualitySettings(ext, quality)) {
+
 			// create quality parameters
 			JPEGImageWriteParam jpegParams = new JPEGImageWriteParam(null);
 			jpegParams.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
@@ -178,12 +242,39 @@ public class AssetModifierServlet extends HttpServlet {
 	 * @return a buffered image instance.
 	 * @throws IOException
 	 */
-	protected BufferedImage getBufferedImageForRequest(String fullUrl, String host, String context) throws IOException {
+	protected BufferedImage getBufferedImageForRequest(Session jcrSession, String fullUrl, String host, String context) throws IOException {
 
 		// referencing something in the local hippo repo?
 		if (this.isLocalRequest(fullUrl)) {
-			URL binaryUrl = new URL(host + context + getBinaryLocation(fullUrl));
-			return ImageIO.read(binaryUrl);
+
+
+			String contentPath = getBinaryLocation(fullUrl);
+			if (!contentPath.startsWith(PATH_CONTENT_GALLERY)) {
+				LOG.info("Not a content gallery node, skipping.");
+				return null;
+			}
+
+			try {
+				Node handleNode = jcrSession.getNode(contentPath);
+				Node assetNode = handleNode.getNode(handleNode.getName() + "/hippogallery:original");
+				if (assetNode == null) {
+					LOG.error("Could not get the asset node for: {}", fullUrl);
+					return null;
+				}
+
+				Property property = assetNode.getProperty(PROP_JCR_DATA);
+				if (property == null) {
+					LOG.error("Node does not have a jcr:data property.");
+					return null;
+				}
+
+				Binary binaryValue = property.getBinary();
+				return ImageIO.read(binaryValue.getStream());
+			}
+			catch (Exception ex) {
+				LOG.error("Could not read binary data, caused by: ", ex);
+				return null;
+			}
 		}
 
 		// referencing an external entity? try to get it through S3.
@@ -239,46 +330,13 @@ public class AssetModifierServlet extends HttpServlet {
 	// ------------------------------------------------------------------------------------------------
 
 	/**
-	 * Apply a colour filter
-	 *
-	 * @param img		is the image to operate on
-	 * @param instr		the instructions to execute
-	 * @return a new buffered image
-	 */
-	protected BufferedImage filter(BufferedImage img, Instruction instr) {
-		if (instr.isEmpty(0)) {
-			LOG.error("Expecting a filter name");
-			return img;
-		}
-
-		String type = instr.getParam(0);
-		switch (type) {
-			case "grayscale":
-			case "greyscale":
-				return Scalr.OP_GRAYSCALE.filter(img, null);
-
-			case "darker":
-				return Scalr.OP_DARKER.filter(img, null);
-
-			case "brighter":
-				return Scalr.OP_BRIGHTER.filter(img, null);
-
-			default:
-				LOG.error("Don't know about filter type: {}", type);
-				return img;
-
-		}
-
-	}
-
-	/**
 	 * Scale to a certain size.
 	 *
 	 * @param img		is the buffered image to operate on
 	 * @param instr		the instructions
 	 * @return the buffered image
 	 */
-	protected BufferedImage scale(BufferedImage img, Instruction instr) {
+	protected BufferedImage scale(BufferedImage img, Instruction instr) throws Exception {
 		if (instr.isEmpty(SCALE_PARAM_X) && instr.isEmpty(SCALE_PARAM_Y)) {
 			LOG.error("Cannot scale nothing");
 			return img;
@@ -290,12 +348,25 @@ public class AssetModifierServlet extends HttpServlet {
 		// `x` param empty? fit to height.
 		if (instr.isEmpty(SCALE_PARAM_X)) {
 			size = instr.getIntParam(SCALE_PARAM_Y);
+
+			// make sure to not grow the image
+			if (size > img.getWidth()) {
+				size = img.getWidth();
+			}
+
 			mode = Scalr.Mode.FIT_TO_HEIGHT;
 		}
 		else if (instr.isEmpty(SCALE_PARAM_Y)) {
 			size = instr.getIntParam(SCALE_PARAM_X);
+
+			// make sure to not grow the image
+			if (size > img.getHeight()) {
+				size = img.getHeight();
+			}
+
 			mode = Scalr.Mode.FIT_TO_WIDTH;
-		} else {
+		}
+		else {
 			LOG.error("Cowardly refusing to stretch nastily");
 			return img;
 		}
@@ -305,7 +376,7 @@ public class AssetModifierServlet extends HttpServlet {
 			return img;
 		}
 
-		return Scalr.resize(img, Scalr.Method.QUALITY, mode, size);
+		return AsyncScalr.resize(img, Scalr.Method.QUALITY, mode, size).get();
 	}
 
 
@@ -316,7 +387,7 @@ public class AssetModifierServlet extends HttpServlet {
 	 * @param instr
 	 * @return
 	 */
-	protected BufferedImage crop(BufferedImage img, Instruction instr) {
+	protected BufferedImage crop(BufferedImage img, Instruction instr) throws Exception {
 
 		// make sure instructions are proper
 		if (instr.isEmpty(CROP_PARAM_WIDTH) || instr.isEmpty(CROP_PARAM_HEIGHT)) {
@@ -383,7 +454,7 @@ public class AssetModifierServlet extends HttpServlet {
 		int clippedOffsetY = Math.max(0, offsetY);
 
 		return
-			Scalr.crop(img,
+			AsyncScalr.crop(img,
 				// bound to 0, 0
 				clippedOffsetX,
 				clippedOffsetY,
@@ -391,7 +462,9 @@ public class AssetModifierServlet extends HttpServlet {
 				// bound to width, height
 				Math.min(imgW - clippedOffsetX, cropW),
 				Math.min(imgH - clippedOffsetY, cropH)
-			);
+			)
+			.get()
+		;
 	}
 
 
@@ -435,9 +508,11 @@ public class AssetModifierServlet extends HttpServlet {
 		String mimeType = s_mimeTypes.getOrDefault(extension, "application/octet-stream");
 		resp.setHeader("Content-Type", mimeType);
 
-		try (AutoCloseableSession adminSession = closeableSession(loginAdministrative())) {
+		Session adminSession = null;
+		try {
+			adminSession = SessionUtils.getPooledSession(req, "default");
 			SiteXinmodsConfig xmCfg = new SiteXinmodsConfig(adminSession);
-			long cacheLength = xmCfg.getAssetCacheLength(CACHE_TIME);
+			long cacheLength = getAssetCacheLength(xmCfg);
 
 			// set header
 			String cacheControl = String.format("max-age=%d", cacheLength);
@@ -445,8 +520,17 @@ public class AssetModifierServlet extends HttpServlet {
 		}
 		catch (Exception ex) {
 			LOG.error("Couldn't set response header, caused by: ", ex);
-
 		}
+		finally {
+			SessionUtils.releaseSession(req, adminSession);
+		}
+	}
+
+	protected long getAssetCacheLength(SiteXinmodsConfig xmCfg) {
+		if (this.cacheTime == null) {
+			return this.cacheTime = xmCfg.getAssetCacheLength(CACHE_TIME);
+		}
+		return this.cacheTime;
 	}
 
 	// ------------------------------------------------------------------------------------------------
@@ -477,11 +561,12 @@ public class AssetModifierServlet extends HttpServlet {
 	 * @return part of the url where the actual thing lives
 	 */
 	protected String getBinaryLocation(String fullUrl) {
-		int binariesPathIdx = fullUrl.indexOf("/" + PATH_BINARIES);
+		String binariesPathPrefix = "/" + PATH_BINARIES;
+		int binariesPathIdx = fullUrl.indexOf(binariesPathPrefix);
 		if (binariesPathIdx == -1) {
 			return null;
 		}
-		return fullUrl.substring(binariesPathIdx);
+		return fullUrl.substring(binariesPathIdx + binariesPathPrefix.length());
 	}
 
 	/**
