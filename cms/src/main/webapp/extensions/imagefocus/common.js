@@ -15,15 +15,14 @@ window.Common = Object.assign(new function() {} (), {
 
 		return new Promise((resolve, reject) => {
 
-			// delicious way to find the name of the document we're editing.
-			const windowParams = parent.parent.window.document.location.pathname;
-			const pathEl = windowParams.split("/path");
-			if (pathEl.length === 1) {
+			const windowParams = parent.window.document.location.search;
+			const pathEl = windowParams.split("&").filter((el) => el.indexOf("path=") === 0);
+			if (pathEl.length === 0) {
 				reject("No path found in location object");
 				return;
 			}
 
-			const path = pathEl[1];
+			const path = pathEl[0].split("=")[1];
 			const pathPrefix = (extConfig.siteUrl || "/site/binaries");
 
 			const img = new Image();
