@@ -17,8 +17,8 @@
 
 
   <scm>
-    <connection>scm:git:ssh://git@github.com/XIN-Solutions/hippo-xinmods</connection>
-    <developerConnection>scm:git:ssh://git@github.com/XIN-Solutions/hippo-xinmods</developerConnection>
+    <connection>scm:git:ssh://git@marnixk.github.com/XIN-Solutions/hippo-xinmods</connection>
+    <developerConnection>scm:git:ssh://git@marnixk.github.com/XIN-Solutions/hippo-xinmods</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
