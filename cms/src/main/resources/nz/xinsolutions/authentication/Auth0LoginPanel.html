@@ -34,10 +34,14 @@
 
                 // Initialize app
                 const webAuth = (
-                    auth0Config
+                    validConfig(auth0Config)
                         ? new auth0.WebAuth({ domain : auth0Config.domain, clientID : auth0Config.clientId })
                         : null
                 );
+
+                function validConfig(config) {
+                    return config.clientId && config.domain;
+                }
 
                 /**
                  * Parse incoming hash information and return a map with
@@ -156,7 +160,7 @@
                     logoutFromAuth0();
                 }
 
-                if (document.location.href.indexOf("system") === -1 && auth0Config) {
+                if (document.location.href.indexOf("system") === -1 && validConfig(auth0Config)) {
                     setTimeout(() => {
                         $(".login-form-buttons").hide();
                         $(".login-form-input").hide();
