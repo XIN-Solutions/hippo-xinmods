@@ -81,6 +81,13 @@
           </constructor-arg>
         </bean>
 
+        <bean class="org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider">
+          <constructor-arg>
+            <bean class="nz.xinsolutions.rest.FacetedNavResource">
+              <property name="resourceContextFactory" ref="resourceContextFactory"></property>
+            </bean>
+          </constructor-arg>
+        </bean>
       </list>
     </property>
   </bean>

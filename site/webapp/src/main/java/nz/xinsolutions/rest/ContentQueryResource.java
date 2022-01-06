@@ -506,7 +506,7 @@ public class ContentQueryResource extends BaseRestResource implements Rest {
     /**
      * @return a new instance of the context variables bean
      */
-    public ContextVariablesBean newContextVariablesInstance(HttpServletRequest request) {
+    protected ContextVariablesBean newContextVariablesInstance(HttpServletRequest request) {
         return new ContextVariablesBean(request);
     }
 

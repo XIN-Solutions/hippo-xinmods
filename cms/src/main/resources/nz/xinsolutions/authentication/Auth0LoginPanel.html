@@ -32,6 +32,8 @@
 
             (function() {
 
+                var auth0Config = window.auth0Config || null;
+
                 // Initialize app
                 const webAuth = (
                     validConfig(auth0Config)
@@ -40,7 +42,7 @@
                 );
 
                 function validConfig(config) {
-                    return config.clientId && config.domain;
+                    return config && config.clientId && config.domain;
                 }
 
                 /**
