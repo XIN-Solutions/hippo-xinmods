@@ -15,6 +15,7 @@ public class FacetNode {
     private String displayName;
     private Map<String, Integer> childFacets;
     private List<Map<String, Object>> results;
+    private int totalCount;
 
     public void setDisplayName(String displayName) {
         this.displayName = displayName;
@@ -54,5 +55,13 @@ public class FacetNode {
 
     public void setFacetPath(String facetPath) {
         this.facetPath = facetPath;
+    }
+
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
+
+    public int getTotalCount() {
+        return totalCount;
     }
 }

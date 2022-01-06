@@ -76,6 +76,7 @@ public class FacetedNavService {
             FacetNode facetNode = beanToFacetNode(objBeanMgr, nav, offset, limit, sorted, fetch);
             facetNode.setSourceFacet(facetPath);
             facetNode.setFacetPath(childPath);
+            facetNode.setTotalCount(nav.getCount().intValue());
 
             return facetNode;
         }
