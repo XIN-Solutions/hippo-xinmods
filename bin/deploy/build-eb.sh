@@ -16,7 +16,8 @@ if [ ! -f $CONFIG ]; then
 fi
 
 
-TOMCAT_VERSION=8.5.71
+#TOMCAT_VERSION=8.5.71
+TOMCAT_VERSION=9.0.56
 
 BASE=$(pwd)
 SCRIPT_BASE=$(dirname $0)
@@ -58,7 +59,7 @@ TOMCAT_FILE=apache-tomcat-$TOMCAT_VERSION.tar.gz
 if [ -f "/tmp/$TOMCAT_FILE" ]; then
   cp /tmp/$TOMCAT_FILE .
 else
-  TOMCAT_URL="https://downloads.apache.org/tomcat/tomcat-8/v$TOMCAT_VERSION/bin/$TOMCAT_FILE"
+  TOMCAT_URL="https://downloads.apache.org/tomcat/tomcat-9/v$TOMCAT_VERSION/bin/$TOMCAT_FILE"
   wget $TOMCAT_URL
 
   if [ "$?" != "0" ]; then
