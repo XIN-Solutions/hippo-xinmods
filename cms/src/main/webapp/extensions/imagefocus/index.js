@@ -122,9 +122,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 		}
 
 
-	} catch (error) {
-		console.error('Failed to register extension:', error.message);
-		console.error('- error code:', error.code);
+	}
+	catch (error) {
+		console.error('Failed to register extension:', error);
+		console.error('- error code:', error.code, error.message);
 	}
 
 });
