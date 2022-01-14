@@ -347,7 +347,7 @@ public class AssetModifierServlet extends HttpServlet {
 
 		// `x` param empty? fit to height.
 		if (instr.isEmpty(SCALE_PARAM_X)) {
-			size = instr.getIntParam(SCALE_PARAM_Y);
+			size = instr.getIntParam(SCALE_PARAM_X);
 
 			// make sure to not grow the image
 			if (size > img.getWidth()) {
@@ -357,7 +357,7 @@ public class AssetModifierServlet extends HttpServlet {
 			mode = Scalr.Mode.FIT_TO_HEIGHT;
 		}
 		else if (instr.isEmpty(SCALE_PARAM_Y)) {
-			size = instr.getIntParam(SCALE_PARAM_X);
+			size = instr.getIntParam(SCALE_PARAM_Y);
 
 			// make sure to not grow the image
 			if (size > img.getHeight()) {
