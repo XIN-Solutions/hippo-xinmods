@@ -7,10 +7,7 @@ import org.onehippo.repository.update.GroovyUpdaterClassLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.Node;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.Value;
+import javax.jcr.*;
 import java.util.Map;
 
 /*
@@ -108,6 +105,10 @@ public class XinGroovyDeriveFunction extends DerivedDataFunction {
                 return null;
             }
 
+        }
+        catch (ItemNotFoundException infEx) {
+            LOG.info("Can't process a new node, skipping.");
+            return null;
         }
         catch (Exception ex) {
             LOG.error("Could not process derivative function manipulation, caused by: ", ex);
