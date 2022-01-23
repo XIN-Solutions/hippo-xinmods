@@ -25,6 +25,11 @@ public class XpathMapFilter {
     private static final Logger LOG = LoggerFactory.getLogger(XpathMapFilter.class);
 
     /**
+     * Keep digging for xpath mappings after modifications found, this many times.
+     */
+    private static final int MAX_LEVEL = 2;
+
+    /**
      * Start visiting a map
      *
      * @param map            the map to get through
@@ -32,7 +37,18 @@ public class XpathMapFilter {
      * @param callback       a callback when something hits
      */
     public void visitMap(Map<String, Object> map, List<String> pathSelectors, MapFilterCallback callback) {
-        this.visitMap(map, pathSelectors, new ArrayList<>(), callback);
+        int level = 0;
+        while (true) {
+
+            boolean modified = this.visitMap(map, pathSelectors, new ArrayList<>(), callback);
+
+            // nothing happened or we've gone over this too many times? don't worry about doing it again.
+            if (!modified || level >= MAX_LEVEL) {
+                break;
+            }
+
+            ++level;
+        }
     }
 
     /**
@@ -42,8 +58,9 @@ public class XpathMapFilter {
      * @param pathSelectors  the selectors we have to match
      * @param callback       a callback when something hits
      */
-    public void visitMap(Map<String, Object> map, List<String> pathSelectors, List<String> breadcrumb, MapFilterCallback callback) {
+    public boolean visitMap(Map<String, Object> map, List<String> pathSelectors, List<String> breadcrumb, MapFilterCallback callback) {
 
+        boolean modified = false;
         XpathSelectorMatcher matcher = new XpathSelectorMatcher();
 
         List<String> keys = new ArrayList<>(map.keySet());
@@ -68,12 +85,12 @@ public class XpathMapFilter {
 
             // something matched? execute callback so we can "enrich" the node.
             if (firstMatchedSelector != null) {
-                callback.matchHit(firstMatchedSelector, scopedBreadcrumb, key, map);
+                modified |= callback.matchHit(firstMatchedSelector, scopedBreadcrumb, key, map);
             }
 
             // should we step into the child node?
             if (entryValue instanceof Map) {
-                this.visitMap((Map) entryValue, pathSelectors, scopedBreadcrumb, callback);
+                modified |= this.visitMap((Map) entryValue, pathSelectors, scopedBreadcrumb, callback);
             }
 
             // if it's a list value, let's find any maps inside.
@@ -90,7 +107,7 @@ public class XpathMapFilter {
                         // create new list with additional breadcrumb for this entry (adds current index integer)
                         List<String> listElBreadcrumb = new ArrayList<>(scopedBreadcrumb);
                         listElBreadcrumb.add(String.format("%d", elIdx));
-                        this.visitMap((Map) valElement, pathSelectors, listElBreadcrumb, callback);
+                        modified |= this.visitMap((Map) valElement, pathSelectors, listElBreadcrumb, callback);
 
                         ++elIdx;
                     }
@@ -98,6 +115,8 @@ public class XpathMapFilter {
                 }
             }
         }
+
+        return modified;
     }
 
 }

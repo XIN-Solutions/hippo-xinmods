@@ -45,6 +45,7 @@ public class XpathMapFilterTest {
             (matchedPath, breadcrumb, nodeName, currentMap) -> {
                 LOG.info("Matched breadcrumb: {}\nNode name: {}", breadcrumb, nodeName);
                 ++hits;
+                return true;
             }
         );
 

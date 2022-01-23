@@ -19,6 +19,6 @@ public interface MapFilterCallback {
      * @param nodeName      the name of the current node
      * @param currentMap    the map of the current node (we can add to this).s
      */
-    void matchHit(String matchedPath, List<String> breadcrumb, String nodeName, Map<String, Object> currentMap);
+    boolean matchHit(String matchedPath, List<String> breadcrumb, String nodeName, Map<String, Object> currentMap);
 
 }

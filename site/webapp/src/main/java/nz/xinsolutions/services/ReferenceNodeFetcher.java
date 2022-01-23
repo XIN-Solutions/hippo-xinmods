@@ -76,12 +76,12 @@ public class ReferenceNodeFetcher {
      * @param nodeName      the name of the node we've matched against
      * @param currentMap    the map that has an entry named `nodeName` we can work on.
      */
-    protected void fetchForMatch(String matchedPath, List<String> breadcrumb, String nodeName, Map<String, Object> currentMap) {
+    protected boolean fetchForMatch(String matchedPath, List<String> breadcrumb, String nodeName, Map<String, Object> currentMap) {
         try {
             Object node = currentMap.get(nodeName);
             if (!(node instanceof Link.LocalLink)) {
                 LOG.debug("Although we matched something, it is not a map, so can't fetch information for it, skipping.");
-                return;
+                return false;
             }
 
             Link.LocalLink link = (Link.LocalLink) node;
@@ -91,7 +91,7 @@ public class ReferenceNodeFetcher {
 
             if (bean == null) {
                 LOG.info("Could not find a hippo bean with uuid `{}`, skipping.", link.id);
-                return;
+                return false;
             }
 
             Map<String, Object> linkMap = new LinkedHashMap<>();
@@ -107,6 +107,8 @@ public class ReferenceNodeFetcher {
         catch (Exception ex) {
             LOG.error("Could not retrieve the referenced bean. Caused by: ", ex);
         }
+
+        return true;
     }
 
 
