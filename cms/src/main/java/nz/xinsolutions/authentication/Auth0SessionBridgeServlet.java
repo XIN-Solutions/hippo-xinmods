@@ -53,8 +53,13 @@ public class Auth0SessionBridgeServlet extends HttpServlet {
             Auth0Configuration authConfig = getAuthConfiguration(session, authService);
 
             StringWriter strWriter = new StringWriter();
-            ObjectMapper objMap = new ObjectMapper();
-            objMap.writeValue(strWriter, authConfig);
+            if (authConfig != null) {
+                ObjectMapper objMap = new ObjectMapper();
+                objMap.writeValue(strWriter, authConfig);
+            }
+            else {
+                strWriter.append("{}");
+            }
 
             String output = "window.auth0Config = " + strWriter.toString() + ";";
 

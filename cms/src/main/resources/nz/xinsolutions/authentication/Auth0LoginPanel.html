@@ -125,7 +125,7 @@
                  * Logout from auth0
                  */
                 window.logoutFromAuth0 = function() {
-                    webAuth.logout({
+                    webAuth && webAuth.logout({
                         returnTo: auth0Config.afterLogoutUrl,
                         clientID: auth0Config.clientId
                     });
