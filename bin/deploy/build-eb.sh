@@ -46,7 +46,6 @@ elif [[ $CONFIG == s3://* ]]; then
   CONFIG=/tmp/config.json
   DELETE_AFTERWARDS=true
 
-  exit 1
 elif [ ! -f $CONFIG ]; then
   echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
   echo "  ERROR: The configuration you've specified ($1) does not exist"
