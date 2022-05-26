@@ -1,14 +1,53 @@
 #!/bin/bash
 
 CONFIG=$1
+DELETE_AFTERWARDS=false
 
-PROJECT_VERSION=$(mvn -q \
-    -Dexec.executable=echo \
-    -Dexec.args='${project.version}' \
-    --non-recursive \
-    exec:exec)
+if [[ $CONFIG == "" ]]; then
+  echo
+  echo "  Usage: $0 [localfile|s3://bucket/key.json]"
+  echo
+  cat << 'EOF'
+    This build script will combine the CMS distribution build with the latest tomcat version, and insert
+    configuration information specified in the configuration JSON into the relevant configuration
+    files, and move shared libraries into the correct position.
 
-if [ ! -f $CONFIG ]; then
+    It will also shape the distribution in such a way that it can be ingested by ElasticBeanstalk.
+
+    Expected JSON configuration elements:
+
+      {
+        "eb" : {
+          "app" : "<elastic-beanstalk-application-name>",
+          "env" : "<eb-environment-name>",
+          "region" : "ap-southeast-2"
+        },
+
+        "mysql": {
+          "host" : "<database host>",
+          "port": 3306,
+          "database" : "<database name>",
+          "username" : "<database user name>",
+          "password": "<database user password>"
+        },
+
+        "xin" : {
+          "cmsHost": "<root url of where CMS is hosted without trailing slash>"
+        }
+
+      }
+
+EOF
+  exit 1
+elif [[ $CONFIG == s3://* ]]; then
+  echo "S3 configuration .. fetching from AWS"
+
+  aws s3 cp $CONFIG /tmp/config.json
+  CONFIG=/tmp/config.json
+  DELETE_AFTERWARDS=true
+
+  exit 1
+elif [ ! -f $CONFIG ]; then
   echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
   echo "  ERROR: The configuration you've specified ($1) does not exist"
   echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
@@ -16,8 +55,17 @@ if [ ! -f $CONFIG ]; then
 fi
 
 
-#TOMCAT_VERSION=8.5.71
-TOMCAT_VERSION=9.0.56
+PROJECT_VERSION=$(mvn -q \
+    -Dexec.executable=echo \
+    -Dexec.args='${project.version}' \
+    --non-recursive \
+    exec:exec)
+
+echo -n "Determine latest Tomcat 9 version .. "
+LISTING=`curl https://downloads.apache.org/tomcat/tomcat-9/ -s -o - | grep -oE 'v[0-9\.]+'`
+TOMCAT_VERSION=$(echo "$LISTING" | tr ' ' '\n' | sort -Vr | head -n1 | sed 's/v//' )
+
+echo $TOMCAT_VERSION
 
 BASE=$(pwd)
 SCRIPT_BASE=$(dirname $0)
@@ -104,7 +152,7 @@ mv $SCRIPT_BASE/target/cms.war $SCRIPT_BASE/target/webapps
 node $SCRIPT_BASE/merge.js $CONFIG $SCRIPT_BASE/templates/context.xml.tpl > $SCRIPT_BASE/target/conf/context.xml
 if [ "$?" != "0" ]; then
   echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-  echo "  Could merge $CONFIG into $SCRIPT_BASE/templates/context.xml.tpl, check your config "
+  echo "  Could not merge $CONFIG into $SCRIPT_BASE/templates/context.xml.tpl, check your config "
   echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
   exit 1
 fi
@@ -112,7 +160,7 @@ fi
 node $SCRIPT_BASE/merge.js $CONFIG $SCRIPT_BASE/templates/repository.xml.tpl > $SCRIPT_BASE/target/conf/repository.xml
 if [ "$?" != "0" ]; then
   echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-  echo "  Could merge $CONFIG into $SCRIPT_BASE/templates/repository.xml.tpl, check your config "
+  echo "  Could not merge $CONFIG into $SCRIPT_BASE/templates/repository.xml.tpl, check your config "
   echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
   exit 1
 fi
@@ -120,7 +168,7 @@ fi
 node $SCRIPT_BASE/merge.js $CONFIG $SCRIPT_BASE/templates/catalina.properties.tpl > $SCRIPT_BASE/target/conf/catalina.properties
 if [ "$?" != "0" ]; then
   echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-  echo "  Could merge $CONFIG into $SCRIPT_BASE/templates/catalina.properties.tpl, check your config "
+  echo "  Could not merge $CONFIG into $SCRIPT_BASE/templates/catalina.properties.tpl, check your config "
   echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
   exit 1
 fi
@@ -128,7 +176,7 @@ fi
 node $SCRIPT_BASE/merge.js $CONFIG $SCRIPT_BASE/templates/server.xml.tpl > $SCRIPT_BASE/target/conf/server.xml
 if [ "$?" != "0" ]; then
   echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-  echo "  Could merge $CONFIG into $SCRIPT_BASE/templates/server.xml.tpl, check your config "
+  echo "  Could not merge $CONFIG into $SCRIPT_BASE/templates/server.xml.tpl, check your config "
   echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
   exit 1
 fi
@@ -136,7 +184,7 @@ fi
 node $SCRIPT_BASE/merge.js $CONFIG $SCRIPT_BASE/templates/setenv.sh.tpl > $SCRIPT_BASE/target/bin/setenv.sh
 if [ "$?" != "0" ]; then
   echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
-  echo "  Could merge $CONFIG into $SCRIPT_BASE/templates/setenv.sh.tpl, check your config "
+  echo "  Could not merge $CONFIG into $SCRIPT_BASE/templates/setenv.sh.tpl, check your config "
   echo "-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
   exit 1
 fi
@@ -149,3 +197,8 @@ zip $BASE/target/eb-application-$PROJECT_VERSION.zip . -r
 cd $BASE
 
 rm $SCRIPT_BASE/target -Rf
+
+if [ "$DELETE_AFTERWARDS" == "true" ]; then
+  echo "Deleting temporary configuration"
+  rm -f /tmp/config.json
+fi
