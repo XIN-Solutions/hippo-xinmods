@@ -4,7 +4,7 @@ cd /home/ec2-user
 
 # get amazon cloudwatch agent and install it on the system
 wget https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm
-yum localinstall amazon-cloudwatch-agent.rpm
+yum -y localinstall amazon-cloudwatch-agent.rpm
 
 cat << 'EOF' > amazon-cloudwatch-agent.json
 {
