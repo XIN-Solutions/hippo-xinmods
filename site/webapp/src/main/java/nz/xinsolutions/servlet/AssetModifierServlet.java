@@ -508,10 +508,10 @@ public class AssetModifierServlet extends HttpServlet {
 		String mimeType = s_mimeTypes.getOrDefault(extension, "application/octet-stream");
 		resp.setHeader("Content-Type", mimeType);
 
-		Session adminSession = null;
+		Session configSession = null;
 		try {
-			adminSession = SessionUtils.getPooledSession(req, "default");
-			SiteXinmodsConfig xmCfg = new SiteXinmodsConfig(adminSession);
+			configSession = SessionUtils.getPooledSession(req, "hstconfigreader");
+			SiteXinmodsConfig xmCfg = new SiteXinmodsConfig(configSession);
 			long cacheLength = getAssetCacheLength(xmCfg);
 
 			// set header
@@ -522,7 +522,7 @@ public class AssetModifierServlet extends HttpServlet {
 			LOG.error("Couldn't set response header, caused by: ", ex);
 		}
 		finally {
-			SessionUtils.releaseSession(req, adminSession);
+			SessionUtils.releaseSession(req, configSession);
 		}
 	}
 
