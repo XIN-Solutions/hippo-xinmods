@@ -76,3 +76,16 @@ username and password fields will reappear.
 In some situations, especially while configuring the plugin you might get stuck with a logged in user. To logout, open
 a console in your browser and type: `logoutFromAuth0()`; this will manually trigger the logout in the Auth0 SDK. 
 
+## Reverting
+
+The original plugin module class is
+
+    org.hippoecm.frontend.plugins.login.DefaultLoginPlugin
+
+Input this value in the console at: 
+
+    /hippo:configuration/hippo:frontend/login/login/loginPage
+    @ plugin.class
+
+
+

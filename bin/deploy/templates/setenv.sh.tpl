@@ -8,4 +8,7 @@ SCALR_OPTS="-Dimgscalr.async.threadCount=2 -Dasset.concurrent.max=20 -Djava.awt.
 #REMOTE_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8000"
 
 CATALINA_OPTS="\${JVM_OPTS} \${REP_OPTS} \${L4J_OPTS} \${REMOTE_OPTS} \${SCALR_OPTS}"
-JAVA_HOME="/usr/lib/jvm/jre-1.8.0"
+
+if [ -d "/usr/lib/jvm/jre-1.8.0" ]; then
+	JAVA_HOME="/usr/lib/jvm/jre-1.8.0"
+fi
