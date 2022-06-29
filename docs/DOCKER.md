@@ -25,6 +25,8 @@ Run remote image:
         -e BRXM_CMS_HOST=<http-url-for-cms> \
         xinsolutions/bloomreach-xinmods-cms:latest
 
+Of course you can also feed it an environment file, or you can use the image as part of a docker compose yaml.
+
 ## Build with a JSON configuration
 
 If you have made changes to the xinmods project to accommodate your own
