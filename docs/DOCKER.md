@@ -58,6 +58,11 @@ The shape of the configuration is as follows:
     }
 
 
+Alternatively, if you would like to configure your container using environment variables as per the example
+at the top of this document, run the following:
+
+    ./bin/deploy/build-docker.sh
+
 Then create a Docker image from the resulting ZIP file by running this command in the root folder of the project:
 
     sudo docker build -t bloomreach-backend .
