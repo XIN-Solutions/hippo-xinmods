@@ -1,8 +1,6 @@
 # syntax=docker/dockerfile:1
 
-# arch=arm64v8
-ARG arch=amd64	 
-FROM --platform=${arch} ubuntu:22.10
+FROM arm64v8/ubuntu:22.10
 
 #
 #	Install required packages
