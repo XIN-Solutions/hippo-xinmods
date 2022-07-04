@@ -11,7 +11,7 @@
 		minEvictableIdleTimeMillis='60000'
 		username='${cfg.mysql.username}' password='${cfg.mysql.password}'
 		driverClassName='com.mysql.cj.jdbc.Driver'
-		url='jdbc:mysql://${cfg.mysql.host}:${cfg.mysql.port}/${cfg.mysql.database}?characterEncoding=utf8&amp;useSSL=false&amp;nullDatabaseMeansCurrent=true'/>
+		url='jdbc:mysql://${cfg.mysql.host}:${cfg.mysql.port}/${cfg.mysql.database}?characterEncoding=utf8&amp;useSSL=false&amp;nullDatabaseMeansCurrent=true&amp;allowPublicKeyRetrieval=true'/>
 
 	<Parameter name='apiUrl' value='${cfg.xin.cmsHost}/api' />
 	<Parameter name='xinApiUrl' value='${cfg.xin.cmsHost}/api/xin' />
