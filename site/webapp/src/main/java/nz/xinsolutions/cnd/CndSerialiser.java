@@ -14,6 +14,8 @@ import java.io.StringWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+
 /**
  * Author: Marnix Kok <marnix@xinsolutions.co.nz>
  * Date: 25/10/17
@@ -96,7 +98,15 @@ public class CndSerialiser {
     
     protected String entityToCndString(CndEntity entity) {
         StringBuilder strBld = new StringBuilder();
-        strBld.append(String.format("[%s] > %s\n", entity.getName(), concatSuperTypes(entity)));
+        String superType = concatSuperTypes(entity);
+        strBld.append(
+            String.format(
+                "[%s] %s %s\n",
+                entity.getName(),
+                isNotEmpty(superType) ? ">" : "",
+                superType
+            )
+        );
         
         if (entity.isOrderable()) {
             strBld.append("  orderable\n");
@@ -104,6 +114,10 @@ public class CndSerialiser {
         
         if (entity.isAbstrakt()) {
             strBld.append("  abstract\n");
+        }
+
+        if (entity.isMixin()) {
+            strBld.append("  mixin\n");
         }
 
         // convert properties into cnd
