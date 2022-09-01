@@ -1,0 +1,295 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "hippo-backend-swagger",
+        "description": "Swagger definitions for hippo-backend",
+        "common": [
+            "Models.js"
+        ]
+    },
+    "host": "localhost:8090",
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "basePath": "/",
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/api/xin/facets/get": {
+            "get": {
+                "summary": "Get Facet at path",
+                "tags": [
+                    "Content"
+                ],
+                "id": "get_apixinfacetsget",
+                "description": "Get facet at path",
+                "operationId": "get_apixinfacetsget",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "The Facet information",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/xin/content/document-with-uuid": {
+            "get": {
+                "summary": "Get document with UUID",
+                "tags": [
+                    "Content"
+                ],
+                "id": "get_apixincontentdocumentwithuuid",
+                "description": "Get document with UUID",
+                "operationId": "get_apixincontentdocumentwithuuid",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "the document with a particular UUID",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/xin/content/document-at-path": {
+            "get": {
+                "summary": "Get document at Path",
+                "tags": [
+                    "Content"
+                ],
+                "id": "get_apixincontentdocumentatpath",
+                "description": "Get document at path",
+                "operationId": "get_apixincontentdocumentatpath",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "the document at that path",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/xin/content/uuid-to-path": {
+            "get": {
+                "summary": "UUID to path",
+                "tags": [
+                    "Content"
+                ],
+                "id": "get_apixincontentuuidtopath",
+                "description": "UUID to path",
+                "operationId": "get_apixincontentuuidtopath",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "the list of documents and folders",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/xin/content/path-to-uuid": {
+            "get": {
+                "summary": "Path To UUID",
+                "tags": [
+                    "Content"
+                ],
+                "id": "get_apixincontentpathtouuid",
+                "description": "UUID to path",
+                "operationId": "get_apixincontentpathtouuid",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "the list of documents and folders",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/xin/content/documents-list": {
+            "get": {
+                "summary": "List documents",
+                "tags": [
+                    "Content"
+                ],
+                "id": "get_apixincontentdocumentslist",
+                "description": "List Documents",
+                "operationId": "get_apixincontentdocumentslist",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "the list of documents and folders",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/documents": {
+            "get": {
+                "summary": "Get documents",
+                "tags": [
+                    "Content"
+                ],
+                "id": "get_apidocuments",
+                "description": "Get Documents",
+                "operationId": "get_apidocuments",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "The list of documents",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/xin/query": {
+            "get": {
+                "summary": "Execute a query that returns a set of documents.",
+                "tags": [
+                    "Content"
+                ],
+                "id": "get_apixinquery",
+                "description": "<p>Execute a query that returns a set of documents.</p> <p>Can we do multiple lines?</p>",
+                "operationId": "get_apixinquery",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "The Collections API List response.",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/xin/collections/list": {
+            "get": {
+                "summary": "List collections",
+                "tags": [
+                    "Collections"
+                ],
+                "id": "get_apixincollectionslist",
+                "description": "List collections of simple documents currently available in your Bloomreach XM repository.",
+                "operationId": "get_apixincollectionslist",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "The Collections API List response.",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/xin/collections/{name}/item": {
+            "get": {
+                "summary": "Get collection",
+                "tags": [
+                    "Collections"
+                ],
+                "id": "get_apixincollectionsnameitem",
+                "description": "Get collection item",
+                "operationId": "get_apixincollectionsnameitem",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "The Collections API List response.",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "deprecated": false
+            },
+            "delete": {
+                "summary": "Delete collection",
+                "tags": [
+                    "Collections"
+                ],
+                "id": "delete_apixincollectionsnameitem",
+                "description": "Delete collection item",
+                "operationId": "delete_apixincollectionsnameitem",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "The Collections API delete response.",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "deprecated": false
+            },
+            "post": {
+                "summary": "Put collection",
+                "tags": [
+                    "Collections"
+                ],
+                "id": "post_apixincollectionsnameitem",
+                "description": "Put collection item",
+                "operationId": "post_apixincollectionsnameitem",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "The Collections API put response.",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/assetmod/{url}": {
+            "get": {
+                "summary": "Asset modification",
+                "tags": [
+                    "Asset Modification"
+                ],
+                "id": "get_assetmodurl",
+                "description": "Asset mods",
+                "operationId": "get_assetmodurl",
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "binary",
+                        "schema": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        }
+    },
+    "definitions": {}
+}

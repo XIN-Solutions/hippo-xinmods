@@ -1,0 +1,19 @@
+{
+  "name": "hippo-backend-swagger",
+  "version": "1.0.0",
+  "description": "Swagger definitions for hippo-backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "generate-docs": "node index.js > dist/swagger.json && redoc-cli build dist/swagger.json -o ../API-Swagger.html "
+  },
+  "dependencies": {
+    "redoc": "^2.0.0-rc.76",
+    "express": "^4.18.1",
+    "express-list-endpoints": "^4.0.0",
+    "swagger-ui-express": "^4.5.0",
+    "swagger-scrape": "^1.1.6"
+  },
+  "author": "Marnix Kok",
+  "license": "ISC"
+}
