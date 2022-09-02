@@ -1,28 +1,20 @@
+const fs = require('fs');
 const express = require('express');
 const SwaggerScrape = require("swagger-scrape");
-const DEFAULT_PORT = process.env.APP_PORT || 8090;
+const DEFAULT_PORT = process.env.APP_PORT || 8080;
 
 const pkgInfo = require('./package.json');
 
 const appInfo = {
     version: pkgInfo.version,
     title: pkgInfo.name,
-    description: pkgInfo.description,
+    description: fs.readFileSync('description.html').toString(),
 
     common: [ "Models.js" ]
 };
 
 const app = express();
 
-
-app.get("/api/xin/facets/get", (req, resp) => {
-    /** @fileHint: ContentEndpoints.js::getFacetAtPath; */
-});
-
-
-app.get("/api/xin/facets/get", (req, resp) => {
-    /** @fileHint: ContentEndpoints.js::getFacetAtPath; */
-});
 
 app.get("/api/xin/content/document-with-uuid", (req, resp) => {
     /** @fileHint: ContentEndpoints.js::getDocumentWithUuid; */
@@ -48,6 +40,11 @@ app.get("/api/xin/content/documents-list", (req, resp) => {
 
 app.get("/api/documents", (req, resp) => {
     /** @fileHint: ContentEndpoints.js::getDocuments; */
+});
+
+
+app.get("/api/xin/facets/get", (req, resp) => {
+    /** @fileHint: ContentEndpoints.js::getFacetAtPath; */
 });
 
 

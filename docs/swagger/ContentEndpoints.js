@@ -8,7 +8,7 @@ module.exports = {
      * <p>Can we do multiple lines?</p>
      *
      * @id executeQuery
-     * @tag Content
+     * @tag Complex Content
      * @summary Execute a query that returns a set of documents.
      *
      * @response 200 {object} The Collections API List response.
@@ -41,7 +41,7 @@ module.exports = {
      * Get facet at path
      *
      * @id getFacetAtPath
-     * @tag Content
+     * @tag Complex Content
      * @summary Get Facet at path
      *
      * @response 200 {object} The Facet information
@@ -62,7 +62,12 @@ module.exports = {
      *
      * @summary Get document with UUID
      *
-     * @response 200 {object} the document with a particular UUID
+     * @param Authorization {string} (header) Basic authorization header for user in the `restapi` group or `admin` user
+     * @param uuid {string} (query) the unique identifier of the document you wish to retrieve.
+     * @param fetch {?string[]} (query) partial paths to items in the payload that must be <a href="https://marnixkok.nl/news/bloomreach-xm-tutorials/prefetching-content-from-bloomreach-xm-using-xin-mods" target="_blank">prefetched</a>.
+     *
+     * @response 200 {DocumentWithUuidResponse} the document with a particular UUID
+     * @response 403 {string} Sent when the credentials are invalid.
      *
      * @param req
      * @param resp
@@ -78,9 +83,14 @@ module.exports = {
      * @id getDocumentAtPath
      * @tag Content
      *
-     * @summary Get document at Path
+     * @summary Get document at path
      *
-     * @response 200 {object} the document at that path
+     * @param Authorization {string} (header) Basic authorization header for user in the `restapi` group or `admin` user
+     * @param path {string} (query) the path of the document you wish to retrieve.
+     * @param fetch {?string[]} (query) partial paths to items in the payload that must be <a href="https://marnixkok.nl/news/bloomreach-xm-tutorials/prefetching-content-from-bloomreach-xm-using-xin-mods" target="_blank">prefetched</a>.
+     *
+     * @response 200 {DocumentWithUuidResponse} the document with a particular UUID
+     * @response 403 {string} Sent when the credentials are invalid.
      *
      * @param req
      * @param resp
