@@ -133,19 +133,44 @@
         },
         "/api/xin/content/uuid-to-path": {
             "get": {
-                "summary": "UUID to path",
+                "summary": "UUID to path converter",
                 "tags": [
                     "Content"
                 ],
                 "id": "get_apixincontentuuidtopath",
-                "description": "UUID to path",
+                "description": "This endpoint is able to convert a UUID to the Path at which the document with that UUID lives in the JCR. It will also return other useful metadata.",
                 "operationId": "get_apixincontentuuidtopath",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": false,
+                        "description": "Basic authorization header for user in the `restapi` group or `admin` user",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "uuid",
+                        "in": "query",
+                        "required": false,
+                        "description": "the UUID to convert to its path equivalent",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "the list of documents and folders",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/UuidToPathResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Sent when the credentials are invalid.",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 },
@@ -154,19 +179,38 @@
         },
         "/api/xin/content/path-to-uuid": {
             "get": {
-                "summary": "Path To UUID",
+                "summary": "Path To UUID Converter",
                 "tags": [
                     "Content"
                 ],
                 "id": "get_apixincontentpathtouuid",
-                "description": "UUID to path",
+                "description": "This endpoint is able to convert a document path to the UUID of the document. It will also return other useful metadata.",
                 "operationId": "get_apixincontentpathtouuid",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": false,
+                        "description": "Basic authorization header for user in the `restapi` group or `admin` user",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "path",
+                        "in": "query",
+                        "required": false,
+                        "description": "the path of the document to retrieve a UUID for.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "the list of documents and folders",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/PathToUuidResponse"
                         }
                     }
                 },
@@ -175,19 +219,47 @@
         },
         "/api/xin/content/documents-list": {
             "get": {
-                "summary": "List documents",
+                "summary": "List folders and documents",
                 "tags": [
                     "Content"
                 ],
                 "id": "get_apixincontentdocumentslist",
-                "description": "List Documents",
+                "description": "This endpoint enables you to retrieve a list of sub-folders and sub-documents of a specific path in your content tree.",
                 "operationId": "get_apixincontentdocumentslist",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": false,
+                        "description": "Basic authorization header for user in the `restapi` group or `admin` user",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "path",
+                        "in": "query",
+                        "required": false,
+                        "description": "the path to retrieve child document information for",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "fetch",
+                        "in": "query",
+                        "required": false,
+                        "description": "partial paths to items in the payload that must be <a href=\"https://marnixkok.nl/news/bloomreach-xm-tutorials/prefetching-content-from-bloomreach-xm-using-xin-mods\" target=\"_blank\">prefetched</a>.",
+                        "schema": {
+                            "$ref": "#/definitions/[ 'Array' ].<string>"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "the list of documents and folders",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/ListDocumentsResponse"
                         }
                     }
                 },
@@ -433,6 +505,109 @@
                 "document": {
                     "$ref": "#/definitions/BloomreachDocument",
                     "description": "the document that is present at the UUID"
+                }
+            },
+            "required": [],
+            "allOf": [
+                {
+                    "type": "ApiResponse",
+                    "$ref": "#/definitions/ApiResponse"
+                }
+            ]
+        },
+        "UuidToPathResponse": {
+            "type": "object",
+            "title": "UuidToPathResponse",
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "description": "the UUID that was originally requested"
+                },
+                "type": {
+                    "type": "string",
+                    "description": "the CND type of the document this UUID belongs to"
+                },
+                "path": {
+                    "type": "string",
+                    "description": "the path at which the document with this UUID lives."
+                }
+            },
+            "required": [],
+            "allOf": [
+                {
+                    "type": "ApiResponse",
+                    "$ref": "#/definitions/ApiResponse"
+                }
+            ]
+        },
+        "PathToUuidResponse": {
+            "type": "object",
+            "title": "PathToUuidResponse",
+            "properties": {},
+            "required": [],
+            "allOf": [
+                {
+                    "type": "UuidToPathResponse",
+                    "$ref": "#/definitions/UuidToPathResponse"
+                }
+            ]
+        },
+        "BloomreachFolder": {
+            "type": "object",
+            "title": "BloomreachFolder",
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "description": "the UUID of the folder in the repository"
+                },
+                "path": {
+                    "type": "string",
+                    "description": "the absolute path of the folder in the repository"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "the node name of the folder in the repository"
+                },
+                "label": {
+                    "type": "string",
+                    "description": "the display name of the folder in the repository"
+                }
+            },
+            "required": []
+        },
+        "ListDocumentsResponse": {
+            "type": "object",
+            "title": "ListDocumentsResponse",
+            "properties": {
+                "uuid": {
+                    "type": "string",
+                    "description": "the uuid of the node at the path requested"
+                },
+                "path": {
+                    "type": "string",
+                    "description": "the path as requested in the request"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "the name of the node"
+                },
+                "label": {
+                    "type": "string",
+                    "description": "the display name of the node"
+                },
+                "folders": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BloomreachFolder",
+                        "description": "a list of folders that are available at this path"
+                    }
+                },
+                "documents": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/BloomreachDocument",
+                        "description": "a list of child documents available at the requested path"
+                    }
                 }
             },
             "required": [],

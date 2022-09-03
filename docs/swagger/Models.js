@@ -12,6 +12,29 @@
  */
 
 /**
+ * @typedef {ApiResponse} UuidToPathResponse
+ *
+ * @property {string} uuid - the UUID that was originally requested
+ * @property {string} type - the CND type of the document this UUID belongs to
+ * @property {string} path - the path at which the document with this UUID lives.
+ */
+
+/**
+ * @typedef {UuidToPathResponse} PathToUuidResponse
+ */
+
+/**
+ * @typedef {ApiResponse} ListDocumentsResponse
+ *
+ * @property {string} uuid - the uuid of the node at the path requested
+ * @property {string} path - the path as requested in the request
+ * @property {string} name - the name of the node
+ * @property {string} label - the display name of the node
+ * @property {BloomreachFolder[]} folders - a list of folders that are available at this path
+ * @property {BloomreachDocument[]} documents - a list of child documents available at the requested path
+ */
+
+/**
  * @typedef BloomreachDocument
  *
  * @property {string} id - the UUID of the document
@@ -25,4 +48,13 @@
  * @property {string} pubwfLastModificationDate - publication workflow modification date formatted as an ISO date string.
  * @property {string} pubwfPublicationDate - publication workflow publication ISO date string indicating when the document was first published
  * @property {object} items - object describing the values stored in the document, this structure will be different for every document type.
+ */
+
+/**
+ * @typedef BloomreachFolder
+ *
+ * @property {string} uuid - the UUID of the folder in the repository
+ * @property {string} path - the absolute path of the folder in the repository
+ * @property {string} name - the node name of the folder in the repository
+ * @property {string} label - the display name of the folder in the repository
  */
