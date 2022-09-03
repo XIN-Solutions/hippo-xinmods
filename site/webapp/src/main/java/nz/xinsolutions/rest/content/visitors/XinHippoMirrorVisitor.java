@@ -39,14 +39,6 @@ import static org.hippoecm.repository.api.HippoNodeType.NT_MIRROR;
  */
 public class XinHippoMirrorVisitor extends HippoMirrorVisitor {
 
-    /**
-     * Logger
-     */
-    private static final Logger LOG = LoggerFactory.getLogger(XinHippoMirrorVisitor.class);
-
-    public XinHippoMirrorVisitor() {
-        LOG.info("Initialise");
-    }
 
     /**
      * Override the visit node implementation to handle "folder" references.

@@ -105,26 +105,26 @@
                             </div>
 
                             <!--
-                                    Required CNDs 
-                            -->
-                            <div class="form-group">
-                                <label>Required CNDs</label>
-                                <p class="help-block">Packages may rely on certain CND elements to be available</p>
+                                <div class="form-group">
+                                    <label>Required CNDs</label>
+                                    <p class="help-block">Packages may rely on certain CND elements to be available</p>
 
-                                <div ng-repeat="(idx, cndId) in requiredCnds">
-                                    <div class="spaced clearfix">
-                                        <input type="text" class="form-control" ng-model="cndId.value">
-                                        <button class="btn btn-xs right right--space btn-flat--top" ng-click="removeFrom(requiredCnds, idx)"><i class="glyphicon glyphicon-minus"></i> Remove</button>
+                                    <div ng-repeat="(idx, cndId) in requiredCnds">
+                                        <div class="spaced clearfix">
+                                            <input type="text" class="form-control" ng-model="cndId.value">
+                                            <button class="btn btn-xs right right--space btn-flat--top" ng-click="removeFrom(requiredCnds, idx)"><i class="glyphicon glyphicon-minus"></i> Remove</button>
+                                        </div>
                                     </div>
+
+                                    <div ng-show="requiredCnds.length === 0" class="alert alert-warning">
+                                        This package definition currently has no dependent CNDs.
+                                    </div>
+
+
+                                    <button class="btn btn-default btn-sm" ng-click="addTo(requiredCnds)"><i class="glyphicon glyphicon-plus"></i> Add</button>
                                 </div>
+                             -->
 
-                                <div ng-show="requiredCnds.length === 0" class="alert alert-warning">
-                                    This package definition currently has no dependent CNDs.
-                                </div>
-
-
-                                <button class="btn btn-default btn-sm" ng-click="addTo(requiredCnds)"><i class="glyphicon glyphicon-plus"></i> Add</button>
-                            </div>
 
                             <!-- submission options -->
                             <div class="ButtonBar ButtonBar--bottom">

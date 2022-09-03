@@ -2,6 +2,7 @@ package nz.xinsolutions.packages;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.zeroturnaround.zip.ZipUtil;
 
 import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import java.io.*;
@@ -135,9 +137,12 @@ public class PackageExportService {
     protected List<Node> getFilterNodes(Session jcrSession, Package pkg) throws RepositoryException {
         
         List<Node> filterNode = new ArrayList<>();
+
+        List<String> rawFilters = pkg.getFilters();
+        List<String> expandedFilters = expandFilters(jcrSession, rawFilters);
         
         // all filters
-        for (String filter : pkg.getFilters()) {
+        for (String filter : expandedFilters) {
             
             if (!jcrSession.nodeExists(filter)) {
                 LOG.info("The node at path `{}` does not exist.", filter);
@@ -150,5 +155,65 @@ public class PackageExportService {
         
         return filterNode;
     }
+    
+    /**
+     * Expand a set of filter paths. Usually a path will not have to be manipulated, unless the path
+     * ends in an asterisk. This will cause us to read the parent node and find children that starts with
+     * whatever came before the asterisk's last path element.
+     *
+     * @param jcrSession the jcr session to use to check node names with
+     * @param rawFilters a list of filters to be expanded
+     *
+     * @return and expanded list of filters.
+     */
+    protected List<String> expandFilters(Session jcrSession, List<String> rawFilters) throws RepositoryException {
+        
+        List<String> result = new ArrayList<>();
+        
+        for (String path: rawFilters) {
+            
+            // regular path? just add it back in
+            if (!path.endsWith("*")) {
+                result.add(path);
+                continue;
+            }
+            
+            FilterExpansion expansion = new FilterExpansion(path);
+    
+            String basePath = expansion.getBasePath();
+            String startsWith = expansion.getStartsWith();
+            LOG.info("Expecting to iterate over node at basePath: {}", basePath);
+            
+            // does the node not exist? skip.
+            if (!jcrSession.nodeExists(basePath)) {
+                LOG.info("Could not find base path for wildcard expression: {}", basePath);
+                continue;
+            }
 
+            // get parent node
+            Node parentNode = jcrSession.getNode(basePath);
+            
+            // iterate over children
+            NodeIterator childrenIt = parentNode.getNodes();
+            while (childrenIt.hasNext()) {
+                Node child = childrenIt.nextNode();
+                String childPath = child.getPath();
+                
+                LOG.info("Iterating over: {}", childPath);
+                
+                // need to match something in the node's name? let's make sure it starts with that identifier, otherwise skip
+                if (StringUtils.isNotBlank(startsWith) && !child.getName().startsWith(startsWith)) {
+                    LOG.info("Skipping over: {}", childPath);
+                    continue;
+                }
+                
+                LOG.info("Child at path matches: {}", childPath);
+                result.add(childPath);
+            }
+            
+        }
+        
+        return result;
+    }
+    
 }

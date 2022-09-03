@@ -10,7 +10,7 @@
 
         <link href="css/styles.css" type="text/css" rel="stylesheet">
 
-        <title>Packages | XIN Solutions</title>
+        <title>Package Manager | XIN Solutions</title>
 
     </head>
     <body ng-app="app">

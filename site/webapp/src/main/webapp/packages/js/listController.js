@@ -20,14 +20,17 @@
                 endpoint
                     .getPackages()
                     .then( function(payload)  {
-                        $scope.packages = payload.data;
-                        $scope.packages.sort(function(a, b) {
-                            return a.id > b.id;
+                        const incomingPackages = [...payload.data];
+                        incomingPackages.sort(function(a, b) {
+                            return a.id > b.id ? 1 : -1;
                         });
 
-                        _.each($scope.packages, function(pkg, idx) { 
+
+                        _.each(incomingPackages, function(pkg, idx) {
                             pkg.collapsed = true; 
                         });
+
+                        $scope.packages = incomingPackages;
                     })
                     .catch( function(err) {console.log(err)} )
                 ;

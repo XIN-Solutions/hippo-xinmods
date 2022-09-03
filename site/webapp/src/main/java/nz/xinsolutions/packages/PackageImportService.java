@@ -92,9 +92,6 @@ public class PackageImportService {
                 );
             }
             
-            // check whether package requirements are met
-            validatePackageAgainstRepo(packageDesc);
-    
             if (importPackageDef) {
                 listService.addPackage(session, packageDesc);
             } else {
