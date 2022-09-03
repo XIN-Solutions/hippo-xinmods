@@ -38,9 +38,15 @@ app.get("/api/xin/content/documents-list", (req, resp) => {
 });
 
 
-app.get("/api/documents", (req, resp) => {
-    /** @fileHint: ContentEndpoints.js::getDocuments; */
+app.get("/api/documents/:uuid",  (req, resp) => {
+    /** @fileHint: ContentEndpoints.js::ootbGetDocument; */
 });
+
+app.get("/api/documents", (req, resp) => {
+    /** @fileHint: ContentEndpoints.js::ootbGetDocuments; */
+});
+
+
 
 
 app.get("/api/xin/facets/get", (req, resp) => {

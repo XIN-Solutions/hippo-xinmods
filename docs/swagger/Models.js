@@ -35,6 +35,23 @@
  */
 
 /**
+ * @typedef GetDocumentsResponse
+ *
+ * @property {number} offset - the offset for the result set
+ * @property {number} max - the limit to the number of records to be returned
+ * @property {number} count - the number of items returned
+ * @property {number} total - total number of results (includes results outside the current offset/max viewport)
+ * @property {boolean} more - if true there are more results to be retrieved in a next page.
+ * @property {BloomreachGetDocumentItem} items - a list of result items.
+ */
+
+/**
+ * @typedef GetDocumentResponse
+ *
+ */
+
+
+/**
  * @typedef BloomreachDocument
  *
  * @property {string} id - the UUID of the document
@@ -57,4 +74,22 @@
  * @property {string} path - the absolute path of the folder in the repository
  * @property {string} name - the node name of the folder in the repository
  * @property {string} label - the display name of the folder in the repository
+ */
+
+/**
+ * @typedef BloomreachGetDocumentItem
+ *
+ * @property {string} name - the name of the node
+ * @property {string} id - the uuid of the node
+ * @property {BloomreachLink} link - the link to the document
+ * @property {string} type - the CND type of this node
+ *
+ */
+
+/**
+ * @typedef BloomreachLink
+ * @property {string} type - 'local' to signify the document is in the repository
+ * @property {string} id - the uuid of the node
+ * @property {string} url - a URL that can retrieve this specific document
+ *
  */

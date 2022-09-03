@@ -212,6 +212,12 @@
                         "schema": {
                             "$ref": "#/definitions/PathToUuidResponse"
                         }
+                    },
+                    "403": {
+                        "description": "Sent when the credentials are invalid.",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 },
                 "deprecated": false
@@ -261,6 +267,58 @@
                         "schema": {
                             "$ref": "#/definitions/ListDocumentsResponse"
                         }
+                    },
+                    "403": {
+                        "description": "Sent when the credentials are invalid.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "deprecated": false
+            }
+        },
+        "/api/documents/{uuid}": {
+            "get": {
+                "summary": "Get document by ID (legacy)",
+                "tags": [
+                    "Content"
+                ],
+                "id": "get_apidocumentsuuid",
+                "description": "Get document is an endpoint built-in to Bloomreach XM, it allows you to query for a single document by its UUID. While you're free to use this endpoint, it is recommended to use the XIN Mods `Get document at path` endpoint as it allows prefetching.",
+                "operationId": "get_apidocumentsuuid",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": false,
+                        "description": "Basic authorization header for user in the `restapi` group or `admin` user",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "required": false,
+                        "description": "the UUID of the document you want to retrieve.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The list of documents",
+                        "schema": {
+                            "$ref": "#/definitions/BloomreachDocument"
+                        }
+                    },
+                    "403": {
+                        "description": "Sent when the credentials are invalid.",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 },
                 "deprecated": false
@@ -268,19 +326,89 @@
         },
         "/api/documents": {
             "get": {
-                "summary": "Get documents",
+                "summary": "Get filtered documents",
                 "tags": [
                     "Content"
                 ],
                 "id": "get_apidocuments",
-                "description": "Get Documents",
+                "description": "Get documents is an endpoint built-in to Bloomreach XM, it allows you to query for documents in quite the unrefined manner.",
                 "operationId": "get_apidocuments",
-                "parameters": [],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": false,
+                        "description": "Basic authorization header for user in the `restapi` group or `admin` user",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "_offset",
+                        "in": "query",
+                        "required": false,
+                        "description": "pagination offset",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "_max",
+                        "in": "query",
+                        "required": false,
+                        "description": "the maximum number of records to be retrieved",
+                        "schema": {
+                            "type": "number"
+                        }
+                    },
+                    {
+                        "name": "_orderBy",
+                        "in": "query",
+                        "required": false,
+                        "description": "the field to order by (eg, hippostd:pubwfCreationDate)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "_sortOrder",
+                        "in": "query",
+                        "required": false,
+                        "description": "'asc' or 'desc' for ascending and descending sort order respectively",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "_nodetype",
+                        "in": "query",
+                        "required": false,
+                        "description": "the CND type to look for (like xinmods:blogdocument)",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "_query",
+                        "in": "query",
+                        "required": false,
+                        "description": "the free text query.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "The list of documents",
                         "schema": {
-                            "type": "object"
+                            "$ref": "#/definitions/GetDocumentsResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Sent when the credentials are invalid.",
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 },
@@ -617,6 +745,79 @@
                     "$ref": "#/definitions/ApiResponse"
                 }
             ]
+        },
+        "BloomreachLink": {
+            "type": "object",
+            "title": "BloomreachLink",
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "'local' to signify the document is in the repository"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "the uuid of the node"
+                },
+                "url": {
+                    "type": "string",
+                    "description": "a URL that can retrieve this specific document"
+                }
+            },
+            "required": []
+        },
+        "BloomreachGetDocumentItem": {
+            "type": "object",
+            "title": "BloomreachGetDocumentItem",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "the name of the node"
+                },
+                "id": {
+                    "type": "string",
+                    "description": "the uuid of the node"
+                },
+                "link": {
+                    "$ref": "#/definitions/BloomreachLink",
+                    "description": "the link to the document"
+                },
+                "type": {
+                    "type": "string",
+                    "description": "the CND type of this node"
+                }
+            },
+            "required": []
+        },
+        "GetDocumentsResponse": {
+            "type": "object",
+            "title": "GetDocumentsResponse",
+            "properties": {
+                "offset": {
+                    "type": "number",
+                    "description": "the offset for the result set"
+                },
+                "max": {
+                    "type": "number",
+                    "description": "the limit to the number of records to be returned"
+                },
+                "count": {
+                    "type": "number",
+                    "description": "the number of items returned"
+                },
+                "total": {
+                    "type": "number",
+                    "description": "total number of results (includes results outside the current offset/max viewport)"
+                },
+                "more": {
+                    "type": "boolean",
+                    "description": "if true there are more results to be retrieved in a next page."
+                },
+                "items": {
+                    "$ref": "#/definitions/BloomreachGetDocumentItem",
+                    "description": "a list of result items."
+                }
+            },
+            "required": []
         }
     }
 }

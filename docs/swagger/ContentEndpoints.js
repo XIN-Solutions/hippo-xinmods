@@ -18,16 +18,50 @@ module.exports = {
      */
     executeQuery(req, resp) {},
 
+
     /**
      * @swagger
      *
-     * Get Documents
+     * Get document is an endpoint built-in to Bloomreach XM, it allows you to query for
+     * a single document by its UUID. While you're free to use this endpoint, it is recommended to
+     * use the XIN Mods `Get document at path` endpoint as it allows prefetching.
      *
-     * @id getDocuments
+     * @id ootbGetDocument
      * @tag Content
-     * @summary Get documents
+     * @summary Get document by ID (legacy)
      *
-     * @response 200 {object} The list of documents
+     * @param Authorization {string} (header) Basic authorization header for user in the `restapi` group or `admin` user
+     * @param uuid {string} (path) the UUID of the document you want to retrieve.
+     *
+     * @response 200 {BloomreachDocument} The list of documents
+     * @response 403 {string} Sent when the credentials are invalid.
+     *
+     * @param req
+     * @param resp
+     */
+    getDocument(req, resp) {},
+
+
+    /**
+     * @swagger
+     *
+     * Get documents is an endpoint built-in to Bloomreach XM, it allows you to query for
+     * documents in quite the unrefined manner.
+     *
+     * @id ootbGetDocuments
+     * @tag Content
+     * @summary Get filtered documents
+     *
+     * @param Authorization {string} (header) Basic authorization header for user in the `restapi` group or `admin` user
+     * @param _offset {?number} (query) pagination offset
+     * @param _max {?number} (query) the maximum number of records to be retrieved
+     * @param _orderBy {?string} (query) the field to order by (eg, hippostd:pubwfCreationDate)
+     * @param _sortOrder {?string} (query) 'asc' or 'desc' for ascending and descending sort order respectively
+     * @param _nodetype {?string} (query) the CND type to look for (like xinmods:blogdocument)
+     * @param _query {?string} (query) the free text query.
+     *
+     * @response 200 {GetDocumentsResponse} The list of documents
+     * @response 403 {string} Sent when the credentials are invalid.
      *
      * @param req
      * @param resp
@@ -114,6 +148,7 @@ module.exports = {
      * @param fetch {?string[]} (query) partial paths to items in the payload that must be <a href="https://marnixkok.nl/news/bloomreach-xm-tutorials/prefetching-content-from-bloomreach-xm-using-xin-mods" target="_blank">prefetched</a>.
      *
      * @response 200 {ListDocumentsResponse} the list of documents and folders
+     * @response 403 {string} Sent when the credentials are invalid.
      *
      * @param req
      * @param resp
@@ -157,6 +192,7 @@ module.exports = {
      * @param path {string} (query) the path of the document to retrieve a UUID for.
      *
      * @response 200 {PathToUuidResponse} the list of documents and folders
+     * @response 403 {string} Sent when the credentials are invalid.
      *
      * @param req
      * @param resp
