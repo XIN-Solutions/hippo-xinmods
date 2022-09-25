@@ -402,4 +402,25 @@ Kills the tomcat instance very much:
 	echo "Killing $PID"
 	kill -9 $PID
 
+# Build Dockerfile into Dockerhub
 
+Build and release docker versions. 
+
+Build project:
+  
+    $ ./bin/deploy/build-docker.sh
+
+Run this on Raspberry PI:
+
+    sudo docker build -f Dockerfile.arm64 -t xinsolutions/bloomreach-xinmods-cms-arm64 .
+
+and:
+
+    docker build \
+      -t xinsolutions/bloomreach-xinmods-cms:latest \
+      -f Dockerfile .
+
+and push the images:
+
+    docker push xinsolutions/bloomreach-xinmods-cms-arm64
+    docker push xinsolutions/bloomreach-xinmods-cms
