@@ -148,10 +148,7 @@ public class InjectDto {
             response.render(
                 new JavaScriptUrlReferenceHeaderItem(
                     js,
-                    "id" + new Date().getTime(),
-                    false,
-                    "UTF-8",
-                    null
+                    "id" + new Date().getTime()
                 )
             );
         }

@@ -1,7 +1,7 @@
 package nz.xinsolutions.editing.helptext;
 
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.util.string.Strings;
 import org.hippoecm.frontend.plugin.IPluginContext;
 import org.hippoecm.frontend.plugin.config.IPluginConfig;
@@ -24,7 +24,7 @@ public class HelpTextTemplatePlugin extends RenderPlugin<String> {
     }
 
 
-    private static class NewLinesToBrModel extends AbstractReadOnlyModel<String> {
+    private static class NewLinesToBrModel implements IModel<String> {
 
         String text;
 

@@ -5,7 +5,6 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
@@ -128,12 +127,9 @@ public class JavascriptEnabledStdWorkflow extends StdWorkflow {
             @Override
             protected void initialize() {
 
-                add(CssClass.append(new AbstractReadOnlyModel<String>() {
-                    @Override
-                    public String getObject() {
-                        return JavascriptEnabledStdWorkflow.this.isEnabled() ? "icon-enabled" : "icon-disabled";
-                    }
-                }));
+                add(CssClass.append(
+                    (IModel<String>) () -> JavascriptEnabledStdWorkflow.this.isEnabled() ? "icon-enabled" : "icon-disabled")
+                );
 
                 add(onClickAttribute(url));
 

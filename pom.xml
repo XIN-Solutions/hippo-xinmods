@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.onehippo.cms7</groupId>
     <artifactId>hippo-cms7-release</artifactId>
-    <version>14.6.3</version>
+    <version>15.1.3</version>
   </parent>
 
   <name>XINmods</name>
@@ -22,11 +22,11 @@
     <tag>HEAD</tag>
   </scm>
 
-  <!-- 
+  <!--
     The below project elements are emptied/overridden as otherwise their metadata would be
     inherited or merged from the parent hippo-cms7-release pom (or its hippo-cms7-project pom).
 
-    DO NOT remove these tags but instead fill them in appropriately as needed, 
+    DO NOT remove these tags but instead fill them in appropriately as needed,
     UNLESS the inherited values are valid for your project.
   -->
   <url />
@@ -45,7 +45,7 @@
     <contributor />
   </contributors>
   <issueManagement />
-  
+
   <ciManagement />
   <distributionManagement>
     <repository>
@@ -64,7 +64,7 @@
     <!--***START temporary override of versions*** -->
     <!-- ***END temporary override of versions*** -->
 
-    <essentials.version>14.1.0</essentials.version>
+    <essentials.version>14.6.3</essentials.version>
 
     <jsp-api.version>2.2</jsp-api.version>
     <taglibs.version>1.2.5</taglibs.version>

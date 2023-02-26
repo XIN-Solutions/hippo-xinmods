@@ -20,24 +20,6 @@ it as follows:
 This will generate four new files, that will replace the existing key files. Ideally you do not store private keys in
 the repo, instead you could make bundling it from an external source part of your build process.
 
-JWTs obtained through the `/cms/ws/jwt` endpoint can be sent through to the `/api` and `/custom-api` endpoints as
-bearer tokens in the `Authorization` header.
-
-    Authorization: Bearer <jwt>
-
-The token will be checked against the `jwks.json` specified in the configuration. By default, if the JWT validation was
-successful, a JCR session is opened as `admin`. If you do not want that, you can provide an alternative set of credentials
-in the deployment configuration.
-
-    ..
-    "xin" : { 
-        "cmsHost": "https://<your_cms_deployment_url>",
-        "jwksUrl": "https://<your_cms_deployment_url>/cms/ws/jwks.json",
-        "jwtRepoUser": "jwt_user", 
-        "jwtRepoPassword": ""
-    } 
-    ..
-
 As with normal Basic authentication for the API endpoints, only users either `admin` or contained within the
 `restapi` group are allowed to access the endpoints.
 
