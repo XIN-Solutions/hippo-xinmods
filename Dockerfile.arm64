@@ -19,7 +19,7 @@ COPY ./bin/nginx-keepalive.sh ./bin/nginx-keepalive.sh
 COPY ./bin/docker-start.sh ./bin/docker-start.sh
 RUN chmod +x ./bin/nginx-keepalive.sh ./bin/docker-start.sh
 
-FROM --platform=${arch} ubuntu:22.10 as main
+FROM arm64v8/ubuntu:22.10 as main
 
 #
 #	Install required packages
