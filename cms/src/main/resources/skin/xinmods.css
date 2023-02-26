@@ -21,6 +21,7 @@
 
 .login-panel-header-logo {
     background-image: url("./logo-brxm.svg");
+    background-size: auto 75px;
 }
 
 .column-wrapper.imageset-override-styles img {
