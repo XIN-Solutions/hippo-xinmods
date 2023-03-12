@@ -35,7 +35,7 @@
         <bean id="hippoMirrorVisitor" class="nz.xinsolutions.rest.content.visitors.XinHippoMirrorVisitor"/>
         <bean id="hippoGalleryImageVisitor" class="org.hippoecm.hst.restapi.content.visitors.HippoGalleryImageVisitor"/>
         <bean id="hippoResourceVisitor" class="org.hippoecm.hst.restapi.content.visitors.HippoResourceVisitor"/>
-        <bean id="defaultNodeVisitor" class="org.hippoecm.hst.restapi.content.visitors.DefaultNodeVisitor"/>
+        <bean id="defaultNodeVisitor" class="nz.xinsolutions.rest.content.visitors.XinDefaultNodeVisitor"/>
       </list>
     </property>
   </bean>
