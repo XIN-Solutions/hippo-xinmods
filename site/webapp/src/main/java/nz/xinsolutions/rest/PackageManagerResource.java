@@ -295,6 +295,11 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
         catch (PackageException pkgEx) {
             LOG.error("Something went wrong, caused by: ", pkgEx);
         }
+        finally {
+            if (jcrSession != null && jcrSession.isLive()) {
+                jcrSession.logout();
+            }
+        }
 
     }
 
@@ -327,7 +332,11 @@ public class PackageManagerResource extends BaseRestResource implements Rest {
             LOG.error("Could not complete package creation, caused by: ", ex);
             return Response.serverError().build();
         }
-
+        finally {
+            if (jcrSession != null && jcrSession.isLive()) {
+                jcrSession.logout();
+            }
+        }
     }
 
 

@@ -42,6 +42,11 @@
             <groupId>org.onehippo.cms7</groupId>
             <artifactId>hippo-plugin-selections-hst-client</artifactId>
         </dependency>
+        <dependency>
+            <groupId>net.sf.jsignature.io-tools</groupId>
+            <artifactId>easystream</artifactId>
+            <version>1.2.15</version>
+        </dependency>
 
     </dependencies>
     <build>

@@ -15,5 +15,12 @@
         <module>components</module>
         <module>webapp</module>
     </modules>
+    <dependencies>
+        <dependency>
+            <groupId>net.sf.jsignature.io-tools</groupId>
+            <artifactId>easystream</artifactId>
+            <version>1.2.15</version>
+        </dependency>
+    </dependencies>
 
 </project>

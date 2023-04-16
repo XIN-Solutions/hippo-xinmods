@@ -126,6 +126,11 @@
       <groupId>org.onehippo.cms7</groupId>
       <artifactId>hippo-repository-builtin</artifactId>
     </dependency>
+    <dependency>
+        <groupId>net.sf.jsignature.io-tools</groupId>
+        <artifactId>easystream</artifactId>
+        <version>1.2.15</version>
+    </dependency>
 
   </dependencies>
 
